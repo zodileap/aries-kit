@@ -14,7 +14,7 @@ export const BasicNav: React.FC = () => {
           ]}
           logo={
             <AriImage
-              fileName="/assets/logo/logo-circle.svg"
+              fileName="/assets/logo/logo.png"
               style={{ width: 16, height: 16 }}
               usage="image"
             />

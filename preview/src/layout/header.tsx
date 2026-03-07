@@ -1,4 +1,4 @@
-import { AriIcon, AriNav } from "@ari/components";
+import { AriIcon } from "@ari/components";
 import { useEffect, useState } from "react";
 import { getColorTheme, onThemeChange, setColorTheme } from "@ari/init";
 
@@ -24,9 +24,10 @@ export const Navigation: React.FC = () => {
 
     return (
         <div style={{ height: "60px", display: 'flex', justifyContent: 'space-between', padding: '0 calc(var(--z-padding-element) + 0rem)' }} >
-            <AriIcon
-                name='logo-word'
-                fullPath='/assets/logo/logo-circle.svg'
+            <img
+                src='/assets/logo/logo.png'
+                alt='Aries Kit'
+                style={{ height: 28, width: 'auto', objectFit: 'contain' }}
             />
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 {/* 根据当前主题显示相应图标并添加点击事件 */}

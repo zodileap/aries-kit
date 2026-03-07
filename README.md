@@ -12,16 +12,16 @@ Aries Kit is a React frontend library that combines UI components, hooks, initia
 ## Installation
 
 ```bash
-pnpm add react react-dom react-router-dom @aries-kit/react
+pnpm add @aries-kit/react
 ```
 
 or
 
 ```bash
-npm install react react-dom react-router-dom @aries-kit/react
+npm install @aries-kit/react
 ```
 
-`react`, `react-dom`, and `react-router-dom` are peer dependencies.
+Before using Aries Kit, make sure your project already has `react`, `react-dom`, and `react-router-dom` installed. They are peer dependencies and are not bundled into the package.
 
 ## Quick Start
 
