@@ -1,0 +1,488 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-progress {
+    box-sizing: border-box;
+    @include flex(flex-start, center);
+    width: 100%;
+    transition: all getVar(duration, element-interaction);
+
+    // 线条进度条样式
+    &--line {
+        .#{$namespace}-progress__outer {
+            flex: 1;
+            margin-right: getVar(inset, sm);
+            position: relative;
+        }
+
+        .#{$namespace}-progress__inner {
+            position: relative;
+            background-color: getVar(color, bg-tertiary);
+            border-radius: getVar(border-radius, sm);
+            overflow: hidden;
+            width: 100%;
+            height: 8px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+            
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+            }
+        }
+
+        .#{$namespace}-progress__bg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(135deg, getVar(color, brand) 0%, getVar(color, brand-active) 100%);
+            transition: all getVar(duration, element-interaction);
+            border-radius: inherit;
+            box-shadow: 0 1px 3px rgba(getVar(color, brand), 0.3);
+            
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+                border-radius: inherit;
+            }
+        }
+
+        .#{$namespace}-progress__success-bg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(135deg, getVar(color, success) 0%, getVar(color, success-active) 100%);
+            transition: all getVar(duration, element-interaction);
+            border-radius: inherit;
+            box-shadow: 0 1px 3px rgba(getVar(color, success), 0.3);
+        }
+
+        .#{$namespace}-progress__info {
+            margin-left: getVar(inset, sm);
+            font-size: getVar(font-size, callout);
+            white-space: nowrap;
+            font-weight: 500;
+            color: getVar(color, text);
+            transition: all getVar(duration, element-interaction);
+        }
+
+        .#{$namespace}-progress__info-text {
+            color: getVar(color, text-secondary);
+        }
+
+        .#{$namespace}-progress__icon {
+            vertical-align: middle;
+            transition: all getVar(duration, element-interaction);
+            
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    &__outer {
+        flex: 1;
+        margin-right: getVar(inset, sm);
+        position: relative;
+    }
+
+    &__inner {
+        position: relative;
+        background-color: getVar(color, bg-tertiary);
+        border-radius: getVar(border-radius, sm);
+        overflow: hidden;
+        width: 100%;
+        height: 8px;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+        }
+    }
+
+    &__bg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        background: linear-gradient(135deg, getVar(color, brand) 0%, getVar(color, brand-active) 100%);
+        transition: all getVar(duration, element-interaction);
+        border-radius: inherit;
+        box-shadow: 0 1px 3px rgba(getVar(color, brand), 0.3);
+        
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+            border-radius: inherit;
+        }
+    }
+
+    &__success-bg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        background: linear-gradient(135deg, getVar(color, success) 0%, getVar(color, success-active) 100%);
+        transition: all getVar(duration, element-interaction);
+        border-radius: inherit;
+        box-shadow: 0 1px 3px rgba(getVar(color, success), 0.3);
+    }
+
+    &__info {
+        margin-left: getVar(inset, sm);
+        font-size: getVar(font-size, callout);
+        white-space: nowrap;
+        font-weight: 500;
+        color: getVar(color, text);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__info-text {
+        color: getVar(color, text-secondary);
+    }
+
+    &__icon {
+        vertical-align: middle;
+        transition: all getVar(duration, element-interaction);
+        
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+
+    // 步骤进度条样式
+    &.#{$namespace}-is-steps {
+        .#{$namespace}-progress__steps {
+            @include flex(flex-start, center);
+            gap: getVar(inset, xs);
+            width: 100%;
+        }
+
+        .#{$namespace}-progress__step {
+            flex: 1;
+            height: 8px;
+            background-color: getVar(color, bg-tertiary);
+            transition: all getVar(duration, element-interaction);
+            position: relative;
+            overflow: hidden;
+            
+            &:first-child {
+                border-radius: getVar(border-radius, sm) 0 0 getVar(border-radius, sm);
+            }
+            
+            &:last-child {
+                border-radius: 0 getVar(border-radius, sm) getVar(border-radius, sm) 0;
+            }
+            
+            &:only-child {
+                border-radius: getVar(border-radius, sm);
+            }
+
+            &.#{$namespace}-is-step-default {
+                background-color: getVar(color, bg-tertiary);
+            }
+
+            &.#{$namespace}-is-step-normal {
+                background: linear-gradient(135deg, getVar(color, brand) 0%, getVar(color, brand-active) 100%);
+                box-shadow: 0 1px 3px rgba(getVar(color, brand), 0.3);
+                transform: translateY(-1px);
+            }
+
+            &.#{$namespace}-is-step-success {
+                background: linear-gradient(135deg, getVar(color, success) 0%, getVar(color, success-active) 100%);
+                box-shadow: 0 1px 3px rgba(getVar(color, success), 0.3);
+                transform: translateY(-1px);
+            }
+
+            &.#{$namespace}-is-step-exception {
+                background: linear-gradient(135deg, getVar(color, danger) 0%, getVar(color, danger-active) 100%);
+                box-shadow: 0 1px 3px rgba(getVar(color, danger), 0.3);
+                transform: translateY(-1px);
+            }
+
+            &.#{$namespace}-is-step-active {
+                background: linear-gradient(135deg, getVar(color, brand) 0%, getVar(color, brand-active) 100%);
+                box-shadow: 0 1px 3px rgba(getVar(color, brand), 0.3);
+                transform: translateY(-1px);
+                
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+                    animation: progressStepActive 2s ease-in-out infinite;
+                }
+            }
+        }
+
+        .#{$namespace}-progress__info {
+            margin-left: getVar(inset, sm);
+            font-weight: 500;
+            color: getVar(color, text);
+        }
+    }
+
+    // 小步骤
+    &.#{$namespace}-is-step-small {
+        .#{$namespace}-progress__step {
+            height: 4px;
+        }
+    }
+
+    // 圆形进度条样式
+    &--circle,
+    &--dashboard {
+        display: inline-block;
+        position: relative;
+        transition: all getVar(duration, element-interaction);
+        
+        &:hover {
+            transform: scale(1.02);
+        }
+
+        .#{$namespace}-progress__circle {
+            position: relative;
+            
+            svg {
+                transform-origin: center center;
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+                transition: all getVar(duration, element-interaction);
+            }
+        }
+
+        .#{$namespace}-progress__circle-path {
+            transition: all getVar(duration, element-interaction);
+            stroke: getVar(color, brand);
+            stroke-linecap: round;
+        }
+
+        .#{$namespace}-progress__circle-path-success {
+            transition: all getVar(duration, element-interaction);
+            stroke: getVar(color, success);
+            stroke-linecap: round;
+        }
+
+        .#{$namespace}-progress__circle-info {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            text-align: center;
+            font-size: getVar(font-size, body);
+            font-weight: 600;
+            color: getVar(color, text);
+            z-index: 1;
+            @include flex(center, center);
+        }
+    }
+
+    // 状态样式
+    &--success {
+        .#{$namespace}-progress__bg {
+            background: linear-gradient(135deg, getVar(color, success) 0%, getVar(color, success-active) 100%);
+            box-shadow: 0 1px 3px rgba(getVar(color, success), 0.3);
+        }
+
+        .#{$namespace}-progress__circle-path {
+            stroke: getVar(color, success);
+        }
+
+        .#{$namespace}-progress__icon {
+            color: getVar(color, success);
+        }
+    }
+
+    &--exception {
+        .#{$namespace}-progress__bg {
+            background: linear-gradient(135deg, getVar(color, danger) 0%, getVar(color, danger-active) 100%);
+            box-shadow: 0 1px 3px rgba(getVar(color, danger), 0.3);
+        }
+
+        .#{$namespace}-progress__circle-path {
+            stroke: getVar(color, danger);
+        }
+
+        .#{$namespace}-progress__icon {
+            color: getVar(color, danger);
+        }
+    }
+
+    &--active {
+        .#{$namespace}-progress__bg {
+            position: relative;
+            
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -100%;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(90deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+                animation: progressActive 2s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+            }
+        }
+        
+        .#{$namespace}-progress__circle {
+            svg {
+                animation: progressCircleRotate 2s linear infinite;
+            }
+        }
+    }
+
+    // 尺寸样式
+    &--small {
+        .#{$namespace}-progress__info {
+            font-size: getVar(font-size, caption);
+        }
+
+        &.#{$namespace}-progress--line {
+            .#{$namespace}-progress__inner {
+                height: 4px;
+            }
+        }
+    }
+
+    &--large {
+        .#{$namespace}-progress__info {
+            font-size: getVar(font-size, subheadline);
+        }
+
+        &.#{$namespace}-progress--line {
+            .#{$namespace}-progress__inner {
+                height: 12px;
+            }
+        }
+    }
+
+    // 不显示信息时的样式
+    &.#{$namespace}-is-show-info {
+        &.#{$namespace}-progress--line {
+            .#{$namespace}-progress__outer {
+                margin-right: 0;
+            }
+        }
+    }
+    
+    // 渐变效果
+    &--gradient {
+        .#{$namespace}-progress__bg {
+            background: linear-gradient(45deg, 
+                getVar(color, brand) 0%, 
+                getVar(color, brand-active) 25%,
+                getVar(color, brand) 50%,
+                getVar(color, brand-active) 75%,
+                getVar(color, brand) 100%);
+            background-size: 200% 100%;
+            animation: progressGradient 3s ease-in-out infinite;
+        }
+    }
+    
+    // 脉冲效果
+    &--pulse {
+        .#{$namespace}-progress__bg {
+            animation: progressPulse 2s ease-in-out infinite;
+        }
+        
+        .#{$namespace}-progress__circle-path {
+            animation: progressCirclePulse 2s ease-in-out infinite;
+        }
+    }
+    
+    // 禁用状态
+    &.#{$namespace}-is-disabled {
+        opacity: getVar(color, opacity-disabled);
+        pointer-events: none;
+        
+        .#{$namespace}-progress__bg,
+        .#{$namespace}-progress__success-bg {
+            animation: none;
+            background: getVar(color, bg-secondary);
+            box-shadow: none;
+        }
+    }
+}
+
+// 动画定义
+@keyframes progressActive {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(200%);
+    }
+}
+
+@keyframes progressStepActive {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes progressGradient {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes progressPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.02);
+    }
+}
+
+@keyframes progressCircleRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes progressCirclePulse {
+    0%, 100% {
+        stroke-width: 6;
+        opacity: 1;
+    }
+    50% {
+        stroke-width: 8;
+        opacity: 0.8;
+    }
+}

@@ -1,0 +1,59 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-checkbox {
+  @include flex(flex-start, center);
+  cursor: pointer;
+  user-select: none;
+  gap: getVar(inset, sm);
+  transition: all getVar(duration, element-interaction);
+
+  &.#{$namespace}-is-disabled {
+    cursor: not-allowed;
+    opacity: getVar(opacity, disabled);
+
+    .#{$namespace}-checkbox__box {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  &__box {
+    width: getVar(element-size, xs);
+    height: getVar(element-size, xs);
+    border: 1px solid getVar(color, border);
+    @include adaptive-border-radius("", getVar(element-size, xs));
+    @include flex();
+    transition: all getVar(duration, element-interaction);
+    background-color: getVar(color, bg);
+    transform: translateY(0);
+
+    &:hover {
+      border-color: getVar(color, border-brand);
+      transform: translateY(0);
+      box-shadow: getVar(color, box-shadow);
+    }
+
+    &.#{$namespace}-is-checked,
+    &.#{$namespace}-is-indeterminate {
+      background-color: getVar(color, brand);
+      border-color: getVar(color, brand);
+      transform: scale(1.05);
+      box-shadow: getVar(color, box-shadow-rounded);
+    }
+  }
+
+  &__label {
+    color: getVar(color, text);
+    font-size: getVar(font-size, button);
+    transition: color getVar(duration, element-interaction);
+
+    &:hover {
+      color: getVar(color, text-active);
+    }
+  }
+}
+
+.#{$namespace}-checkbox-group {
+  @include flex(flex-start, stretch, column);
+  gap: getVar(inset);
+}

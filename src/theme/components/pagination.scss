@@ -1,0 +1,116 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-pagination {
+    $min-width: getVar(element-size);
+    $height: getVar(element-size);
+
+    @include flex(flex-start, center);
+    padding: getVar(inset) 0;
+    font-size: getVar(font-size, button);
+
+    &__list {
+        @include flex();
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: getVar(inset, sm);
+    }
+
+    &__label {
+        font-size: getVar(font-size, button);
+        margin: 0;
+        
+        &--page {
+            min-width: getVar(element-size);
+        }
+    }
+
+    &__item {
+        @include flex();
+        min-width: $min-width;
+        height: $height;
+        padding: 0 getVar(inset, xs);
+        box-sizing: border-box;
+        border: 1px solid getVar(color, border);
+        @include adaptive-border-radius("sm", $height);
+        background-color: getVar(color, bg);
+        color: getVar(color, text);
+        cursor: pointer;
+        user-select: none;
+        transition: all getVar(duration, element-interaction);
+        transform: translateY(0);
+
+        &:hover {
+            border-color: getVar(color, brand);
+            color: getVar(color, brand);
+            transform: translateY(getVar(transform, hover-translate-y));
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &.#{$namespace}-is-active {
+            border-color: getVar(color, brand);
+            background-color: getVar(color, brand);
+            color: getVar(color, text-on-brand);
+            transform: translateY(getVar(transform, hover-translate-y));
+            box-shadow: 0 4px 12px rgba(getVar(color, brand), 0.3);
+
+            &:hover {
+                color: getVar(color, text-on-brand);
+                background-color: getVar(color, brand-active);
+                transform: translateY(getVar(transform, hover-translate-y));
+            }
+        }
+
+        &.#{$namespace}-is-disabled {
+            cursor: not-allowed;
+            color: getVar(color, text-disabled);
+            border-color: getVar(color, border);
+            opacity: getVar(opacity, disabled);
+            transform: none;
+
+            &:hover {
+                border-color: getVar(color, border);
+                color: getVar(color, text-disabled);
+                transform: none;
+                box-shadow: none;
+            }
+        }
+    }
+
+    &__ellipsis {
+        @include flex();
+        min-width: $min-width;
+        height: $height;
+        color: getVar(color, text-secondary);
+        cursor: default;
+    }
+
+    &__total {
+        margin-right: getVar(inset);
+        color: getVar(color, text-secondary);
+    }
+
+    &__jumper,
+    &__options {
+        @include flex(unset);
+        margin-left: getVar(inset);
+        gap: getVar(inset, sm);
+    }
+
+    &.#{$namespace}-is-simple {
+    }
+
+    &.#{$namespace}-is-disabled {
+        .#{$namespace}-pagination__item,
+        .#{$namespace}-pagination__jumper,
+        .#{$namespace}-pagination__options {
+            cursor: not-allowed;
+            color: getVar(color, text, disabled);
+
+            .#{$namespace}-input,
+            .#{$namespace}-select {
+                cursor: not-allowed;
+            }
+        }
+    }
+}

@@ -1,0 +1,30 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-context-menu {
+  display: inline-flex;
+}
+
+.#{$namespace}-context-menu__overlay {
+  position: fixed;
+  width: max-content;
+  min-width: getVar(element-size, width-lg);
+  max-width: getVar(element-size, content-sm);
+  transition: transform getVar(duration, element-interaction)
+      getVar(transition-timing-function),
+    opacity getVar(duration, element-interaction)
+      getVar(transition-timing-function);
+}
+
+.#{$namespace}-context-menu__container {
+  width: auto;
+  max-width: 100%;
+  box-shadow: getVar(color, box-shadow-popover);
+  overflow: hidden;
+
+  .#{$namespace}-menu {
+    width: auto;
+    min-width: getVar(element-size, width-lg);
+    max-width: getVar(element-size, content-sm);
+    padding: getVar(inset, xxs);
+  }
+}

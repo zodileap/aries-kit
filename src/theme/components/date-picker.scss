@@ -1,0 +1,459 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-date-picker {
+    position: relative;
+    display: inline-flex;
+    width: 100%;
+    max-width: 240px;
+    transition: all getVar(duration, element-interaction);
+
+    &__input-wrapper {
+        position: relative;
+        @include flex(flex-start, center);
+        width: 100%;
+        border: 1px solid getVar(color, border);
+        border-radius: getVar(border-radius);
+        background: linear-gradient(135deg, 
+            getVar(color, bg) 0%, 
+            getVar(color, bg-secondary) 100%);
+        transition: all getVar(duration, element-interaction);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+        &:hover {
+            border-color: getVar(color, brand);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            transform: translateY(0);
+        }
+
+        &:focus-within:not(.is-disabled) {
+            border-color: getVar(color, brand);
+            box-shadow: 0 0 0 3px rgba(getVar(color, brand), 0.2);
+            transform: translateY(0);
+        }
+
+        &.#{$namespace}-is-disabled {
+            background-color: getVar(color, bg-secondary);
+            cursor: not-allowed;
+            opacity: getVar(color, opacity-disabled);
+            
+            &:hover {
+                border-color: getVar(color, border);
+                transform: none;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+        }
+    }
+
+    &__prefix-icon {
+        @include flex();
+        color: getVar(color, text-secondary);
+        padding-left: getVar(inset, sm);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__suffix-icons {
+        @include flex(flex-start, center);
+        color: getVar(color, text-secondary);
+        padding-right: getVar(inset, sm);
+        gap: getVar(inset, xs);
+    }
+
+    &__clear-icon {
+        @include flex();
+        cursor: pointer;
+        visibility: hidden;
+        color: getVar(color, text-tertiary);
+        transition: all getVar(duration, element-interaction);
+        border-radius: getVar(border-radius, xs);
+        padding: getVar(inset, xxs);
+
+        &:hover {
+            color: getVar(color, text);
+            background-color: getVar(color, bg-selected);
+            transform: scale(1.1);
+        }
+    }
+
+    &__dropdown-icon {
+        @include flex();
+        transition: transform getVar(duration, element-interaction);
+        color: getVar(color, text-secondary);
+        border-radius: getVar(border-radius, xs);
+        padding: getVar(inset, xxs);
+
+        &:hover {
+            color: getVar(color, brand);
+            background-color: getVar(color, bg-selected);
+        }
+    }
+
+    &__input {
+        flex: 1;
+        padding: getVar(inset, sm);
+        border: none;
+        background-color: transparent;
+        font-size: getVar(font-size, body);
+        color: getVar(color, text);
+        width: 100%;
+        transition: all getVar(duration, element-interaction);
+
+        &:focus {
+            outline: none;
+        }
+
+        &::placeholder {
+            color: getVar(color, text-secondary);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            color: getVar(color, text-disabled);
+        }
+    }
+
+    &__popup {
+        position: absolute;
+        z-index: 9999;
+        top: 100%;
+        left: 0;
+        margin-top: 4px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__calendar-wrapper {
+        border-radius: getVar(border-radius);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(135deg, 
+            getVar(color, bg) 0%, 
+            getVar(color, bg-secondary) 100%);
+        @include flex(flex-start, stretch, column);
+        overflow: hidden;
+        backdrop-filter: blur(8px);
+        border: 1px solid getVar(color, border);
+    }
+
+    &__panel-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    &__tabs {
+        @include flex();
+        border-bottom: 1px solid getVar(color, border);
+        background: linear-gradient(135deg, 
+            getVar(color, bg-tertiary) 0%, 
+            getVar(color, bg-secondary) 100%);
+    }
+
+    &__tab {
+        flex: 1;
+        padding: getVar(inset, sm);
+        text-align: center;
+        cursor: pointer;
+        font-size: getVar(font-size, body);
+        color: getVar(color, text-secondary);
+        transition: all getVar(duration, element-interaction);
+        border-radius: getVar(border-radius, xs);
+        margin: getVar(inset, xs);
+        font-weight: getVar(font-weight, medium);
+
+        &:hover {
+            color: getVar(color, text);
+            background-color: getVar(color, bg-selected);
+            transform: translateY(0);
+        }
+
+        &.#{$namespace}-is-active {
+            color: getVar(color, brand);
+            font-weight: getVar(font-weight, semibold);
+            background-color: getVar(color, bg);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    &__date-panel,
+    &__time-panel {
+        display: none;
+        width: 100%;
+        height: 100%;
+
+        &.#{$namespace}-is-active {
+            display: block;
+        }
+    }
+
+    &__time-panel {
+        padding: getVar(inset, sm);
+        
+        &.#{$namespace}-is-active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        // 确保嵌入的时间选择器有足够的宽度和高度
+        .#{$namespace}-time-picker {
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            flex: 1;
+            
+            .#{$namespace}-time-picker__columns {
+                min-width: 240px;
+            }
+            
+            .#{$namespace}-time-picker__column {
+                min-width: 60px;
+            }
+        }
+    }
+
+    &__footer {
+        @include flex(space-between, center);
+        padding: getVar(inset, sm);
+        border-top: 1px solid getVar(color, border);
+        background: linear-gradient(135deg, 
+            getVar(color, bg-tertiary) 0%, 
+            getVar(color, bg-secondary) 100%);
+    }
+
+    &__now-btn {
+        font-size: getVar(font-size, footnote);
+        color: getVar(color, brand);
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: getVar(border-radius, sm);
+        padding: getVar(inset, xs);
+        cursor: pointer;
+        transition: all getVar(duration, element-interaction);
+        font-weight: getVar(font-weight, medium);
+        
+        &:hover {
+            color: getVar(color, text-on-brand);
+            background-color: getVar(color, brand);
+            border-color: getVar(color, brand);
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(getVar(color, brand), 0.3);
+        }
+    }
+
+    &__confirm-btn {
+        font-size: getVar(font-size, footnote);
+        color: getVar(color, text-on-brand);
+        background: linear-gradient(135deg, 
+            getVar(color, brand) 0%, 
+            getVar(color, brand-active) 100%);
+        border: none;
+        border-radius: getVar(border-radius);
+        padding: getVar(inset, xs) getVar(inset, sm);
+        cursor: pointer;
+        transition: all getVar(duration, element-interaction);
+        font-weight: getVar(font-weight, semibold);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        
+        &:hover {
+            background: linear-gradient(135deg, 
+                getVar(color, brand-active) 0%, 
+                getVar(color, brand) 100%);
+            transform: translateY(0);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(getVar(color, brand), 0.3);
+        }
+    }
+
+    // 上方显示状态
+    &.#{$namespace}-is-show-above {
+        .#{$namespace}-date-picker__popup {
+            top: auto;
+            bottom: 100%;
+            margin-bottom: 4px;
+            margin-top: 0;
+            transform: translateY(-8px);
+        }
+        
+        // 当弹窗可见时，向上动画到位置0
+        &.#{$namespace}-is-popup-visible {
+            .#{$namespace}-date-picker__popup {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+        }
+    }
+
+    // 交互状态
+    &:hover {
+        .#{$namespace}-date-picker__clear-icon {
+            visibility: visible;
+        }
+    }
+
+    &.#{$namespace}-is-popup-visible {
+        .#{$namespace}-date-picker__dropdown-icon {
+            transform: rotate(180deg);
+            color: getVar(color, brand);
+        }
+
+        .#{$namespace}-date-picker__popup {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: opacity getVar(duration, element-interaction),
+                        visibility getVar(duration, element-interaction),
+                        transform getVar(duration, element-interaction);
+        }
+
+        .#{$namespace}-date-picker__input-wrapper {
+            border-color: getVar(color, brand);
+            box-shadow: 0 0 0 3px rgba(getVar(color, brand), 0.2);
+        }
+    }
+
+    &.#{$namespace}-is-has-value {
+        .#{$namespace}-date-picker__clear-icon {
+            visibility: visible;
+        }
+    }
+
+    &.#{$namespace}-is-with-time {
+        .#{$namespace}-date-picker__popup {
+            width: auto;
+            min-width: 320px;
+            // 确保默认定位在下方
+            top: 100%;
+            bottom: auto;
+        }
+        
+        .#{$namespace}-date-picker__calendar-wrapper {
+            min-height: 400px;
+            width: fit-content;
+            min-width: 320px;
+        }
+        
+        .#{$namespace}-date-picker__panel-container {
+            min-height: 300px;
+            min-width: 320px;
+        }
+        
+        .#{$namespace}-date-picker__date-panel {
+            min-height: 300px;
+        }
+        
+        .#{$namespace}-date-picker__time-panel {
+            min-height: 300px;
+        }
+        
+        // 当同时有show-above类时，覆盖默认定位
+        &.#{$namespace}-is-show-above {
+            .#{$namespace}-date-picker__popup {
+                top: auto;
+                bottom: 100%;
+            }
+        }
+    }
+
+    // 尺寸变体
+    &--small {
+        .#{$namespace}-date-picker__input {
+            padding: getVar(inset, xs);
+            font-size: getVar(font-size, footnote);
+        }
+
+        .#{$namespace}-date-picker__prefix-icon,
+        .#{$namespace}-date-picker__suffix-icons {
+            font-size: getVar(font-size, footnote);
+        }
+    }
+
+    &--medium {
+        .#{$namespace}-date-picker__input {
+            padding: getVar(inset, sm);
+            font-size: getVar(font-size, body);
+        }
+
+        .#{$namespace}-date-picker__prefix-icon,
+        .#{$namespace}-date-picker__suffix-icons {
+            font-size: getVar(font-size, body);
+        }
+    }
+
+    &--large {
+        .#{$namespace}-date-picker__input {
+            padding: getVar(inset);
+            font-size: getVar(font-size, title-3);
+        }
+
+        .#{$namespace}-date-picker__prefix-icon,
+        .#{$namespace}-date-picker__suffix-icons {
+            font-size: getVar(font-size, title-3);
+        }
+    }
+
+    // 弹出位置变体
+    &--placement-top {
+        .#{$namespace}-date-picker__popup {
+            bottom: 100%;
+            margin-bottom: 4px;
+            margin-top: 0;
+            transform: translateY(-8px);
+        }
+    }
+
+    &--placement-top-start {
+        .#{$namespace}-date-picker__popup {
+            bottom: 100%;
+            left: 0;
+            margin-bottom: 4px;
+            margin-top: 0;
+            transform: translateY(-8px);
+        }
+    }
+
+    &--placement-top-end {
+        .#{$namespace}-date-picker__popup {
+            bottom: 100%;
+            right: 0;
+            margin-bottom: 4px;
+            margin-top: 0;
+            transform: translateY(-8px);
+        }
+    }
+
+    &--placement-bottom {
+        .#{$namespace}-date-picker__popup {
+            top: 100%;
+            margin-top: 4px;
+            transform: translateY(8px);
+        }
+    }
+
+    &--placement-bottom-start {
+        .#{$namespace}-date-picker__popup {
+            top: 100%;
+            left: 0;
+            margin-top: 4px;
+            transform: translateY(8px);
+        }
+    }
+
+    &--placement-bottom-end {
+        .#{$namespace}-date-picker__popup {
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            transform: translateY(8px);
+        }
+    }
+}

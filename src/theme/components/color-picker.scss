@@ -1,0 +1,565 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-color-picker {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-radius: getVar(border-radius);
+  transition: all getVar(duration, element-interaction);
+
+  &__container {
+    position: relative;
+    width: 100%;
+  }
+
+  &__trigger {
+    cursor: pointer;
+    @include flex(flex-start, center);
+    height: getVar(element-size);
+    padding: 0 getVar(inset, sm);
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius);
+    background-color: getVar(color, bg);
+    transition: all getVar(duration, element-interaction);
+    user-select: none;
+    width: 100%;
+    gap: getVar(inset, sm);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+
+    &:hover {
+      border-color: getVar(color, brand);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transform: translateY(0);
+    }
+
+    &.#{$namespace}-is-disabled {
+      opacity: getVar(opacity, disabled);
+      cursor: not-allowed;
+      pointer-events: none;
+
+      &:hover {
+        border-color: getVar(color, border);
+        transform: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    &.#{$namespace}-is-active {
+      border-color: getVar(color, brand);
+      box-shadow: 0 0 0 3px rgba(getVar(color, brand), 0.2);
+    }
+  }
+
+  &__color-preview {
+    width: 16px;
+    height: 16px;
+    border-radius: getVar(border-radius, sm);
+    border: 1px solid getVar(color, border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    background-position: 0 0;
+    background-size: cover;
+    transition: all getVar(duration, element-interaction);
+
+    &.#{$namespace}-is-gradient {
+      background-image: linear-gradient(45deg, 
+        getVar(color, brand) 0%, 
+        getVar(color, info) 100%);
+    }
+    
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &__color-value {
+    flex: 1;
+    font-size: getVar(font-size, body);
+    color: getVar(color, text);
+    margin-left: getVar(inset, sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: getVar(font-weight, lg);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__arrow-icon {
+    color: getVar(color, text-secondary);
+    transition: all getVar(duration, element-interaction);
+    @include flex();
+
+    &.#{$namespace}-is-active {
+      transform: rotate(180deg);
+      color: getVar(color, brand);
+    }
+  }
+
+  &__panel {
+    position: fixed;
+    z-index: 1000;
+    padding: getVar(inset);
+    background: linear-gradient(135deg, 
+      getVar(color, bg) 0%, 
+      getVar(color, bg-secondary) 100%);
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    width: 300px;
+    backdrop-filter: blur(8px);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  // tabs样式已移除，现在使用AriTabs组件
+
+  &__color-area {
+    display: flex;
+    margin-bottom: 16px; // 增加间距
+    width: 220px;
+  }
+
+  &__saturation {
+    width: 100%;
+    position: relative;
+    height: 150px;
+    border-radius: getVar(border-radius, sm);
+    user-select: none;
+    overflow: hidden;
+    margin-bottom: getVar(inset);
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to right, white, rgba(255, 255, 255, 0));
+      z-index: 1;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0), black);
+      z-index: 1;
+    }
+  }
+
+  &__saturation-pointer {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow:
+      0 0 2px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(0, 0, 0, 0.3) inset;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  &__sliders-area {
+    display: flex;
+    margin-bottom: getVar(inset);
+    gap: 12px; // 增加间距为12px
+    width: 100%;
+    height: 28px;
+    justify-content: space-between; // 左右对齐
+    align-items: center; // 垂直居中
+  }
+
+  &__sliders {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; // 间距改为12px
+    height: 100%;
+    justify-content: space-between;
+    min-width: 0; // 允许缩小到小于内容所需宽度
+  }
+
+  &__preview-rect {
+    width: 28px;
+    height: 28px;
+    border-radius: getVar(border-radius, sm);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.1) inset;
+    background-position: 0 0;
+    background-size: cover;
+    flex-shrink: 0; // 不允许缩小
+
+    // 透明度背景
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: getVar(color, bg-solid); // 纯色背景
+      border-radius: getVar(border-radius, sm);
+      z-index: -1;
+    }
+  }
+
+  &__hue {
+    width: 100%;
+    height: 8px;
+    position: relative;
+    background: linear-gradient(
+      to right,
+      #ff0000 0%,
+      #ffff00 17%,
+      #00ff00 33%,
+      #00ffff 50%,
+      #0000ff 67%,
+      #ff00ff 83%,
+      #ff0000 100%
+    );
+    border-radius: getVar(border-radius, sm);
+    user-select: none;
+  }
+
+  &__hue-pointer {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid white;
+    box-shadow:
+      0 0 2px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(0, 0, 0, 0.3) inset;
+    transform: translate(-50%, -2px);
+    top: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  &__alpha {
+    width: 100%;
+    height: 8px;
+    position: relative;
+    border-radius: getVar(border-radius, sm);
+    user-select: none;
+    background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+      linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%),
+      linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    background-size: 8px 8px;
+    background-position:
+      0 0,
+      0 4px,
+      4px -4px,
+      -4px 0px;
+  }
+
+  &__alpha-pointer {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid white;
+    box-shadow:
+      0 0 2px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(0, 0, 0, 0.3) inset;
+    transform: translate(-50%, -2px);
+    top: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  &__alpha-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: getVar(border-radius, sm);
+    z-index: 1;
+  }
+
+  &__info-bar {
+    display: flex;
+    align-items: center;
+    gap: getVar(inset, sm);
+    width: 100%;
+  }
+
+  &__format-select {
+    position: relative;
+  }
+
+  &__format-button {
+    display: flex;
+    align-items: center;
+    padding: 0 getVar(inset, xs);
+    height: 28px;
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius, sm);
+    font-size: getVar(font-size, caption);
+    color: getVar(color, text-secondary);
+    cursor: pointer;
+    user-select: none;
+    gap: getVar(inset, xs);
+
+    &:hover {
+      border-color: getVar(color, border-active);
+    }
+  }
+
+  &__format-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1001;
+    margin-top: getVar(inset, xs);
+    background-color: getVar(color, bg);
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius, sm);
+    box-shadow: getVar(color, box-shadow-popover);
+    min-width: 100%;
+    display: none;
+
+    &.#{$namespace}-is-visible {
+      display: block;
+    }
+  }
+
+  &__format-item {
+    padding: getVar(inset, xs) getVar(inset, sm);
+    font-size: getVar(font-size, caption);
+    color: getVar(color, text);
+    cursor: pointer;
+
+    &:hover {
+      background-color: getVar(color, bg-secondary);
+    }
+
+    &.#{$namespace}-is-active {
+      color: getVar(color, brand);
+      font-weight: getVar(font-weight, lg);
+    }
+  }
+
+  &__color-input {
+    flex: 1;
+    height: 28px;
+    padding: 0 getVar(inset, xs);
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius, sm);
+    font-size: getVar(font-size, caption);
+    outline: none;
+    min-width: 0;
+    width: calc(100% - 100px);
+
+    &:focus {
+      border-color: getVar(color, brand);
+    }
+  }
+
+  &__alpha-input {
+    width: 50px;
+    height: 28px;
+    padding: 0 getVar(inset, xs);
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius, sm);
+    font-size: getVar(font-size, caption);
+    outline: none;
+    text-align: center;
+
+    &:focus {
+      border-color: getVar(color, brand);
+    }
+  }
+
+  &__gradient-editor {
+    margin-bottom: getVar(inset);
+  }
+
+  &__gradient-direction {
+    display: flex;
+    flex-wrap: wrap;
+    gap: getVar(inset, xs);
+    margin-bottom: getVar(inset);
+  }
+
+  &__direction-button {
+    min-width: 36px;
+    height: 28px;
+    padding: 0 getVar(inset, xs);
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius, sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: getVar(color, text-secondary);
+    background-color: getVar(color, bg);
+    transition: all getVar(duration, element-interaction);
+    font-size: getVar(font-size, caption);
+    font-weight: getVar(font-weight, medium);
+    user-select: none;
+
+    &:hover {
+      border-color: getVar(color, border-active);
+      color: getVar(color, text);
+      background-color: getVar(color, bg-active);
+    }
+
+    &.#{$namespace}-is-active {
+      border-color: getVar(color, brand);
+      color: getVar(color, brand);
+      background-color: getVar(color, bg-selected);
+      font-weight: getVar(font-weight, semibold);
+    }
+  }
+
+  &__gradient-preview {
+    height: 24px;
+    border-radius: getVar(border-radius, sm);
+    margin-bottom: getVar(inset);
+    position: relative;
+    background-image: linear-gradient(to right, red, blue);
+
+    // 透明度背景
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: getVar(color, bg-tertiary); // 纯色背景
+      border-radius: getVar(border-radius, sm);
+      z-index: -1;
+    }
+  }
+
+  &__gradient-track {
+    height: 16px;
+    margin-top: -8px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  &__gradient-stop {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+    transform: translate(-50%, 0);
+    cursor: pointer;
+    z-index: 1;
+
+    &.#{$namespace}-is-active {
+      z-index: 2;
+      box-shadow: 0 0 0 2px getVar(color, brand);
+    }
+  }
+
+  &__presets {
+    display: none;
+  }
+
+  &__preset-color {
+    display: none;
+  }
+
+  // 尺寸变体 - xs
+  &--xs {
+    .#{$namespace}-color-picker__trigger {
+      height: getVar(element-size, xs);
+    }
+
+    .#{$namespace}-color-picker__color-preview {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  // 尺寸变体 - sm
+  &--sm {
+    .#{$namespace}-color-picker__trigger {
+      height: getVar(element-size, sm);
+    }
+
+    .#{$namespace}-color-picker__color-preview {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  // 尺寸变体 - lg
+  &--lg {
+    .#{$namespace}-color-picker__trigger {
+      height: getVar(element-size, lg);
+    }
+
+    .#{$namespace}-color-picker__color-preview {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  // 尺寸变体 - xl
+  &--xl {
+    .#{$namespace}-color-picker__trigger {
+      height: getVar(element-size, xl);
+    }
+
+    .#{$namespace}-color-picker__color-preview {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  // 尺寸变体 - xxl
+  &--xxl {
+    .#{$namespace}-color-picker__trigger {
+      height: getVar(element-size, xxl);
+    }
+
+    .#{$namespace}-color-picker__color-preview {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  // 多通道输入容器
+  &__multi-input {
+    display: flex;
+    flex: 1;
+    gap: 8px;
+  }
+
+  // 颜色通道容器
+  &__color-channel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  // 通道标签
+  &__channel-label {
+    font-size: getVar(font-size, caption);
+    color: getVar(color, text-secondary);
+    width: 12px;
+    text-align: center;
+  }
+
+  // 透明度输入容器
+  &__alpha-input-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}

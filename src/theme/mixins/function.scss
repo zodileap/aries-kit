@@ -1,0 +1,62 @@
+@use "config";
+@use "sass:string";
+@use "sass:meta";
+
+// BEM 帮助函数
+
+// 将选择器转换为字符串
+@function selectorToString($selector) {
+  $selector: meta.inspect($selector);
+  $selector: string.slice($selector, 2, -2);
+  @return $selector;
+}
+
+// 检查选择器是否包含修饰符
+@function containsModifier($selector) {
+  $selector: selectorToString($selector);
+
+  @if string.index($selector, config.$modifier-separator) {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+// 检查选择器是否包含状态标志
+@function containWhenFlag($selector) {
+  $selector: selectorToString($selector);
+
+  @if string.index($selector, "." + config.$state-prefix) {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+// 检查选择器是否包含伪类
+@function containPseudoClass($selector) {
+  $selector: selectorToString($selector);
+
+  @if string.index($selector, ":") {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+// 检查选择器是否命中所有特殊嵌套规则
+@function hitAllSpecialNestRule($selector) {
+  @return containsModifier($selector) or containWhenFlag($selector) or containPseudoClass($selector);
+}
+
+// 连接变量名
+// 示例: joinVarName(('button', 'text-color')) => '--el-button-text-color'
+@function joinVarName($list) {
+  $name: "--" + config.$namespace;
+  @each $item in $list {
+    @if $item != "" {
+      $name: $name + "-" + $item;
+    }
+  }
+  @return $name;
+}

@@ -1,0 +1,281 @@
+@use "../global/index.scss" as *;
+
+// Layout 专用动画mixin
+@mixin layoutPanelTransition() {
+  transition:
+    width getVar(duration, page) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    margin getVar(duration, page) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    padding getVar(duration, page) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity getVar(duration, page) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform getVar(duration, page) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: width, opacity, transform;
+}
+
+@mixin layoutContentTransition() {
+  transition:
+    opacity getVar(duration, page) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform getVar(duration, page) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: opacity, transform;
+}
+
+.#{$namespace}-layout {
+  padding: getVar(inset) calc(getVar(windows-inset, right) - getVar(inset)) getVar(windows-inset, bottom)
+    calc(getVar(windows-inset, left) - getVar(inset));
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: sticky;
+  transition: all getVar(duration, element-interaction);
+
+  // 侧边面板
+  &__left {
+    flex-shrink: 0;
+    position: relative;
+    @include layoutPanelTransition();
+    margin-right: getVar(inset);
+    padding-left: getVar(inset);
+    border-radius: getVar(border-radius, container);
+    transform-origin: left center;
+    overflow: hidden;
+
+    // 性能优化：GPU加速
+    transform: translateZ(0);
+
+    // 悬停微交互
+    &:hover {
+      transform: translateZ(0) translateY(getVar(transform, hover-translate-y));
+    }
+
+    // 内容包装器
+    .layout-content-wrapper {
+      width: var(--panel-width, 250px);
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      @include layoutContentTransition();
+      transform-origin: left top;
+      border-radius: getVar(border-radius, container);
+
+      // 自定义滚动条
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(getVar(color, text-tertiary), 0.3);
+        border-radius: getVar(border-radius, container);
+        transition: all getVar(duration, element-interaction);
+
+        &:hover {
+          background-color: rgba(getVar(color, text-secondary), 0.5);
+        }
+      }
+    }
+
+    &.#{$namespace}-is-hidden {
+      width: 0 !important;
+      margin-right: 0 !important;
+      padding-left: 0 !important;
+      opacity: 0;
+      transform: translateZ(0) scaleX(0) rotateY(-15deg);
+      pointer-events: none;
+
+      .layout-content-wrapper {
+        opacity: 0;
+        transform: translateX(-100%) scaleX(0.8) rotateX(5deg);
+        pointer-events: none;
+      }
+    }
+
+    &.#{$namespace}-is-collapsed {
+      width: 60px !important;
+
+      .layout-content-wrapper {
+        width: 60px;
+        overflow: hidden;
+        transform: scaleX(0.95);
+      }
+    }
+  }
+
+  &__right {
+    flex-shrink: 0;
+    position: relative;
+    @include layoutPanelTransition();
+    margin-left: getVar(inset);
+    padding-right: getVar(inset);
+    border-radius: getVar(border-radius, container);
+    transform-origin: right center;
+    overflow: hidden;
+
+    // 性能优化：GPU加速
+    transform: translateZ(0);
+
+    // 悬停微交互
+    &:hover {
+      transform: translateZ(0) translateY(getVar(transform, hover-translate-y));
+    }
+
+    // 内容包装器
+    .layout-content-wrapper {
+      width: var(--panel-width, 250px);
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      @include layoutContentTransition();
+      transform-origin: right top;
+      border-radius: getVar(border-radius, container);
+
+      // 自定义滚动条
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(getVar(color, text-tertiary), 0.3);
+        border-radius: getVar(border-radius, container);
+        transition: all getVar(duration, element-interaction);
+
+        &:hover {
+          background-color: rgba(getVar(color, text-secondary), 0.5);
+        }
+      }
+    }
+
+    &.#{$namespace}-is-hidden {
+      width: 0 !important;
+      margin-left: 0 !important;
+      padding-right: 0 !important;
+      opacity: 0;
+      transform: translateZ(0) scaleX(0) rotateY(15deg);
+      pointer-events: none;
+
+      .layout-content-wrapper {
+        opacity: 0;
+        transform: translateX(100%) scaleX(0.8) rotateX(5deg);
+        pointer-events: none;
+      }
+    }
+
+    &.#{$namespace}-is-collapsed {
+      width: 60px !important;
+
+      .layout-content-wrapper {
+        width: 60px;
+        overflow: hidden;
+        transform: scaleX(0.95);
+      }
+    }
+  }
+
+  // 中央内容区
+  &__center {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    transition:
+      flex getVar(duration, page) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      margin getVar(duration, page) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform getVar(duration, page) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    padding: 0 getVar(inset);
+    border-radius: getVar(border-radius, container);
+    margin: 0 getVar(inset, xs);
+    position: relative;
+    transform: translateZ(0);
+    will-change: flex, margin, transform;
+
+    // 自定义滚动条
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: getVar(color, bg-secondary);
+      border-radius: getVar(border-radius, container);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(getVar(color, text-tertiary), 0.4);
+      border-radius: getVar(border-radius, container);
+      transition: all getVar(duration, element-interaction);
+
+      &:hover {
+        background-color: rgba(getVar(color, text-secondary), 0.6);
+      }
+    }
+
+    &.#{$namespace}-is-no-right {
+      margin-right: 0;
+
+      > .#{$namespace}-container {
+        padding-right: 0;
+      }
+    }
+
+    &.#{$namespace}-is-no-left {
+      margin-left: 0;
+    }
+
+    &.#{$namespace}-is-full-width {
+      margin: 0;
+      border-radius: 0;
+    }
+
+    // 响应式处理
+    @media (max-width: 768px) {
+      flex-direction: column;
+      transition: flex-direction getVar(duration, page) getVar(transition-timing-function);
+
+      .#{$namespace}-layout__left,
+      .#{$namespace}-layout__right {
+        width: 100% !important;
+        margin: 0 0 getVar(inset, sm) 0 !important;
+        padding: 0 !important;
+        transform: none !important;
+        transition:
+          height getVar(duration, page) getVar(transition-timing-function),
+          opacity getVar(duration, page) getVar(transition-timing-function),
+          transform getVar(duration, page) getVar(transition-timing-function);
+
+        .layout-content-wrapper {
+          width: 100% !important;
+          transform: none !important;
+          transition:
+            opacity getVar(duration, page) getVar(transition-timing-function),
+            transform getVar(duration, page) getVar(transition-timing-function);
+        }
+
+        &.#{$namespace}-is-hidden {
+          height: 0 !important;
+          margin: 0 !important;
+          opacity: 0;
+          transform: translateY(-100%) !important;
+          overflow: hidden;
+
+          .layout-content-wrapper {
+            opacity: 0;
+            transform: translateY(-100%) scaleY(0.8) !important;
+          }
+        }
+      }
+
+      .#{$namespace}-layout__center {
+        margin: 0;
+        border-radius: getVar(border-radius, container);
+        transition:
+          margin getVar(duration, page) getVar(transition-timing-function),
+          padding getVar(duration, page) getVar(transition-timing-function);
+      }
+    }
+  }
+}

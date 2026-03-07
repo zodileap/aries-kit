@@ -1,0 +1,844 @@
+@use "../global/index.scss" as *;
+
+@mixin placeholder {
+    &::-webkit-input-placeholder {
+        @content;
+    }
+    &::-moz-placeholder {
+        @content;
+    }
+    &:-ms-input-placeholder {
+        @content;
+    }
+    &::-ms-input-placeholder {
+        @content;
+    }
+    &::placeholder {
+        @content;
+    }
+}
+
+@mixin input {
+    display: inline-flex;
+    width: 100%;
+    min-width: 0;
+    padding: getVar(inset, xs) getVar(inset, sm) !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    gap: getVar(inset, sm);
+    background: getVar(color, bg-opacity-blur) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid getVar(color, border);
+    transform: translateY(0);
+
+    &:hover {
+        background: getVar(color, bg-opacity) !important;
+        box-shadow: getVar(color, box-shadow);
+        border-color: getVar(color, border-brand);
+    }
+
+    &:focus-within {
+        background: getVar(color, bg-solid) !important;
+        box-shadow: getVar(color, box-shadow);
+        border-color: getVar(color, brand);
+    }
+
+    &.#{$namespace}-is-disabled {
+        color: getVar(color, text-disabled);
+        background-color: getVar(color, bg-secondary);
+        cursor: not-allowed;
+        opacity: getVar(opacity, disabled);
+        transform: none;
+
+        &:hover {
+            border-color: getVar(color, border);
+            box-shadow: none;
+            transform: none;
+        }
+    }
+
+    .#{$namespace}-text-input__input {
+        flex: 1;
+        color: getVar(color, text);
+        line-height: 1.5;
+        font-size: getVar(font-size, input);
+        border: none;
+        outline: none;
+        background: transparent;
+
+        @include placeholder {
+            font-size: getVar(font-size, input);
+            color: getVar(color, text-secondary);
+        }
+    }
+
+    // 变体样式定义
+    &.#{$namespace}-input--outlined {
+        border: 1px solid getVar(color, border);
+        border-radius: getVar(border-radius);
+
+        &:hover {
+            border-color: getVar(color, border-active);
+        }
+    }
+
+    &.#{$namespace}-input--borderless {
+        border: none;
+        border-radius: getVar(border-radius);
+    }
+
+    &.#{$namespace}-input--filled {
+        border: none;
+        border-radius: getVar(border-radius);
+        background-color: getVar(color, bg-secondary);
+
+        &:hover {
+            background-color: getVar(color, bg-tertiary);
+        }
+    }
+
+    &.#{$namespace}-input--underlined {
+        border: none;
+        border-bottom: 1px solid getVar(color, border);
+        border-radius: 0;
+
+        &:hover {
+            border-bottom-color: getVar(color, border-brand);
+        }
+    }
+}
+
+.#{$namespace}-text-input {
+    @include input;
+
+    &.#{$namespace}-is-border-radius {
+        border-radius: getVar(border-radius);
+    }
+
+    &.#{$namespace}-is-borderless {
+        border: none;
+
+        &:hover,
+        &:focus-within {
+            border: none;
+        }
+    }
+
+    &.#{$namespace}-is-no-hover-focus-effect {
+        &:not(.#{$namespace}-is-disabled) {
+            &:hover,
+            &:focus-within {
+                background: getVar(color, bg-opacity-blur) !important;
+                border-color: getVar(color, border);
+                box-shadow: none;
+            }
+        }
+
+        &.#{$namespace}-is-borderless {
+            &:hover,
+            &:focus-within {
+                border: none;
+            }
+        }
+
+        &.#{$namespace}-is-filled {
+            &:hover,
+            &:focus-within {
+                background: getVar(color, bg-secondary) !important;
+                border: none;
+            }
+        }
+
+        &.#{$namespace}-is-underlined {
+            &:hover,
+            &:focus-within {
+                border: none;
+                border-bottom: 1px solid getVar(color, border);
+                border-radius: 0;
+            }
+        }
+    }
+
+    // 尺寸变体
+    &--xs {
+        height: getVar(element-size, xs);
+        padding: getVar(inset, xxs) getVar(inset, xs) !important;
+    }
+
+    &--sm {
+        height: getVar(element-size, sm);
+        padding: getVar(inset, xxs) getVar(inset, xs) !important;
+    }
+
+    &--default {
+        // 默认尺寸，已在基础样式中定义
+    }
+
+    &--lg {
+        height: getVar(element-size, lg);
+        padding: getVar(inset, sm) getVar(inset, md) !important;
+    }
+
+    &--xl {
+        height: getVar(element-size, xl);
+        padding: getVar(inset, sm) getVar(inset, md) !important;
+    }
+
+    &--xxl {
+        height: getVar(element-size, xxl);
+        padding: getVar(inset, md) getVar(inset, lg) !important;
+    }
+
+    &__wrapper {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        width: 100%;
+    }
+
+    &__prefix,
+    &__suffix {
+        @include flex();
+        color: getVar(color, text-secondary);
+    }
+
+    &__prefix {
+        margin-right: getVar(inset, xs);
+    }
+
+    &__suffix {
+        margin-left: getVar(inset, xs);
+    }
+
+    &__count,
+    &__count-standalone {
+        font-size: getVar(font-size, caption);
+        color: getVar(color, text-secondary);
+    }
+
+    &__count {
+        margin-left: getVar(inset, xs);
+    }
+
+    &__count-standalone {
+        margin-top: getVar(inset, xxs);
+        text-align: right;
+    }
+
+    &__clear-icon,
+    &__password-toggle {
+        @include flex();
+        margin-left: getVar(inset, xs);
+        cursor: pointer;
+        color: getVar(color, text-secondary);
+        transition: all getVar(duration, element-interaction);
+
+        &:hover {
+            color: getVar(color, text);
+            transform: scale(1.1);
+        }
+    }
+
+    &__label {
+        font-size: getVar(font-size, input) !important;
+        color: getVar(color, text) !important;
+        margin-bottom: getVar(inset, xxs) !important;
+        font-weight: getVar(font-weight, medium) !important;
+    }
+}
+
+.#{$namespace}-search-input {
+    display: flex;
+    position: relative;
+    width: 100%;
+
+    &__input {
+        padding-right: calc(getVar(inset, sm) * 2 + getVar(icon-size));
+    }
+
+    &__button {
+        height: 100%;
+        @include flex();
+        cursor: pointer;
+        transition: all getVar(duration, element-interaction);
+        color: getVar(color, text-secondary);
+        margin-left: getVar(inset, sm);
+        font-size: getVar(font-size);
+
+        &:hover {
+            color: getVar(color, text);
+        }
+    }
+
+    &__loading-icon {
+        @include elementRotate();
+    }
+}
+
+.#{$namespace}-input-number {
+    @include input;
+
+    &__handler-wrap {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 100%;
+        padding: 0 0 0 getVar(inset, sm);
+    }
+
+    &__handler {
+        position: relative;
+        @include flex();
+        width: getVar(icon-size);
+        height: getVar(icon-size);
+        cursor: pointer;
+        transition: all getVar(duration, element-interaction);
+
+        &:hover {
+            color: getVar(color, text-brand);
+        }
+
+        &.#{$namespace}-is-disabled {
+            color: getVar(color, text-secondary);
+            cursor: not-allowed;
+            opacity: 0.6;
+
+            &:hover {
+                color: getVar(color, text-secondary);
+            }
+        }
+    }
+
+    &__handler-down {
+        padding-right: getVar(inset, xs);
+        border-right: 1px solid getVar(color, border);
+    }
+
+    &__handler-up {
+        padding-left: getVar(inset, xs);
+    }
+
+    &__handler-up-icon,
+    &__handler-down-icon {
+        font-size: getVar(font-size, caption);
+        line-height: 1;
+        color: getVar(color, text-secondary);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    // 处理器悬停状态
+    &__handler {
+        &:hover {
+            .z-input-number__handler-up-icon, 
+            .z-input-number__handler-down-icon {
+                color: getVar(color, text-brand);
+            }
+        }
+    }
+
+    // 禁用状态下的处理器样式
+    &.#{$namespace}-is-disabled {
+        .z-input-number__handler:hover {
+            .z-input-number__handler-up-icon, 
+            .z-input-number__handler-down-icon {
+                color: getVar(color, text-secondary);
+            }
+        }
+
+        .z-input-number__handler-up-icon, 
+        .z-input-number__handler-down-icon {
+            color: getVar(color, text-secondary);
+        }
+    }
+}
+
+.#{$namespace}-text-area {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0 !important;
+
+    &.#{$namespace}-is-border-radius {
+        border-radius: getVar(border-radius);
+    }
+
+    &__wrapper {
+        position: relative;
+        display: flex;
+        width: 100%;
+    }
+
+    &__textarea {
+        min-width: 0;
+        padding: getVar(inset, xs) getVar(inset, sm);
+        border: 1px solid getVar(color, border);
+        border-radius: getVar(border-radius);
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        flex: 1;
+        color: getVar(color, text);
+        line-height: 1.5;
+        background: getVar(color, bg-opacity-blur);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        font-size: getVar(font-size, input);
+        transform: translateY(0);
+
+        resize: vertical;
+        outline: none;
+
+        &:hover {
+            background: getVar(color, bg-opacity);
+            box-shadow: getVar(color, box-shadow);
+            border-color: getVar(color, border-brand);
+        }
+
+        &:focus {
+            background: getVar(color, bg-solid);
+            box-shadow: getVar(color, box-shadow);
+            border-color: getVar(color, brand);
+        }
+
+        // 直接应用到textarea元素上，而不是外层容器
+        @include placeholder {
+            font-size: getVar(font-size, input);
+            color: getVar(color, text-secondary);
+        }
+    }
+
+    &__clear-icon {
+        position: absolute;
+        top: getVar(inset, xs);
+        right: getVar(inset, xs);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: getVar(color, text-secondary);
+
+        &:hover {
+            color: getVar(color, text);
+        }
+    }
+
+    &__count {
+        margin-top: getVar(inset, xxs);
+        font-size: getVar(font-size, caption);
+        color: getVar(color, text-secondary);
+        text-align: right;
+    }
+
+    &__label {
+        font-size: getVar(font-size, input) !important;
+        color: getVar(color, text) !important;
+        margin-bottom: getVar(inset, xxs) !important;
+        font-weight: getVar(font-weight, medium) !important;
+    }
+
+    &.#{$namespace}-is-borderless {
+        .#{$namespace}-text-area__textarea {
+            border: none;
+
+            &:hover,
+            &:focus {
+                border: none;
+            }
+        }
+    }
+
+    &.#{$namespace}-is-filled {
+        .#{$namespace}-text-area__textarea {
+            border: none;
+            background-color: getVar(color, bg-secondary);
+
+            &:hover {
+                background-color: getVar(color, bg-tertiary);
+            }
+        }
+    }
+
+    &.#{$namespace}-is-underlined {
+        .#{$namespace}-text-area__textarea {
+            border: none;
+            border-bottom: 1px solid getVar(color, border);
+            border-radius: 0;
+
+            &:hover {
+                border-bottom-color: getVar(color, border-brand);
+            }
+
+            &:focus {
+                border-bottom-color: getVar(color, brand);
+            }
+        }
+    }
+
+    &.#{$namespace}-is-no-hover-focus-effect {
+        .#{$namespace}-text-area__textarea {
+            &:not(:disabled) {
+                &:hover,
+                &:focus {
+                    background: getVar(color, bg-opacity-blur);
+                    border-color: getVar(color, border);
+                    box-shadow: none;
+                }
+            }
+        }
+
+        &.#{$namespace}-is-borderless {
+            .#{$namespace}-text-area__textarea {
+                &:hover,
+                &:focus {
+                    border: none;
+                }
+            }
+        }
+
+        &.#{$namespace}-is-filled {
+            .#{$namespace}-text-area__textarea {
+                &:hover,
+                &:focus {
+                    background-color: getVar(color, bg-secondary);
+                    border: none;
+                }
+            }
+        }
+
+        &.#{$namespace}-is-underlined {
+            .#{$namespace}-text-area__textarea {
+                &:hover,
+                &:focus {
+                    border: none;
+                    border-bottom: 1px solid getVar(color, border);
+                    border-radius: 0;
+                }
+            }
+        }
+    }
+
+    // 自动大小状态
+    &.#{$namespace}-is-auto-size {
+        .z-text-area__textarea {
+            resize: none;
+            overflow: hidden;
+        }
+    }
+
+    // 禁用状态
+    &.#{$namespace}-is-disabled {
+        .z-text-area__textarea {
+            color: getVar(color, text-disabled);
+            background-color: getVar(color, bg-secondary);
+            cursor: not-allowed;
+            opacity: getVar(opacity, disabled);
+            resize: none;
+            overflow: hidden;
+            transform: none;
+            
+            &:hover {
+                background-color: getVar(color, bg-secondary);
+                border-color: getVar(color, border);
+                box-shadow: none;
+                transform: none;
+            }
+        }
+
+        .z-text-area__clear-icon {
+            display: none;
+        }
+    }
+}
+
+.#{$namespace}-text-list-input {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: getVar(inset, xs);
+    padding: 0;
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: getVar(inset, xs);
+    }
+
+    &__drag-list {
+        margin-bottom: getVar(inset, xs);
+    }
+
+    &__drag-item-content {
+        @include flex(space-between);
+        width: 100%;
+        align-items: center;
+        gap: getVar(inset, xs);
+        cursor: grab;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+
+    &__item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: getVar(inset, xs);
+        padding: getVar(inset, xxs);
+        border: 1px solid transparent;
+        border-radius: getVar(border-radius);
+        transition: all getVar(duration, element-interaction);
+
+        &:hover {
+            background-color: getVar(color, bg-secondary);
+        }
+    }
+
+    &__input-wrapper {
+        flex: 1;
+        position: relative;
+    }
+
+    &__input {
+        width: 100%;
+    }
+
+    &__remove-button {
+        @include flex();
+        padding: getVar(inset, xxs);
+        cursor: pointer;
+
+        &.#{$namespace}-is-disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    }
+
+    &__label {
+        font-size: getVar(font-size, input) !important;
+        color: getVar(color, text) !important;
+        margin-bottom: getVar(inset, xxs) !important;
+        font-weight: getVar(font-weight, medium) !important;
+    }
+
+    &__count {
+        margin-top: getVar(inset, xxs);
+        font-size: getVar(font-size, caption);
+        color: getVar(color, text-secondary);
+        text-align: right;
+    }
+
+    // 拖拽占位符样式
+    &__drag-placeholder {
+        height: 2px;
+        background-color: getVar(color, border-brand);
+        border-radius: 1px;
+        margin: getVar(inset, xxs) 0;
+        opacity: 0;
+        transition: opacity getVar(duration, element-interaction);
+
+        &.#{$namespace}-is-visible {
+            opacity: 1;
+        }
+    }
+
+    // 尺寸变体
+    &--xs {
+        gap: calc(getVar(inset, xs) * 0.75);
+    }
+
+    &--sm {
+        gap: calc(getVar(inset, xs) * 0.85);
+    }
+
+    &--lg {
+        gap: calc(getVar(inset, xs) * 1.15);
+    }
+
+    &--xl {
+        gap: calc(getVar(inset, xs) * 1.25);
+    }
+
+    &--xxl {
+        gap: calc(getVar(inset, xs) * 1.5);
+    }
+
+    // 输入框尺寸变体的元素样式
+    &--xs &__input {
+        font-size: calc(getVar(font-size, input) * 0.75);
+        @include placeholder {
+            font-size: calc(getVar(font-size, input) * 0.75);
+        }
+    }
+
+    &--xs &__prefix {
+        font-size: calc(getVar(font-size, caption) * 0.75);
+    }
+
+    &--xs &__suffix {
+        font-size: calc(getVar(font-size, caption) * 0.75);
+    }
+
+    &--sm &__input {
+        font-size: calc(getVar(font-size, input) * 0.85);
+        @include placeholder {
+            font-size: calc(getVar(font-size, input) * 0.85);
+        }
+    }
+
+    &--sm &__prefix {
+        font-size: calc(getVar(font-size, caption) * 0.85);
+    }
+
+    &--sm &__suffix {
+        font-size: calc(getVar(font-size, caption) * 0.85);
+    }
+
+    &--lg &__input {
+        font-size: calc(getVar(font-size, input) * 1.15);
+        @include placeholder {
+            font-size: calc(getVar(font-size, input) * 1.15);
+        }
+    }
+
+    &--lg &__prefix {
+        font-size: calc(getVar(font-size, caption) * 1.15);
+    }
+
+    &--lg &__suffix {
+        font-size: calc(getVar(font-size, caption) * 1.15);
+    }
+
+    &--xl &__input {
+        font-size: calc(getVar(font-size, input) * 1.25);
+        @include placeholder {
+            font-size: calc(getVar(font-size, input) * 1.25);
+        }
+    }
+
+    &--xl &__prefix {
+        font-size: calc(getVar(font-size, caption) * 1.25);
+    }
+
+    &--xl &__suffix {
+        font-size: calc(getVar(font-size, caption) * 1.25);
+    }
+
+    &--xxl &__input {
+        font-size: calc(getVar(font-size, input) * 1.5);
+        @include placeholder {
+            font-size: calc(getVar(font-size, input) * 1.5);
+        }
+    }
+
+    &--xxl &__prefix {
+        font-size: calc(getVar(font-size, caption) * 1.5);
+    }
+
+    &--xxl &__suffix {
+        font-size: calc(getVar(font-size, caption) * 1.5);
+    }
+
+    // 前缀后缀状态样式
+    &.#{$namespace}-is-with-prefix {
+        .z-text-input__input {
+            padding-left: 0;
+        }
+    }
+
+    &.#{$namespace}-is-with-suffix {
+        .z-text-input__input {
+            padding-right: 0;
+        }
+    }
+
+    // 尺寸变体的元素样式
+    &--xs &__wrapper {
+        gap: calc(getVar(inset, xs) * 0.75);
+    }
+
+    &--xs &__item {
+        gap: calc(getVar(inset, xs) * 0.75);
+        padding: calc(getVar(inset, xxs) * 0.75);
+    }
+
+    &--xs &__add-button {
+        padding: calc(getVar(inset, xs) * 0.75) calc(getVar(inset, sm) * 0.75);
+        gap: calc(getVar(inset, xs) * 0.75);
+    }
+
+    &--sm &__wrapper {
+        gap: calc(getVar(inset, xs) * 0.85);
+    }
+
+    &--sm &__item {
+        gap: calc(getVar(inset, xs) * 0.85);
+        padding: calc(getVar(inset, xxs) * 0.85);
+    }
+
+    &--sm &__add-button {
+        padding: calc(getVar(inset, xs) * 0.85) calc(getVar(inset, sm) * 0.85);
+        gap: calc(getVar(inset, xs) * 0.85);
+    }
+
+    &--lg &__wrapper {
+        gap: calc(getVar(inset, xs) * 1.15);
+    }
+
+    &--lg &__item {
+        gap: calc(getVar(inset, xs) * 1.15);
+        padding: calc(getVar(inset, xxs) * 1.15);
+    }
+
+    &--lg &__add-button {
+        padding: calc(getVar(inset, xs) * 1.15) calc(getVar(inset, sm) * 1.15);
+        gap: calc(getVar(inset, xs) * 1.15);
+    }
+
+    &--xl &__wrapper {
+        gap: calc(getVar(inset, xs) * 1.25);
+    }
+
+    &--xl &__item {
+        gap: calc(getVar(inset, xs) * 1.25);
+        padding: calc(getVar(inset, xxs) * 1.25);
+    }
+
+    &--xl &__add-button {
+        padding: calc(getVar(inset, xs) * 1.25) calc(getVar(inset, sm) * 1.25);
+        gap: calc(getVar(inset, xs) * 1.25);
+    }
+
+    &--xxl &__wrapper {
+        gap: calc(getVar(inset, xs) * 1.5);
+    }
+
+    &--xxl &__item {
+        gap: calc(getVar(inset, xs) * 1.5);
+        padding: calc(getVar(inset, xxs) * 1.5);
+    }
+
+    &--xxl &__add-button {
+        padding: calc(getVar(inset, xs) * 1.5) calc(getVar(inset, sm) * 1.5);
+        gap: calc(getVar(inset, xs) * 1.5);
+    }
+
+    // 禁用状态
+    &.#{$namespace}-is-disabled {
+        opacity: 0.6;
+        
+        .z-text-list-input__item {
+            background-color: getVar(color, bg-secondary);
+            
+            &:hover {
+                background-color: getVar(color, bg-secondary);
+            }
+        }
+
+        .z-text-list-input__remove-button {
+            cursor: not-allowed;
+            
+            &:hover {
+                color: getVar(color, text-secondary);
+            }
+        }
+    }
+}

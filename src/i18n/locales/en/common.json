@@ -1,0 +1,16 @@
+{
+  "copy": "Copy",
+  "copyFailed": "Copy failed",
+  "copySuccess": "Copied",
+  "createSuccess": "Created successfully",
+  "deleteSuccess": "Deleted successfully",
+  "find": "Find",
+  "format": "Format",
+  "getSuccess": "Loaded successfully",
+  "noSearchResults": "No results found",
+  "pleaseEnter": "Please enter",
+  "redo": "Redo",
+  "searchPlaceholder": "Search...",
+  "undo": "Undo",
+  "updateSuccess": "Updated successfully"
+}

@@ -1,0 +1,233 @@
+@use "../global/index.scss" as *;
+@use "sass:math";
+
+// 定义栅格的总列数
+$grid-columns: 24;
+
+.#{$namespace}-row {
+  display: flex;
+  flex-flow: row wrap;
+  box-sizing: border-box;
+  transition: all getVar(duration, element-interaction);
+  position: relative;
+  
+  // 支持gap属性的现代flexbox布局
+  &[style*="gap"] {
+    // gap属性已通过内联样式设置，这里只确保兼容性
+  }
+
+  // 水平对齐变体
+  &--justify-start {
+    justify-content: flex-start;
+  }
+
+  &--justify-end {
+    justify-content: flex-end;
+  }
+
+  &--justify-center {
+    justify-content: center;
+  }
+
+  &--justify-space-around {
+    justify-content: space-around;
+  }
+
+  &--justify-space-between {
+    justify-content: space-between;
+  }
+
+  &--justify-space-evenly {
+    justify-content: space-evenly;
+  }
+
+  // 垂直对齐变体
+  &--align-top {
+    align-items: flex-start;
+  }
+
+  &--align-middle {
+    align-items: center;
+  }
+
+  &--align-bottom {
+    align-items: flex-end;
+  }
+
+  &--align-stretch {
+    align-items: stretch;
+  }
+
+  // 换行控制
+  &.#{$namespace}-is-no-wrap {
+    flex-wrap: nowrap;
+  }
+
+  &.#{$namespace}-is-wrap-reverse {
+    flex-wrap: wrap-reverse;
+  }
+
+  // 间距变体
+  &--gutter-xs {
+    margin: calc(-1 * getVar(inset, xs) / 2);
+    
+    > .#{$namespace}-col {
+      padding: calc(getVar(inset, xs) / 2);
+    }
+  }
+
+  &--gutter-sm {
+    margin: calc(-1 * getVar(inset, sm) / 2);
+    
+    > .#{$namespace}-col {
+      padding: calc(getVar(inset, sm) / 2);
+    }
+  }
+
+  &--gutter-md {
+    margin: calc(-1 * getVar(inset) / 2);
+    
+    > .#{$namespace}-col {
+      padding: calc(getVar(inset) / 2);
+    }
+  }
+
+  &--gutter-lg {
+    margin: calc(-1 * getVar(inset, lg) / 2);
+    
+    > .#{$namespace}-col {
+      padding: calc(getVar(inset, lg) / 2);
+    }
+  }
+
+  &--gutter-xl {
+    margin: calc(-1 * getVar(inset, xl) / 2);
+    
+    > .#{$namespace}-col {
+      padding: calc(getVar(inset, xl) / 2);
+    }
+  }
+}
+
+.#{$namespace}-col {
+  position: relative;
+  max-width: 100%;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  transition: all getVar(duration, element-interaction);
+
+  // 生成基础列宽
+  @for $i from 1 through $grid-columns {
+    &--span-#{$i} {
+      flex: 0 0 auto;
+      width: math.percentage(math.div($i, $grid-columns));
+    }
+  }
+
+  // 生成偏移量
+  @for $i from 1 through $grid-columns {
+    &--offset-#{$i} {
+      margin-left: math.percentage(math.div($i, $grid-columns));
+    }
+  }
+
+  // 生成向左移动
+  @for $i from 1 through $grid-columns {
+    &--pull-#{$i} {
+      right: math.percentage(math.div($i, $grid-columns));
+    }
+  }
+
+  // 生成向右移动
+  @for $i from 1 through $grid-columns {
+    &--push-#{$i} {
+      left: math.percentage(math.div($i, $grid-columns));
+    }
+  }
+
+  // 生成排序
+  @for $i from 0 through $grid-columns {
+    &--order-#{$i} {
+      order: $i;
+    }
+  }
+
+  // 增强的视觉效果
+  &.#{$namespace}-is-hover-effect {
+    cursor: pointer;
+    border-radius: getVar(border-radius, container);
+
+    &:hover {
+      background-color: getVar(color, bg-active);
+      transform: translateY(getVar(transform, hover-translate-y));
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &.#{$namespace}-is-clickable {
+    cursor: pointer;
+    border-radius: getVar(border-radius, container);
+
+    &:hover {
+      background-color: getVar(color, bg-active);
+    }
+
+    &:active {
+      transform: scale(0.98);
+      background-color: getVar(color, brand-secondary);
+    }
+  }
+
+  &.#{$namespace}-is-bordered {
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius, container);
+    background-color: getVar(color, bg);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+      border-color: getVar(color, brand);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  // 生成响应式样式
+  @each $size, $breakpoint in $breakpoints {
+    @media #{$breakpoint} {
+      // 响应式列宽
+      @for $i from 1 through $grid-columns {
+        &--#{$size}-span-#{$i} {
+          flex: 0 0 auto;
+          width: math.percentage(math.div($i, $grid-columns));
+        }
+      }
+
+      // 响应式偏移量
+      @for $i from 1 through $grid-columns {
+        &--#{$size}-offset-#{$i} {
+          margin-left: math.percentage(math.div($i, $grid-columns));
+        }
+      }
+
+      // 响应式向左移动
+      @for $i from 1 through $grid-columns {
+        &--#{$size}-pull-#{$i} {
+          right: math.percentage(math.div($i, $grid-columns));
+        }
+      }
+
+      // 响应式向右移动
+      @for $i from 1 through $grid-columns {
+        &--#{$size}-push-#{$i} {
+          left: math.percentage(math.div($i, $grid-columns));
+        }
+      }
+
+      // 响应式排序
+      @for $i from 0 through $grid-columns {
+        &--#{$size}-order-#{$i} {
+          order: $i;
+        }
+      }
+    }
+  }
+}

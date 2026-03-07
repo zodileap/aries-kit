@@ -1,0 +1,198 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-popconfirm {
+  position: fixed;
+  z-index: 9999;
+  padding: getVar(inset, md);
+  box-sizing: border-box;
+  max-width: 350px;
+  border-radius: getVar(border-radius);
+  font-size: getVar(font-size, caption);
+  line-height: 1.4;
+  word-wrap: break-word;
+  background-color: getVar(color, bg-solid);
+  color: getVar(color, text);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transition: opacity getVar(duration, element-interaction),
+              visibility getVar(duration, element-interaction);
+  
+  // 默认情况下不可见但仍然存在于DOM中
+  opacity: 0;
+  visibility: hidden;
+  
+  &__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: getVar(spacing, md);
+  }
+  
+  &__title {
+    font-weight: 600;
+    font-size: getVar(font-size, body-small);
+    margin: 0;
+    padding: 0;
+  }
+  
+  &__description {
+    margin: 0;
+    color: getVar(color, text-secondary);
+  }
+  
+  &__actions {
+  }
+  
+  // 使用新的 mixin 简化箭头样式
+  &__arrow {
+    // 基础样式：所有箭头公共属性
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px;
+    border-color: transparent;
+
+    // 使用 mixin 处理各个方向的箭头
+    &.#{$namespace}-is-top {
+      @include arrow('top', 'bg-solid');
+    }
+
+    &.#{$namespace}-is-bottom {
+      @include arrow('bottom', 'bg-solid');
+    }
+
+    &.#{$namespace}-is-left {
+      @include arrow('left', 'bg-solid');
+    }
+
+    &.#{$namespace}-is-right {
+      @include arrow('right', 'bg-solid');
+    }
+
+    // 使用 mixin 处理更多位置
+    &.#{$namespace}-is-topLeft {
+      @include arrow('top', 'bg-solid', 6px, 'left');
+    }
+
+    &.#{$namespace}-is-topRight {
+      @include arrow('top', 'bg-solid', 6px, 'right');
+    }
+
+    &.#{$namespace}-is-bottomLeft {
+      @include arrow('bottom', 'bg-solid', 6px, 'left');
+    }
+
+    &.#{$namespace}-is-bottomRight {
+      @include arrow('bottom', 'bg-solid', 6px, 'right');
+    }
+
+    &.#{$namespace}-is-leftTop {
+      @include arrow('left', 'bg-solid', 6px, 'top');
+    }
+
+    &.#{$namespace}-is-leftBottom {
+      @include arrow('left', 'bg-solid', 6px, 'bottom');
+    }
+
+    &.#{$namespace}-is-rightTop {
+      @include arrow('right', 'bg-solid', 6px, 'top');
+    }
+
+    &.#{$namespace}-is-rightBottom {
+      @include arrow('right', 'bg-solid', 6px, 'bottom');
+    }
+  }
+  
+  // 可见状态
+  &.#{$namespace}-is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  
+  // 位置修饰符的外边距
+  &.#{$namespace}-is-top {
+    margin-bottom: 12px;
+  }
+  
+  &.#{$namespace}-is-topLeft {
+    margin-bottom: 12px;
+  }
+  
+  &.#{$namespace}-is-topRight {
+    margin-bottom: 12px;
+  }
+  
+  &.#{$namespace}-is-bottom {
+    margin-top: 12px;
+  }
+  
+  &.#{$namespace}-is-bottomLeft {
+    margin-top: 12px;
+  }
+  
+  &.#{$namespace}-is-bottomRight {
+    margin-top: 12px;
+  }
+  
+  &.#{$namespace}-is-left {
+    margin-right: 12px;
+  }
+  
+  &.#{$namespace}-is-leftTop {
+    margin-right: 12px;
+  }
+  
+  &.#{$namespace}-is-leftBottom {
+    margin-right: 12px;
+  }
+  
+  &.#{$namespace}-is-right {
+    margin-left: 12px;
+  }
+  
+  &.#{$namespace}-is-rightTop {
+    margin-left: 12px;
+  }
+  
+  &.#{$namespace}-is-rightBottom {
+    margin-left: 12px;
+  }
+  
+  // 动画效果
+  &.#{$namespace}-is-entering {
+    animation: popconfirmFadeIn getVar(duration, element-interaction) ease-out;
+  }
+  
+  &.#{$namespace}-is-leaving {
+    animation: popconfirmFadeOut getVar(duration, element-interaction) ease-in;
+  }
+}
+
+.#{$namespace}-trigger {
+  display: inline-block;
+}
+
+// 动画定义
+@keyframes popconfirmFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popconfirmFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}

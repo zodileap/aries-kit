@@ -1,0 +1,16 @@
+{
+  "copy": "复制",
+  "copyFailed": "复制失败",
+  "copySuccess": "已复制",
+  "createSuccess": "创建成功",
+  "deleteSuccess": "删除成功",
+  "find": "查找",
+  "format": "格式化",
+  "getSuccess": "获取成功",
+  "noSearchResults": "未找到匹配项",
+  "pleaseEnter": "请输入",
+  "redo": "重做",
+  "searchPlaceholder": "搜索...",
+  "undo": "撤销",
+  "updateSuccess": "更新成功"
+}

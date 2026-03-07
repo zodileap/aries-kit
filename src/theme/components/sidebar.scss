@@ -1,0 +1,348 @@
+// @ari/theme/components/sidebar.scss
+
+@use "../global/index.scss" as *;
+
+.#{$namespace}-sidebar {
+  position: relative;
+  height: 100%;
+  background-color: transparent;
+  display: flex;
+  border: none;
+  overflow: hidden;
+  transition: all getVar(duration, element-interaction);
+
+  // 侧边栏方向变体
+  &--left {
+    border-right: 1px solid getVar(color, border-glass);
+    flex-direction: row;
+    box-shadow: getVar(color, box-shadow);
+  }
+
+  &--right {
+    border-left: 1px solid getVar(color, border-glass);
+    flex-direction: row-reverse;
+    box-shadow: getVar(color, box-shadow);
+  }
+
+  // 活动栏和相关元素
+  &__activity-bar {
+    display: flex;
+    background-color: transparent;
+    gap: getVar(inset, xs);
+    padding: getVar(inset, xs);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__activity-item {
+    position: relative;
+    padding: getVar(inset, sm);
+    cursor: pointer;
+    border-radius: getVar(border-radius, sm);
+    transition: all getVar(duration, element-interaction);
+    color: getVar(color, text);
+    background-color: transparent;
+    overflow: hidden;
+
+    &:hover {
+      color: getVar(color, text-active);
+      background-color: transparent;
+      transform: translateX(4px);
+      box-shadow: none;
+    }
+
+    &:active {
+      transform: translateX(2px) scale(0.98);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent 0%, getVar(color, border-glass) 100%);
+      opacity: 0;
+      transition: opacity getVar(duration, element-interaction);
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+
+    &.#{$namespace}-is-active {
+      background-color: getVar(color, bg-selected);
+      border-left: 3px solid getVar(color, brand-active);
+      padding-left: calc(getVar(inset, sm) - 3px);
+      transform: translateX(4px);
+      box-shadow: 0 0 0 2px rgba(getVar(color, brand-active), 0.3);
+      @include rippleAnim(getVar(color, brand-active), getVar(color, bg-selected));
+
+      &:hover {
+        background-color: getVar(color, bg-active);
+        transform: translateX(4px);
+      }
+    }
+  }
+
+  &__content {
+    flex: 1;
+    height: 100%;
+    overflow: auto;
+    background-color: transparent;
+    border-radius: getVar(border-radius, sm);
+    margin: getVar(inset, xs);
+    transition: all getVar(duration, element-interaction);
+
+    // 自定义滚动条
+    &::-webkit-scrollbar {
+      width: getVar(inset, xs);
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: getVar(color, border);
+      border-radius: getVar(border-radius, sm);
+      transition: all getVar(duration, element-interaction);
+
+      &:hover {
+        background-color: getVar(color, border-active);
+      }
+    }
+  }
+
+  &__file-tree {
+    padding: getVar(inset);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  // 活动栏位置变体
+  &--activity-bar-top {
+    flex-direction: column;
+
+    .#{$namespace}-sidebar__activity-bar {
+      width: 100%;
+      flex-direction: row;
+      border-bottom: 1px solid getVar(color, border);
+      padding: getVar(inset, xs) getVar(inset, sm);
+    }
+
+    .#{$namespace}-sidebar__activity-item {
+      width: auto;
+      display: inline-flex;
+      margin-bottom: 0;
+    }
+  }
+
+  &--activity-bar-bottom {
+    flex-direction: column-reverse;
+
+    .#{$namespace}-sidebar__activity-bar {
+      width: 100%;
+      flex-direction: row;
+      border-top: 1px solid getVar(color, border);
+      padding: getVar(inset, xs) getVar(inset, sm);
+    }
+
+    .#{$namespace}-sidebar__activity-item {
+      width: auto;
+      display: inline-flex;
+      margin-bottom: 0;
+    }
+  }
+
+  &--activity-bar-side {
+    .#{$namespace}-sidebar__activity-bar {
+      height: 100%;
+      flex-direction: column;
+      border-right: 1px solid getVar(color, border);
+    }
+  }
+
+  // 文件树节点元素
+  &__node {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+    transition: all getVar(duration, element-interaction);
+    border-radius: getVar(border-radius, sm);
+    overflow: hidden;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &.#{$namespace}-is-expanded {
+      & > .#{$namespace}-sidebar__node-content {
+        background-color: getVar(color, bg-active);
+
+        .#{$namespace}-sidebar__node-toggle {
+          transform: rotate(-90deg);
+          color: getVar(color, brand);
+        }
+      }
+
+      .#{$namespace}-sidebar__node-children {
+        animation: nodeChildrenEnter getVar(duration, element-interaction) ease-out;
+      }
+    }
+  }
+
+  &__node-content {
+    position: relative;
+    @include flex(flex-start, center);
+    padding: getVar(inset, sm);
+    gap: getVar(inset, sm);
+    overflow: hidden;
+    border-radius: inherit;
+    transition: all getVar(duration, element-interaction);
+    transform: translateX(0);
+    color: getVar(color, text);
+    background-color: transparent;
+
+    &:hover {
+      color: getVar(color, text-active);
+      background-color: transparent;
+      transform: translateX(4px);
+      box-shadow: none;
+    }
+
+    &:active {
+      transform: translateX(2px) scale(0.98);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent 0%, getVar(color, border-glass) 100%);
+      opacity: 0;
+      transition: opacity getVar(duration, element-interaction);
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+
+    &.#{$namespace}-is-selected {
+      background-color: getVar(color, bg-selected);
+      border-left: 3px solid getVar(color, brand-active);
+      padding-left: calc(getVar(inset, sm) - 3px);
+      transform: translateX(4px);
+      box-shadow: 0 0 0 2px rgba(getVar(color, brand-active), 0.3);
+      @include rippleAnim(getVar(color, brand-active), getVar(color, bg-selected));
+
+      &:hover {
+        background-color: getVar(color, bg-active);
+        transform: translateX(4px);
+      }
+
+      .#{$namespace}-sidebar__node-name {
+        font-weight: 600;
+        color: getVar(color, brand-active);
+      }
+    }
+  }
+
+  &__node-toggle {
+    transform: rotate(-90deg);
+    transition: all getVar(duration, element-interaction);
+    color: getVar(color, text-secondary);
+    
+    &:hover {
+      color: getVar(color, text);
+      transform: rotate(-90deg) scale(1.1);
+    }
+  }
+
+  &__node-name {
+    flex: 1;
+    margin: 0;
+    font-size: getVar(font-size, button);
+    font-weight: 500;
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__node-children {
+    @include flex(flex-start, stretch, column);
+    gap: getVar(inset, xs);
+    margin-left: getVar(inset, lg);
+    margin-top: getVar(inset, xs);
+    border-left: 2px solid getVar(color, border);
+    padding-left: getVar(inset, sm);
+    @include expandCollapseAnim("down");
+    overflow: hidden;
+    
+    .#{$namespace}-sidebar__node {
+      .#{$namespace}-sidebar__node-content {
+        padding: getVar(inset, xs) getVar(inset, sm);
+        
+        &:hover {
+          transform: translateX(2px);
+        }
+      }
+    }
+  }
+
+  // 文件树状态样式
+  &__node.#{$namespace}-is-has-children {
+    user-select: none;
+  }
+
+  &__node.#{$namespace}-is-disabled {
+    cursor: not-allowed;
+    opacity: getVar(color, opacity-disabled);
+    
+    .#{$namespace}-sidebar__node-content {
+      &:hover,
+      &:active {
+        color: getVar(color, text-disabled);
+        background-color: transparent;
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  // 子节点特殊样式
+  &__node {
+    .#{$namespace}-sidebar__node {
+      .#{$namespace}-sidebar__node-content {
+        margin-left: 0;
+        border-radius: getVar(border-radius, xs);
+        
+        &:hover {
+          background-color: getVar(color, bg-tertiary);
+        }
+      }
+      
+      &.#{$namespace}-is-selected {
+        .#{$namespace}-sidebar__node-content {
+          border-left: 3px solid getVar(color, brand-active);
+          padding-left: calc(getVar(inset, sm) - 3px);
+          background-color: getVar(color, bg-selected);
+          color: getVar(color, brand-active);
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+// 动画定义
+@keyframes nodeChildrenEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

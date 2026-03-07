@@ -1,0 +1,287 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-code {
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    box-shadow: getVar(color, box-shadow);
+    transition: all getVar(duration, element-interaction);
+    box-sizing: border-box;
+
+    &__header {
+        padding: getVar(inset, sm);
+        border-bottom: 1px solid getVar(color, border);
+        background-color: getVar(color, bg-secondary);
+        gap: getVar(inset, sm);
+    }
+
+    &__toolbar {
+        padding: getVar(inset, sm);
+        border-bottom: 1px solid getVar(color, border);
+    }
+
+    &__title {
+        color: getVar(color, text);
+        font-size: getVar(font-size, subheadline);
+        font-weight: getVar(font-weight, semibold);
+        margin: 0;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__title-wrap {
+        min-width: 0;
+        flex: 1;
+        gap: getVar(inset, sm);
+    }
+
+    &__diff-stats {
+        gap: getVar(inset, xs);
+    }
+
+    &__diff-stat {
+        font-family: getVar(font-family, mono);
+        font-size: getVar(font-size, caption);
+        font-weight: getVar(font-weight, semibold);
+        line-height: 1;
+    }
+
+    &__diff-stat-add {
+        color: getVar(color, success);
+    }
+
+    &__diff-stat-remove {
+        color: getVar(color, danger);
+    }
+
+    &__actions {
+        gap: getVar(inset, xs);
+    }
+
+    &__copy {
+        @include flex();
+        flex-shrink: 0;
+    }
+
+    &__language {
+        flex-shrink: 0;
+    }
+
+    &__content {
+        // 当使用Monaco Editor时，不设置padding，让Monaco自己控制
+        // padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
+        margin: 0;
+        overflow-x: auto;
+        transition: all getVar(duration, element-interaction);
+
+        // 只有非Monaco模式才设置padding
+        &:not(:has(.#{$namespace}-code__monaco-container)) {
+            padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
+        }
+    }
+
+    &__code {
+        display: block;
+        font-family: getVar(font-family, mono);
+        line-height: 1.6;
+        white-space: pre;
+        font-size: getVar(font-size, body);
+        color: getVar(color, text);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__editor-container {
+        position: relative;
+        width: 100%;
+        min-height: 100px;
+        overflow: hidden;
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__editor {
+        font-family: getVar(font-family, mono);
+        font-size: getVar(font-size, body);
+        width: 100%;
+        height: 100%;
+        min-height: 100px;
+        border: none;
+        outline: none;
+        resize: vertical;
+        color: transparent;
+        caret-color: getVar(color, text);
+        line-height: 1.6;
+        padding: getVar(inset);
+        box-sizing: border-box;
+        white-space: pre;
+        tab-size: 4;
+        position: relative;
+        z-index: 2;
+        transition: all getVar(duration, element-interaction);
+
+        &::placeholder {
+            color: getVar(color, text-tertiary);
+            opacity: 1;
+        }
+
+        &:focus {
+            caret-color: getVar(color, brand);
+        }
+    }
+
+    &--with-line-numbers {
+        .#{$namespace}-code__code,
+        .#{$namespace}-code__highlight,
+        .#{$namespace}-code__editor {
+            padding-left: 3.5rem;
+        }
+
+        .#{$namespace}-code__content {
+            position: relative;
+        }
+    }
+
+    &--editable {
+        .#{$namespace}-code__content {
+            // padding: 0;
+            position: relative;
+        }
+    }
+
+    &--disabled {
+        opacity: getVar(color, opacity-disabled);
+        cursor: not-allowed;
+
+        .#{$namespace}-code__editor {
+            cursor: not-allowed;
+            background-color: getVar(color, bg-tertiary);
+        }
+
+        .#{$namespace}-code__code {
+            cursor: not-allowed;
+        }
+    }
+
+    &__monaco-container {
+        width: 100%;
+        height: 100%;
+        min-height: 100px;
+        // transition: all getVar(duration, element-interaction);
+
+        .#{$namespace}-code--disabled & {
+            .monaco-editor {
+                opacity: getVar(color, opacity-disabled);
+                background-color: getVar(color, bg-tertiary) !important;
+
+                .view-lines {
+                    cursor: not-allowed !important;
+                }
+            }
+        }
+
+        .view-lines {
+            padding-left: 5px;
+        }
+    }
+
+    &--font-sm {
+        .#{$namespace}-code__title {
+            font-size: getVar(font-size, body);
+        }
+    }
+
+    &--font-default {
+        .#{$namespace}-code__title {
+            font-size: getVar(font-size, subheadline);
+        }
+    }
+
+    &--font-lg {
+        .#{$namespace}-code__title {
+            font-size: getVar(font-size, headline);
+        }
+    }
+}
+
+// 行高亮样式
+.highlight-line {
+    background-color: getVar(color, bg, active) !important;
+    position: relative;
+    padding-left: 5px !important;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background-color: getVar(color, brand);
+        z-index: 1;
+    }
+}
+
+.diff-line-add {
+    background-color: rgba(getVar(color, success), 0.14) !important;
+    position: relative;
+    padding-left: 5px !important;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background-color: getVar(color, success);
+        z-index: 1;
+    }
+}
+
+.diff-line-remove {
+    background-color: rgba(getVar(color, danger), 0.14) !important;
+    position: relative;
+    padding-left: 5px !important;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background-color: getVar(color, danger);
+        z-index: 1;
+    }
+}
+
+.diff-line-add-number {
+    color: getVar(color, success) !important;
+    font-weight: getVar(font-weight, semibold);
+}
+
+.diff-line-remove-number {
+    color: getVar(color, danger) !important;
+    font-weight: getVar(font-weight, semibold);
+}
+
+// 当前行高亮样式
+.current-line-highlight {
+    background-color: getVar(color, bg, active) !important;
+    position: relative;
+    padding-left: 5px !important;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background-color: getVar(color, brand);
+        z-index: 1;
+    }
+}

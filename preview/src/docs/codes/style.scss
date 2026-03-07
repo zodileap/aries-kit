@@ -1,0 +1,60 @@
+@use "@ari/theme/index.scss" as *;
+
+// 定义网格演示组件
+.grid-demo-box {
+  padding: getVar(padding, sm);
+  background: $z-ramp-blue-500;
+  color: $z-ramp-white-1000;
+  text-align: center;
+  height: 20px;
+  @include adaptive-border-radius("", 20px);
+  margin-bottom: getVar(margin, item);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // 响应式处理
+  @media screen and (max-width: 576px) {
+    font-size: getVar(font-size, caption);
+    padding: getVar(padding, sm) 4px;
+  }
+}
+
+.grid-demo-row {
+  margin-bottom: getVar(margin, element);
+  background-color: rgba($z-ramp-blue-500, 0.1);
+  padding: getVar(padding, sm);
+
+  .z-col {
+    // 偶数行背景色轻微区分
+    &:nth-child(even) {
+      .grid-demo-box {
+        background-color: $z-ramp-blue-400;
+      }
+    }
+  }
+
+  // 高度变体
+  &-height {
+    min-height: 160px;
+  }
+}
+
+// 时间轴演示样式
+.demo-title {
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+// 进度条演示样式
+.progress-demo-container {
+  margin: getVar(margin, element) 0;
+  padding: getVar(padding, md);
+  background-color: rgba($z-ramp-blue-50, 0.3);
+  @include adaptive-border-radius("", 8px);
+}
+
+.progress-custom-text {
+  font-weight: 600;
+  color: $z-ramp-blue-600;
+}

@@ -1,0 +1,403 @@
+@use "../global/index.scss" as *;
+
+// 菜单容器
+.#{$namespace}-menu {
+    width: 100%;
+    background-color: transparent;
+    border-radius: getVar(border-radius);
+    box-shadow: none;
+    border: none;
+    overflow: hidden;
+    transition: all getVar(duration, element-interaction);
+
+    &--vertical {
+        @include flex(flex-start, stretch, column);
+        gap: getVar(inset, xs);
+        padding: getVar(inset, xs);
+    }
+
+    &--horizontal {
+        @include flex(flex-start, center);
+        gap: getVar(inset, sm);
+        padding: getVar(inset, xs) getVar(inset, sm);
+        border-radius: getVar(border-radius, lg);
+
+        .#{$namespace}-menu-item {
+            width: auto;
+            display: inline-flex;
+            margin-bottom: 0;
+        }
+    }
+    
+    // 暗色模式变体
+    &--dark {
+        background-color: transparent;
+        border-color: getVar(color, border-active);
+        
+        .#{$namespace}-menu-item {
+            .#{$namespace}-menu-item__content {
+                color: getVar(color, text);
+
+                &:hover {
+                    background-color: getVar(color, bg-tertiary);
+                }
+            }
+        }
+    }
+
+    // 紧凑模式
+    &--compact {
+        .#{$namespace}-menu-item {
+            .#{$namespace}-menu-item__content {
+                padding: getVar(inset, xs);
+                gap: getVar(inset, xs);
+            }
+        }
+    }
+}
+
+// 菜单项
+.#{$namespace}-menu-item {
+    // 基础样式
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+    transition: all getVar(duration, element-interaction);
+    border-radius: getVar(border-radius, lg);
+    overflow: hidden;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    // 内容区域
+    &__content {
+        position: relative;
+        @include flex(flex-start, center);
+        padding: getVar(inset, sm);
+        gap: getVar(inset, sm);
+        overflow: hidden;
+        border-radius: inherit;
+        transition: all getVar(duration, element-interaction);
+        transform: translateX(0);
+        color: getVar(color, text);
+        background-color: transparent;
+
+        &:active {
+            transform: translateX(2px) scale(0.98);
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, getVar(color, border-glass) 100%);
+            opacity: 0;
+            transition: opacity getVar(duration, element-interaction);
+        }
+
+        &:hover {
+            color: getVar(color, text-active);
+            background-color: getVar(color, bg-tertiary);
+            transform: translateX(4px);
+            box-shadow: none;
+
+            &::before {
+                opacity: 1;
+            }
+        }
+
+        &.#{$namespace}-is-has-meta,
+        &.#{$namespace}-is-has-actions {
+            justify-content: flex-start;
+        }
+
+        &.#{$namespace}-is-hover-actions {
+            .#{$namespace}-menu-item__meta {
+                opacity: 1;
+                transition: opacity getVar(duration, element-interaction);
+            }
+
+            .#{$namespace}-menu-item__actions {
+                opacity: 0;
+                pointer-events: none;
+                transform: translateX(4px);
+            }
+
+            &:hover {
+                .#{$namespace}-menu-item__meta {
+                    opacity: 0;
+                }
+
+                .#{$namespace}-menu-item__actions {
+                    opacity: 1;
+                    pointer-events: auto;
+                    transform: translateX(0);
+                }
+            }
+        }
+
+        &.#{$namespace}-is-arrow-left {
+            .#{$namespace}-menu-item__arrow {
+                order: -1;
+                margin-right: getVar(inset, xs);
+            }
+        }
+
+        // 文本位置变体
+        $text-positions: (
+            "left": row-reverse,
+            "top": column-reverse,
+            "bottom": column,
+            "right": row
+        );
+
+        @each $position, $direction in $text-positions {
+            &.text-#{$position} {
+                flex-direction: $direction;
+            }
+        }
+
+        &::after {
+            z-index: -1;
+        }
+    }
+
+    // 文本块
+    &__label {
+        flex: 1;
+        margin: 0;
+        font-size: getVar(font-size, button);
+        font-weight: 500;
+        transition: all getVar(duration, element-interaction);
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__main {
+        min-width: 0;
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    &__meta {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        color: getVar(color, text-secondary);
+        white-space: nowrap;
+    }
+
+    &__actions {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        transition: opacity getVar(duration, element-interaction), transform getVar(duration, element-interaction);
+    }
+
+    // 图标
+    &__icon {
+        @include flex();
+        font-size: getVar(font-size, subheadline);
+        transition: all getVar(duration, element-interaction);
+        
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+
+    // 展开箭头
+    &__arrow {
+        transform: rotate(-90deg);
+        transition: all getVar(duration, element-interaction);
+        color: getVar(color, text-secondary);
+        
+        &:hover {
+            color: getVar(color, text);
+            transform: rotate(-90deg) scale(1.1);
+        }
+    }
+
+    // 子菜单容器
+    &__children {
+        @include flex(flex-start, stretch, column);
+        gap: getVar(inset, xs);
+        margin-left: getVar(inset, lg);
+        margin-top: getVar(inset, xs);
+        border-left: 2px solid getVar(color, border);
+        padding-left: getVar(inset, sm);
+        @include expandCollapseAnim("down");
+        overflow: hidden;
+        
+        & .#{$namespace}-menu-item {
+            .#{$namespace}-menu-item__content {
+                padding: getVar(inset, xs) getVar(inset, sm);
+                
+                &:hover {
+                    transform: translateX(2px);
+                }
+            }
+        }
+    }
+
+    // 状态修饰
+    &.#{$namespace}-is-group {
+        cursor: default;
+        pointer-events: none;
+
+        .#{$namespace}-menu-item__content {
+            padding: getVar(inset, xs) getVar(inset, sm);
+            background-color: transparent !important;
+            color: getVar(color, text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: getVar(font-size, caption);
+            letter-spacing: 0.5px;
+            
+            &:hover,
+            &:active {
+                background-color: transparent !important;
+                transform: none !important;
+                box-shadow: none !important;
+            }
+        }
+    }
+
+    &.#{$namespace}-is-selected {
+        .#{$namespace}-menu-item__content {
+            background-color: getVar(color, bg-selected);
+            border-left: 3px solid getVar(color, brand-active);
+            padding-left: calc(getVar(inset, sm) - 3px);
+            // 移除左边框，用阴影效果表示选中状态
+            transform: translateX(4px);
+            box-shadow: 0 0 0 2px rgba(getVar(color, brand-active), 0.3);
+            @include rippleAnim(getVar(color, brand-active), getVar(color, bg-selected));
+            
+            &:hover {
+                background-color: getVar(color, bg-active);
+                transform: translateX(4px);
+            }
+        }
+
+        .#{$namespace}-menu-item__label {
+            font-weight: 600;
+            color: getVar(color, brand-active);
+        }
+        
+        .#{$namespace}-menu-item__icon {
+            color: getVar(color, brand-active);
+            transform: scale(1.1);
+        }
+    }
+
+    &.#{$namespace}-is-disabled {
+        cursor: not-allowed;
+        opacity: getVar(color, opacity-disabled);
+        
+        .#{$namespace}-menu-item__content {
+            &:hover,
+            &:active {
+                color: getVar(color, text-disabled);
+                background-color: transparent;
+                transform: none;
+                box-shadow: none;
+            }
+        }
+    }
+
+    &.#{$namespace}-is-has-children {
+        user-select: none;
+    }
+
+    &.#{$namespace}-is-open {
+        .#{$namespace}-menu-item__arrow {
+            transform: rotate(90deg);
+            color: getVar(color, brand);
+        }
+
+        .#{$namespace}-menu-item__children {
+            @extend .is-expanded;
+            animation: menuChildrenEnter getVar(duration, element-interaction) ease-out;
+        }
+        
+    }
+    
+    // 子菜单项特殊样式
+    .#{$namespace}-menu-item {
+        .#{$namespace}-menu-item__content {
+            margin-left: 0;
+            border-radius: getVar(border-radius, lg);
+            
+            &:hover {
+                background-color: getVar(color, bg-tertiary);
+            }
+        }
+        
+        &.#{$namespace}-is-selected {
+            .#{$namespace}-menu-item__content {
+                border-left: 3px solid getVar(color, brand-active);
+                padding-left: calc(getVar(inset, sm) - 3px);
+                background-color: getVar(color, bg-selected);
+                color: getVar(color, brand-active);
+                font-weight: 600;
+            }
+        }
+    }
+
+    // 危险项样式
+    &.#{$namespace}-is-danger {
+        .#{$namespace}-menu-item__content {
+            &:hover {
+                color: getVar(color, text-danger);
+                background-color: rgba(getVar(color, text-danger), 0.1);
+            }
+        }
+        
+        .#{$namespace}-menu-item__icon {
+            color: getVar(color, text-danger);
+        }
+    }
+}
+
+// 菜单分割线
+.#{$namespace}-menu-divider {
+    height: 1px;
+    background-color: getVar(color, border);
+    margin: getVar(inset, xs) 0;
+    border: none;
+}
+
+// 菜单组标题
+.#{$namespace}-menu-group {
+    &__title {
+        padding: getVar(inset, xs) getVar(inset, sm);
+        color: getVar(color, text-secondary);
+        font-size: getVar(font-size, caption);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+    }
+    
+    &__content {
+        padding-left: getVar(inset, sm);
+    }
+}
+
+// 动画定义
+@keyframes menuChildrenEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

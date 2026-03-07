@@ -1,0 +1,39 @@
+import React, { Suspense } from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AriApp, setAppConfig } from '@ari/init';
+import Layout from './layout';
+import { menuConfig, routes } from './config';
+import { Navigation } from './layout/header';
+import "@ari/theme/components/index.scss"
+const Preview = () => {
+    return (
+        <BrowserRouter>
+            <Layout menu={menuConfig}>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Routes>
+                        {routes.map(route => (
+                            <Route
+                                key={route.path}
+                                path={route.path}
+                                element={<route.component />}
+                            />
+                        ))}
+                    </Routes>
+                </Suspense>
+            </Layout>
+        </BrowserRouter>
+    );
+};
+
+const appConfig = setAppConfig({
+    localImgSrc: "/assets/images",
+});
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+        <AriApp loadingAnimation={false} appConfig={appConfig}>
+            <Preview />
+        </AriApp>
+    </React.StrictMode>
+);

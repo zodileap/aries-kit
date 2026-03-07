@@ -1,0 +1,181 @@
+@use "../global/index.scss" as *;
+
+// calendar专用按钮基础样式
+@mixin calendar-button($padding: getVar(inset, sm)) {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  padding: $padding;
+  border-radius: getVar(border-radius, sm);
+  @include interactive();
+}
+
+.#{$namespace}-calendar {
+    display: flex;
+    flex-direction: column;
+    background-color: getVar(color, bg);
+    border-radius: getVar(border-radius);
+    box-shadow: getVar(box-shadow, box-shadow-popover);
+    width: getVar(element-size, content-sm);
+    user-select: none;
+
+    &.#{$namespace}-is-disabled {
+        cursor: not-allowed;
+
+        // 共享禁用样式的元素
+        .#{$namespace}-calendar__btn,
+        .#{$namespace}-calendar__title-btn,
+        .#{$namespace}-calendar__day,
+        .#{$namespace}-calendar__month,
+        .#{$namespace}-calendar__year,
+        .#{$namespace}-calendar__today-btn {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    }
+
+    &__header {
+        @include flex(space-between, center);
+        padding: getVar(inset);
+        border-bottom: 1px solid getVar(color, border);
+    }
+
+    &__header-left,
+    &__header-right {
+        @include flex(center, center);
+    }
+
+    &__header-title {
+        @include flex(center, center);
+        font-weight: getVar(font-weight, lg);
+        cursor: pointer;
+    }
+
+    &__btn {
+        @include flex();
+        @include calendar-button(0);
+        width: getVar(element-size, sm);
+        height: getVar(element-size, sm);
+    }
+
+    &__title-btn {
+        @include calendar-button(0 getVar(inset, xs));
+        font-weight: getVar(font-weight, semibold);
+    }
+
+    &__year-range {
+        font-weight: getVar(font-weight, semibold);
+    }
+
+    &__body {
+        padding: getVar(inset, sm);
+    }
+
+    &__weekdays {
+        @include grid(7, 0);
+        margin-bottom: getVar(inset, xs);
+    }
+
+    &__weekday {
+        text-align: center;
+        font-size: getVar(font-size, caption);
+        color: getVar(color, text-secondary);
+        padding: getVar(inset, xxs) 0;
+    }
+
+    &__days {
+        @include grid(7, getVar(inset, xxs));
+    }
+
+    &__day {
+        @include flex();
+        @include interactive();
+        @include selectable();
+        height: getVar(element-size, "");
+        font-size: getVar(font-size, body);
+        border-radius: getVar(border-radius, sm);
+
+        &.#{$namespace}-is-other-month {
+            color: getVar(color, text-tertiary);
+        }
+
+        &.#{$namespace}-is-today {
+            font-weight: getVar(font-weight, bold);
+            color: getVar(color, brand);
+        }
+        
+        // 当同时是今天和选中状态时，确保文字颜色清晰可见
+        &.#{$namespace}-is-selected.#{$namespace}-is-today {
+            color: getVar(color, text-on-brand) !important;
+            font-weight: getVar(font-weight, bold);
+        }
+    }
+
+    // 日期形状修饰符
+    &__day--shape-circle {
+        border-radius: 50%;
+    }
+
+    &__day--shape-square {
+        border-radius: getVar(border-radius, sm);
+    }
+
+    // 共享容器样式的元素
+    &__months,
+    &__years {
+        @include grid(3, getVar(inset, xs), getVar(inset));
+    }
+
+    // 共享交互样式的元素
+    &__month,
+    &__year {
+        @include flex();
+        @include interactive();
+        @include selectable();
+        height: getVar(element-size, xl);
+        font-size: getVar(font-size, body);
+        border-radius: getVar(border-radius, sm);
+    }
+
+    // year元素特有的样式
+    &__year {
+        &.#{$namespace}-is-other-decade {
+            color: getVar(color, text-tertiary);
+        }
+    }
+
+    // 月份和年份的圆形修饰符
+    &__month--shape-circle {
+        border-radius: getVar(border-radius, lg);
+    }
+    
+    &__year--shape-circle {
+        border-radius: getVar(border-radius, lg);
+    }
+
+    // 月份和年份的方形修饰符
+    &__month--shape-square {
+        border-radius: getVar(border-radius, sm);
+    }
+    
+    &__year--shape-square {
+        border-radius: getVar(border-radius, sm);
+    }
+
+    &__footer {
+        @include flex(center, center);
+        padding: getVar(inset, sm);
+        border-top: 1px solid getVar(color, border);
+    }
+
+    &__today-btn {
+        @include calendar-button(getVar(inset, xxs) getVar(inset, xs));
+        color: getVar(color, brand);
+        font-size: getVar(font-size, button);
+
+        &:disabled {
+            color: getVar(color, text-disabled);
+            cursor: not-allowed;
+        }
+    }
+}

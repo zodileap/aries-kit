@@ -1,0 +1,676 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-time-picker {
+    position: relative;
+    display: inline-flex;
+    width: 100%;
+    max-width: 240px;
+
+    // 时间选择器输入相关元素
+    &__input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        border: 1px solid getVar(color, border);
+        border-radius: getVar(border-radius);
+        background: linear-gradient(135deg, 
+            getVar(color, bg) 0%, 
+            getVar(color, bg-secondary) 100%);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all getVar(duration, element-interaction);
+
+        &:hover:not(.is-disabled) {
+            border-color: getVar(color, brand);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            transform: translateY(0);
+        }
+
+        &:focus-within:not(.is-disabled) {
+            border-color: getVar(color, brand);
+            box-shadow: 0 0 0 3px rgba(getVar(color, brand), 0.2);
+            transform: translateY(0);
+        }
+
+        &.#{$namespace}-is-disabled {
+            background: linear-gradient(135deg, 
+                getVar(color, bg-secondary) 0%, 
+                rgba(getVar(color, bg-secondary), 0.8) 100%);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+    }
+
+    &__prefix-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: getVar(color, text-secondary);
+        padding-left: getVar(inset, sm);
+        transition: all getVar(duration, element-interaction);
+
+        &:hover {
+            color: getVar(color, brand);
+        }
+    }
+
+    &__input {
+        flex: 1;
+        padding: getVar(inset, sm);
+        border: none;
+        background-color: transparent;
+        font-size: getVar(font-size, body);
+        color: getVar(color, text);
+        width: 100%;
+        transition: all getVar(duration, element-interaction);
+
+        &:focus {
+            outline: none;
+            color: getVar(color, brand);
+        }
+
+        &::placeholder {
+            color: getVar(color, text-secondary);
+            transition: color getVar(duration, element-interaction);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            color: getVar(color, text-disabled);
+        }
+    }
+
+    &__suffix-icons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: getVar(color, text-secondary);
+        padding-right: getVar(inset, sm);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__clear-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-right: 4px;
+        visibility: hidden;
+        color: getVar(color, text-tertiary);
+        border-radius: getVar(border-radius, sm);
+        padding: getVar(inset, xs);
+        transition: all getVar(duration, element-interaction);
+
+        &:hover {
+            color: getVar(color, danger);
+            background-color: rgba(getVar(color, danger), 0.1);
+            transform: scale(1.1);
+        }
+    }
+
+    &__dropdown-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all getVar(duration, element-interaction);
+        color: getVar(color, text-secondary);
+        border-radius: getVar(border-radius, sm);
+        padding: getVar(inset, xs);
+
+        &:hover {
+            color: getVar(color, brand);
+            background-color: rgba(getVar(color, brand), 0.1);
+        }
+    }
+
+    // 弹出面板相关元素
+    &__popup {
+        position: absolute;
+        z-index: 1000;
+        margin-top: 4px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        transition: all getVar(duration, element-interaction);
+        border-radius: getVar(border-radius);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    &__panel {
+        border-radius: getVar(border-radius);
+        background: linear-gradient(135deg, 
+            getVar(color, bg) 0%, 
+            getVar(color, bg-secondary) 100%);
+        padding: getVar(inset);
+        border: 1px solid rgba(getVar(color, border), 0.3);
+        backdrop-filter: blur(8px);
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(getVar(color, bg-tertiary), 0.3) 0%,
+                transparent 50%,
+                rgba(getVar(color, bg-secondary), 0.2) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+    }
+
+    &__columns {
+        display: flex;
+        align-items: stretch;
+        justify-content: flex-start;
+        height: 216px;
+        position: relative;
+        z-index: 1;
+    }
+
+    &__column {
+        display: flex;
+        align-items: stretch;
+        justify-content: flex-start;
+        flex-direction: column;
+        flex: 1;
+        height: 100%;
+        text-align: center;
+        overflow: hidden;
+        position: relative;
+        border-radius: getVar(border-radius, sm);
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, bg-tertiary), 0.5) 0%,
+            rgba(getVar(color, bg), 0.8) 100%);
+        margin: getVar(inset, xs);
+
+        &:not(:last-child) {
+            margin-right: getVar(inset, sm);
+        }
+    }
+
+    &__column-title {
+            font-size: getVar(font-size, footnote);
+            color: getVar(color, text-secondary);
+            margin-bottom: getVar(inset, xs);
+            text-align: center;
+            font-weight: getVar(font-weight, lg);
+            padding: getVar(inset, xs);
+            background: linear-gradient(135deg, 
+                rgba(getVar(color, brand), 0.1) 0%,
+                rgba(getVar(color, brand), 0.05) 100%);
+            border-radius: getVar(border-radius, sm);
+        }
+
+    &__column-list {
+            flex: 1;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+    &__column-item {
+            padding: getVar(inset, xs) 0;
+            cursor: pointer;
+            font-size: getVar(font-size, body);
+            color: getVar(color, text);
+            transition: all getVar(duration, element-interaction);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+            border-radius: getVar(border-radius, sm);
+            margin: 2px;
+            position: relative;
+
+        &:hover {
+                background: linear-gradient(135deg, 
+                    getVar(color, bg-active) 0%,
+                    rgba(getVar(color, brand), 0.1) 100%);
+                transform: translateX(2px);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+
+        &.#{$namespace}-is-selected {
+                color: getVar(color, text-on-brand);
+                font-weight: getVar(font-weight, lg);
+                background: linear-gradient(135deg, 
+                    getVar(color, brand) 0%,
+                    getVar(color, brand-active) 100%);
+                box-shadow: 0 2px 6px rgba(getVar(color, brand), 0.3);
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    left: -4px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 3px;
+                    height: 16px;
+                    background-color: getVar(color, brand);
+                    border-radius: getVar(border-radius, sm);
+                }
+            }
+
+        &.#{$namespace}-is-disabled {
+                color: getVar(color, text-disabled);
+                cursor: not-allowed;
+                opacity: 0.5;
+
+                &:hover {
+                    background-color: transparent;
+                    transform: none;
+                }
+            }
+        }
+
+    &__period-column {
+            width: 60px;
+            min-width: 60px;
+        }
+
+    &__column-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: getVar(color, text-secondary);
+            padding: 0 getVar(inset, xs);
+            height: 100%;
+            font-size: getVar(font-size, title-3);
+            font-weight: getVar(font-weight, bold);
+        }
+    
+
+    // 底部操作区域相关元素
+    &__footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: getVar(inset, sm);
+            border-top: 1px solid rgba(getVar(color, border), 0.3);
+            margin-top: getVar(inset, sm);
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(4px);
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -#{getVar(inset)};
+                right: -#{getVar(inset)};
+                height: 1px;
+                background: linear-gradient(90deg, 
+                    transparent 0%,
+                    rgba(getVar(color, brand), 0.3) 50%,
+                    transparent 100%);
+            }
+        }
+
+    &__now-btn {
+            font-size: getVar(font-size, footnote);
+            color: getVar(color, brand);
+            background: none;
+            border: none;
+            padding: getVar(inset, xs) getVar(inset, sm);
+            cursor: pointer;
+            border-radius: getVar(border-radius, sm);
+            transition: all getVar(duration, element-interaction);
+            position: relative;
+            
+        &:hover {
+                color: getVar(color, brand-active);
+                background: linear-gradient(135deg, 
+                    rgba(getVar(color, brand), 0.1) 0%,
+                    rgba(getVar(color, brand), 0.05) 100%);
+                transform: translateY(0);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+            
+        &:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(getVar(color, brand), 0.2);
+            }
+
+        &:active {
+                transform: translateY(0) scale(0.98);
+            }
+        }
+
+    &__confirm-btn {
+            font-size: getVar(font-size, footnote);
+            color: getVar(color, text-on-brand);
+            background: linear-gradient(135deg, 
+                getVar(color, brand) 0%,
+                getVar(color, brand-active) 100%);
+            border: none;
+            border-radius: getVar(border-radius, sm);
+            padding: getVar(inset, xs) getVar(inset, sm);
+            cursor: pointer;
+            transition: all getVar(duration, element-interaction);
+            box-shadow: 0 2px 4px rgba(getVar(color, brand), 0.3);
+            
+        &:hover {
+                background: linear-gradient(135deg, 
+                    getVar(color, brand-active) 0%,
+                    getVar(color, brand) 100%);
+                transform: translateY(0);
+                box-shadow: 0 4px 8px rgba(getVar(color, brand), 0.4);
+            }
+            
+        &:focus {
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(getVar(color, brand), 0.3);
+            }
+
+        &:active {
+                transform: translateY(0) scale(0.98);
+                box-shadow: 0 1px 2px rgba(getVar(color, brand), 0.3);
+            }
+        }
+    
+
+    // 交互状态
+    &:hover .#{$namespace}-time-picker__clear-icon {
+        visibility: visible;
+    }
+
+    // 状态修饰符
+    &.#{$namespace}-is-popup-visible {
+        .#{$namespace}-time-picker__dropdown-icon {
+            transform: rotate(180deg);
+            color: getVar(color, brand);
+        }
+
+        .#{$namespace}-time-picker__popup {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .#{$namespace}-time-picker__input-wrapper {
+            border-color: getVar(color, brand);
+            box-shadow: 0 0 0 3px rgba(getVar(color, brand), 0.15);
+        }
+    }
+
+    &.#{$namespace}-is-has-value {
+        .#{$namespace}-time-picker__clear-icon {
+            visibility: visible;
+        }
+    }
+
+    // 尺寸变体
+    &--size-small {
+        max-width: 200px;
+
+        .#{$namespace}-time-picker__input {
+            padding: getVar(inset, xs);
+            font-size: getVar(font-size, footnote);
+        }
+
+        .#{$namespace}-time-picker__prefix-icon,
+        .#{$namespace}-time-picker__suffix-icons {
+            font-size: getVar(font-size, footnote);
+            padding: getVar(inset, xs);
+        }
+
+        .#{$namespace}-time-picker__panel {
+            padding: getVar(inset, sm);
+        }
+
+        .#{$namespace}-time-picker__columns {
+            height: 180px;
+        }
+    }
+
+    &--size-medium {
+        max-width: 240px;
+
+        .#{$namespace}-time-picker__input {
+            padding: getVar(inset, sm);
+            font-size: getVar(font-size, body);
+        }
+
+        .#{$namespace}-time-picker__prefix-icon,
+        .#{$namespace}-time-picker__suffix-icons {
+            font-size: getVar(font-size, body);
+            padding: getVar(inset, sm);
+        }
+
+        .#{$namespace}-time-picker__panel {
+            padding: getVar(inset);
+        }
+
+        .#{$namespace}-time-picker__columns {
+            height: 216px;
+        }
+    }
+
+    &--size-large {
+        max-width: 280px;
+
+        .#{$namespace}-time-picker__input {
+            padding: getVar(inset);
+            font-size: getVar(font-size, callout);
+        }
+
+        .#{$namespace}-time-picker__prefix-icon,
+        .#{$namespace}-time-picker__suffix-icons {
+            font-size: getVar(font-size, callout);
+            padding: getVar(inset);
+        }
+
+        .#{$namespace}-time-picker__panel {
+            padding: getVar(inset, lg);
+        }
+
+        .#{$namespace}-time-picker__columns {
+            height: 252px;
+        }
+    }
+
+    // 位置变体
+    &--placement-top {
+        .#{$namespace}-time-picker__popup {
+            bottom: 100%;
+            margin-bottom: 6px;
+            margin-top: 0;
+            transform: translateY(-8px);
+        }
+        
+        &.#{$namespace}-is-popup-visible .#{$namespace}-time-picker__popup {
+            transform: translateY(0);
+        }
+    }
+
+    &--placement-top-start {
+        .#{$namespace}-time-picker__popup {
+            bottom: 100%;
+            left: 0;
+            margin-bottom: 6px;
+            margin-top: 0;
+            transform: translateY(-8px);
+        }
+        
+        &.#{$namespace}-is-popup-visible .#{$namespace}-time-picker__popup {
+            transform: translateY(0);
+        }
+    }
+
+    &--placement-top-end {
+        .#{$namespace}-time-picker__popup {
+            bottom: 100%;
+            right: 0;
+            margin-bottom: 6px;
+            margin-top: 0;
+            transform: translateY(-8px);
+        }
+        
+        &.#{$namespace}-is-popup-visible .#{$namespace}-time-picker__popup {
+            transform: translateY(0);
+        }
+    }
+
+    // 自动定位时覆盖位置变体的样式
+    &.#{$namespace}-is-show-above {
+        &--placement-bottom,
+        &--placement-bottom-start,
+        &--placement-bottom-end {
+            .#{$namespace}-time-picker__popup {
+                top: auto !important;
+                bottom: 100% !important;
+                margin-bottom: 4px !important;
+                margin-top: 0 !important;
+                transform: translateY(-8px) !important;
+            }
+            
+            &.#{$namespace}-is-popup-visible .#{$namespace}-time-picker__popup {
+                transform: translateY(0) !important;
+            }
+        }
+    }
+
+    &--placement-bottom {
+        .#{$namespace}-time-picker__popup {
+            top: 100%;
+            margin-top: 6px;
+            margin-bottom: 0;
+        }
+    }
+
+    &--placement-bottom-start {
+        .#{$namespace}-time-picker__popup {
+            top: 100%;
+            left: 0;
+            margin-top: 6px;
+            margin-bottom: 0;
+        }
+    }
+
+    &--placement-bottom-end {
+        .#{$namespace}-time-picker__popup {
+            top: 100%;
+            right: 0;
+            margin-top: 6px;
+            margin-bottom: 0;
+        }
+    }
+
+    // 紧凑模式
+    &.#{$namespace}-is-compact {
+        .#{$namespace}-time-picker__popup {
+            max-height: 240px;
+        }
+        
+        .#{$namespace}-time-picker__panel {
+            padding: getVar(inset, xs);
+        }
+        
+        .#{$namespace}-time-picker__columns {
+            height: 160px;
+            min-height: 160px;
+        }
+        
+        .#{$namespace}-time-picker__column-title {
+            padding: getVar(inset, xxs);
+            font-size: getVar(font-size, caption);
+            margin-bottom: getVar(inset, xxs);
+        }
+        
+        .#{$namespace}-time-picker__column-item {
+            height: 28px;
+            font-size: getVar(font-size, footnote);
+            padding: getVar(inset, xxs) 0;
+        }
+        
+        .#{$namespace}-time-picker__footer {
+            padding: getVar(inset, xs);
+        }
+        
+        .#{$namespace}-time-picker__now-btn,
+        .#{$namespace}-time-picker__confirm-btn {
+            padding: getVar(inset, xxs) getVar(inset, xs);
+            font-size: getVar(font-size, caption);
+        }
+    }
+
+    // 上方显示状态
+    &.#{$namespace}-is-show-above {
+        .#{$namespace}-time-picker__popup {
+            top: auto !important;
+            bottom: 100% !important;
+            margin-bottom: 4px !important;
+            margin-top: 0 !important;
+            transform: translateY(-8px) !important;
+        }
+        
+        // 当弹窗可见时，向上动画到位置0
+        &.#{$namespace}-is-popup-visible {
+            .#{$namespace}-time-picker__popup {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transform: translateY(0) !important;
+            }
+        }
+    }
+
+    // 嵌入模式
+    &.#{$namespace}-is-embedded {
+        position: static;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        
+        .#{$namespace}-time-picker__panel {
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            
+            &::before {
+                display: none;
+            }
+        }
+        
+        .#{$namespace}-time-picker__columns {
+            background: transparent;
+            width: 100%;
+            justify-content: space-between;
+            min-width: 240px;
+            flex: 1;
+        }
+        
+        .#{$namespace}-time-picker__column {
+            background: linear-gradient(135deg, 
+                rgba(getVar(color, bg-tertiary), 0.3) 0%,
+                rgba(getVar(color, bg), 0.6) 100%);
+            min-width: 65px;
+            flex: 1;
+        }
+        
+        .#{$namespace}-time-picker__column-divider {
+            min-width: 20px;
+            flex: none;
+        }
+        
+        .#{$namespace}-time-picker__period-column {
+            min-width: 50px;
+            flex: 0 0 50px;
+        }
+    }
+}

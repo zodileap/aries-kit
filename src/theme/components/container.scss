@@ -1,0 +1,140 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-container {
+  padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
+  box-sizing: border-box;
+  position: relative;
+  transition: all getVar(duration, element-interaction);
+
+  > * {
+    flex-shrink: 0;
+  }
+
+  // 对齐方式变体
+  &--center {
+    @include flex();
+  }
+
+  &--topLeft {
+    @include flex(flex-start, flex-start, column);
+  }
+
+  &--top {
+    @include flex(flex-start, center, column);
+  }
+
+  &--topRight {
+    @include flex(flex-start, flex-end, column);
+  }
+
+  &--left {
+    @include flex(center, flex-start, column);
+  }
+
+  &--right {
+    @include flex(center, flex-end, column);
+  }
+
+  &--bottomLeft {
+    @include flex(flex-end, flex-start, column);
+  }
+
+  &--bottom {
+    @include flex(flex-end, center, column);
+  }
+
+  &--bottomRight {
+    @include flex(flex-end, flex-end, column);
+  }
+
+  // 背景色变体
+  &--bg-solid {
+    background-color: getVar(color, bg-solid);
+  }
+
+  &--bg-glass {
+    background-color: getVar(color, bg-glass);
+  }
+
+  // 材质变体
+  &--solid {
+    background-color: getVar(color, bg-solid);
+    border: 1px solid getVar(color, border);
+
+    &.#{$namespace}-container--dashed {
+      border-style: dashed;
+    }
+
+    &.#{$namespace}-container--dotted {
+      border-style: dotted;
+    }
+  }
+
+  &--glass {
+    background-color: getVar(color, bg-glass);
+    border: 1px solid getVar(color, border-glass);
+
+    &.#{$namespace}-container--dashed {
+      border-style: dashed;
+    }
+
+    &.#{$namespace}-container--dotted {
+      border-style: dotted;
+    }
+  }
+
+  // 边框样式修饰符
+  &--dashed {
+    border-style: dashed;
+  }
+
+  &--dotted {
+    border-style: dotted;
+  }
+
+  // 状态变体
+  &.#{$namespace}-is-ghost {
+    background-color: transparent;
+  }
+
+  &.#{$namespace}-is-blur {
+    background-color: getVar(color, bg-opacity-blur);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  &.#{$namespace}-is-border-radius {
+    border-radius: getVar(border-radius, container);
+  }
+
+  &.#{$namespace}-is-shadow-always {
+    box-shadow: getVar(color, box-shadow);
+  }
+
+  &.#{$namespace}-is-shadow-active {
+    &:hover {
+      box-shadow: getVar(color, box-shadow-popover);
+    }
+
+    &.#{$namespace}-is-hover-transform:hover {
+      transform: translateY(getVar(transform, hover-translate-y));
+    }
+  }
+
+  &.#{$namespace}-is-fill {
+    width: 100%;
+    height: 100%;
+  }
+
+  &.#{$namespace}-is-border {
+    border: 1px solid getVar(color, border);
+
+    &.#{$namespace}-container--dashed {
+      border-style: dashed;
+    }
+
+    &.#{$namespace}-container--dotted {
+      border-style: dotted;
+    }
+  }
+}

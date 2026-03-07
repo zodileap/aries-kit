@@ -1,0 +1,47 @@
+// 转发mixins
+@forward "config";
+@forward "function";
+@forward "var";
+
+@use "sass:map";
+@use "sass:string";
+@use "function" as *;
+@use "config" as *;
+@use "../global/var" as var;
+
+/**
+ * 响应式断点mixins
+ * 
+ * 用于在不同设备尺寸下应用样式
+ * 
+ * Params:
+ * 
+ *   - key: 断点名称 (xs, sm, md, lg, xl, xxl)
+ *   - map: 断点映射表（可选，默认使用全局断点配置）
+ * 
+ * Example:
+ * 
+ * ```scss
+ * .component {
+ *   width: 100%;
+ *   
+ *   @include res(sm) {
+ *     width: 50%;
+ *   }
+ *   
+ *   @include res(lg) {
+ *     width: 25%;
+ *   }
+ * }
+ * ```
+ */
+@mixin res($key, $map: var.$breakpoints) {
+  // 遍历断点Map,如果存在则返回
+  @if map.has-key($map, $key) {
+    @media #{string.unquote(map.get($map, $key))} {
+      @content;
+    }
+  } @else {
+    @warn "未定义的断点: `#{$key}` in `#{$map}`";
+  }
+}

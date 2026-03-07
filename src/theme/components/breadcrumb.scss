@@ -1,0 +1,225 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-breadcrumb {
+  @include flex(flex-start, center);
+  font-size: getVar(font-size, subheadline);
+  color: getVar(color, text-secondary);
+  padding: getVar(inset, xs) 0;
+  transition: all getVar(duration, element-interaction);
+  
+  &__list {
+    @include flex(flex-start, center);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  
+  &__item {
+    @include flex(flex-start, center);
+    position: relative;
+    transition: all getVar(duration, element-interaction);
+    
+    &.#{$namespace}-is-disabled {
+      color: getVar(color, text-tertiary);
+      cursor: not-allowed;
+      opacity: getVar(color, opacity-disabled);
+    }
+    
+    &.#{$namespace}-is-last {
+      color: getVar(color, text);
+      font-weight: getVar(font-weight, semibold);
+      
+      .#{$namespace}-breadcrumb__link {
+        background-color: getVar(color, brand-secondary);
+        border-radius: getVar(border-radius, xs);
+        padding: getVar(inset, xs) getVar(inset, sm);
+        color: getVar(color, brand);
+        pointer-events: none;
+      }
+    }
+  }
+  
+  &__link {
+    @include flex(flex-start, center);
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all getVar(duration, element-interaction);
+    padding: getVar(inset, xs) getVar(inset, sm);
+    border-radius: getVar(border-radius, xs);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: getVar(color, brand);
+      opacity: 0;
+      transition: all getVar(duration, element-interaction);
+      z-index: -1;
+    }
+    
+    &:hover {
+      color: getVar(color, brand-active);
+      transform: translateY(getVar(transform, hover-translate-y));
+      
+      &::before {
+        opacity: 0.1;
+      }
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  &__icon {
+    margin-right: getVar(inset, xs);
+    @include flex();
+    font-size: getVar(font-size, body);
+    transition: all getVar(duration, element-interaction);
+    
+    &:hover {
+      color: getVar(color, brand-active);
+      transform: scale(1.1);
+    }
+  }
+  
+  &__text {
+    margin: 0;
+    line-height: 1.4;
+    transition: all getVar(duration, element-interaction);
+    
+    // 继承父元素的hover颜色变化
+    .#{$namespace}-breadcrumb__link:hover & {
+      color: getVar(color, brand-active);
+      font-weight: getVar(font-weight, semibold);
+    }
+  }
+  
+  &__separator {
+    margin: 0 getVar(inset, xs);
+    color: getVar(color, text-tertiary);
+    @include flex();
+    font-size: getVar(font-size, caption);
+    transition: all getVar(duration, element-interaction);
+    opacity: 0.7;
+    
+    &:hover {
+      opacity: 1;
+      color: getVar(color, brand);
+    }
+  }
+  
+  // 尺寸变体
+  &--small {
+    font-size: getVar(font-size, caption);
+    
+    .#{$namespace}-breadcrumb__link {
+      padding: getVar(inset, xs);
+    }
+    
+    .#{$namespace}-breadcrumb__icon {
+      font-size: getVar(font-size, callout);
+    }
+  }
+  
+  &--large {
+    font-size: getVar(font-size, body);
+    
+    .#{$namespace}-breadcrumb__link {
+      padding: getVar(inset, sm) getVar(inset);
+    }
+    
+    .#{$namespace}-breadcrumb__icon {
+      font-size: getVar(font-size, subheadline);
+    }
+  }
+  
+  // 分隔符样式变体
+  &--slash {
+    .#{$namespace}-breadcrumb__separator {
+      &::before {
+        content: '/';
+      }
+    }
+  }
+  
+  &--arrow {
+    .#{$namespace}-breadcrumb__separator {
+      &::before {
+        content: '→';
+      }
+    }
+  }
+  
+  &--dot {
+    .#{$namespace}-breadcrumb__separator {
+      &::before {
+        content: '•';
+      }
+    }
+  }
+  
+  // 背景变体
+  &--background {
+    background-color: getVar(color, bg-secondary);
+    border-radius: getVar(border-radius);
+    padding: getVar(inset, sm);
+    border: 1px solid getVar(color, border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    
+    .#{$namespace}-breadcrumb__item.#{$namespace}-is-last {
+      .#{$namespace}-breadcrumb__link {
+        background-color: getVar(color, bg-solid);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+  
+  // 紧凑模式
+  &--compact {
+    .#{$namespace}-breadcrumb__separator {
+      margin: 0 getVar(inset, xs);
+    }
+    
+    .#{$namespace}-breadcrumb__link {
+      padding: getVar(inset, xs);
+    }
+  }
+  
+  // 可滚动模式
+  &--scrollable {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    
+    .#{$namespace}-breadcrumb__list {
+      flex-wrap: nowrap;
+      min-width: max-content;
+    }
+    
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: getVar(color, bg-tertiary);
+      border-radius: 2px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: getVar(color, border);
+      border-radius: 2px;
+      
+      &:hover {
+        background: getVar(color, brand);
+      }
+    }
+  }
+}

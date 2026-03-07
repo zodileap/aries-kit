@@ -1,0 +1,562 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-slider {
+    position: relative;
+    @include flex(flex-start, center);
+    width: 100%;
+    font-size: getVar(font-size, button);
+    line-height: 1.5;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all getVar(duration, element-interaction);
+    padding-top: 40px; // 为值标签预留空间
+    
+    // 滑轨
+    &__rail {
+        position: relative;
+        width: 100%;
+        height: 6px;
+        background-color: getVar(color, bg-tertiary);
+        border-radius: getVar(border-radius, sm);
+        cursor: pointer;
+        transition: all getVar(duration, element-interaction);
+        outline: none;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+            border-radius: inherit;
+        }
+        
+        &:hover {
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+    }
+    
+    // 轨道和填充轨道
+    &__track,
+    &__track-fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        border-radius: inherit;
+    }
+    
+    &__track {
+        width: 100%;
+    }
+    
+    &__track-fill {
+        background: linear-gradient(135deg, getVar(color, brand) 0%, getVar(color, brand-active) 100%);
+        transition: none;
+        box-shadow: 0 1px 3px rgba(getVar(color, brand), 0.3);
+        
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+            border-radius: inherit;
+        }
+    }
+    
+    // 滑块
+    &__thumb {
+        position: absolute;
+        top: 50%;
+        width: 16px;
+        height: 16px;
+        background: linear-gradient(135deg, getVar(color, brand) 0%, getVar(color, brand-active) 100%);
+        border-radius: 50%;
+        border: 2px solid getVar(color, bg-solid);
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        transition: box-shadow getVar(duration, element-interaction), 
+                   background getVar(duration, element-interaction),
+                   border-color getVar(duration, element-interaction);
+        z-index: 1;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        &:hover,
+        &:focus {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 0 0 4px rgba(getVar(color, brand), 0.2);
+        }
+        
+        &.#{$namespace}-is-active {
+            transform: translate(-50%, -50%) scale(1.15);
+            z-index: 2;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25), 0 0 0 6px rgba(getVar(color, brand), 0.3);
+        }
+    }
+    
+    // 刻度容器
+    &__ticks {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 0;
+        margin-top: getVar(inset, sm);
+        z-index: 0;
+    }
+    
+    // 刻度项和刻度标记
+    &__tick {
+        position: absolute;
+        top: 0;
+        transform: translateX(-50%);
+    }
+    
+    &__tick-mark {
+        width: 2px;
+        height: 10px;
+        background-color: getVar(color, border);
+        border-radius: getVar(border-radius, xs);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    // 刻度标签
+    &__tick-label {
+        padding-top: getVar(inset, xs);
+        font-size: getVar(font-size, caption);
+        color: getVar(color, text-secondary);
+        transform: translateX(-50%);
+        white-space: nowrap;
+        transition: all getVar(duration, element-interaction);
+        
+        &:hover {
+            color: getVar(color, text);
+        }
+    }
+    
+    // 值标签
+    &__value-label {
+        position: absolute;
+        top: -36px; // 向上移动更多，避免被遮挡
+        transform: translateX(-50%);
+        padding: getVar(inset, xs) getVar(inset, sm);
+        font-size: getVar(font-size, caption);
+        color: getVar(color, text-on-brand);
+        background: linear-gradient(135deg, getVar(color, brand) 0%, getVar(color, brand-active) 100%);
+        border-radius: getVar(border-radius, sm);
+        white-space: nowrap;
+        transition: opacity getVar(duration, element-interaction),
+                   background getVar(duration, element-interaction);
+        box-shadow: 0 2px 6px rgba(getVar(color, brand), 0.3);
+        z-index: 10; // 确保在最上层
+        
+        &::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -4px;
+            transform: translateX(-50%);
+            border-width: 4px 4px 0;
+            border-style: solid;
+            border-color: getVar(color, brand) transparent transparent;
+        }
+        
+        &.#{$namespace}-is-active {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 3px 8px rgba(getVar(color, brand), 0.4);
+        }
+    }
+    
+    // 前缀和后缀
+    &__prefix,
+    &__suffix {
+        color: getVar(color, text);
+        font-size: getVar(font-size, caption);
+        transition: all getVar(duration, element-interaction);
+    }
+    
+    &__prefix {
+        margin-right: getVar(inset, sm);
+    }
+    
+    &__suffix {
+        margin-left: getVar(inset, sm);
+    }
+    
+    // 垂直模式
+    &.#{$namespace}-is-vertical {
+        flex-direction: column;
+        height: 100%;
+        min-height: 200px;
+        padding-top: 0; // 重置水平模式的padding
+        padding-left: 60px; // 为左侧刻度预留空间
+        padding-right: 100px; // 为右侧值标签预留空间
+        
+        .#{$namespace}-slider__rail {
+            width: 6px;
+            height: 100%;
+        }
+        
+        .#{$namespace}-slider__track {
+            width: 6px;
+            height: 100%;
+        }
+        
+        .#{$namespace}-slider__track-fill {
+            width: 6px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            top: auto;
+            height: 0;
+            transition: none;
+        }
+        
+        .#{$namespace}-slider__thumb {
+            left: 50%;
+            top: auto;
+            bottom: 0;
+            transform: translate(-50%, 50%); // 垂直模式下使用50%偏移，让thumb中心对齐bottom位置
+            transition: box-shadow getVar(duration, element-interaction), 
+                       background getVar(duration, element-interaction),
+                       border-color getVar(duration, element-interaction);
+            
+            &:hover,
+            &:focus {
+                transform: translate(-50%, 50%) scale(1.1); // 保持一致的50%偏移
+            }
+            
+            &.#{$namespace}-is-active {
+                transform: translate(-50%, 50%) scale(1.15); // 保持一致的50%偏移
+            }
+        }
+        
+        .#{$namespace}-slider__ticks {
+            left: 100%;
+            top: 0;
+            height: 100%;
+            width: 0;
+            margin-top: 0;
+            margin-left: getVar(inset, sm);
+        }
+        
+        .#{$namespace}-slider__tick {
+            left: 0;
+            top: auto;
+            bottom: 0;
+            transform: translateY(50%);
+        }
+        
+        .#{$namespace}-slider__tick-mark {
+            width: 10px;
+            height: 2px;
+            transform: translateX(0);
+        }
+        
+        .#{$namespace}-slider__tick-label {
+            padding-top: 0;
+            padding-left: getVar(inset, xs);
+            transform: translateY(0);
+        }
+        
+        .#{$namespace}-slider__value-label {
+            top: auto;
+            left: auto;
+            right: -80px; // 放在滑块右侧，与刻度错开
+            bottom: 0;
+            transform: translateY(50%); // 与thumb的transform保持一致，让值标签中心对齐
+            transition: opacity getVar(duration, element-interaction),
+                       background getVar(duration, element-interaction);
+            z-index: 10;
+            
+            &::after {
+                top: 50%;
+                left: -4px;
+                bottom: auto;
+                transform: translateY(-50%);
+                border-width: 4px 0 4px 4px; // 箭头指向左侧（滑块方向）
+                border-color: transparent transparent transparent getVar(color, brand);
+            }
+            
+            &.#{$namespace}-is-active {
+                transform: translateY(50%) scale(1.1); // 保持与thumb一致的50%偏移
+            }
+        }
+        
+        // 垂直模式下的范围值标签处理
+        &.#{$namespace}-is-range {
+            padding-right: 180px; // 范围模式需要更多右侧空间
+            
+            .#{$namespace}-slider__value-label {
+                &:nth-of-type(2) {
+                    right: -140px; // 第二个标签在更右侧，避免重叠
+                    left: auto;
+                    transform: translateY(50%); // 保持与thumb一致的50%偏移
+                }
+            }
+        }
+        
+        .#{$namespace}-slider__prefix {
+            margin-right: 0;
+            margin-bottom: getVar(inset, sm);
+        }
+        
+        .#{$namespace}-slider__suffix {
+            margin-left: 0;
+            margin-top: getVar(inset, sm);
+        }
+    }
+    
+    // 范围模式和拖动状态
+    &.#{$namespace}-is-range {
+        .#{$namespace}-slider__track-fill {
+            position: absolute;
+        }
+        
+        // 范围模式下的值标签处理
+        .#{$namespace}-slider__value-label {
+            z-index: 10;
+            
+            // 当两个标签位置接近时，错开显示
+            &:first-of-type {
+                z-index: 11;
+            }
+            
+            &:last-of-type {
+                z-index: 12;
+            }
+            
+            // 确保标签不会重叠 - 第二个标签再向上偏移
+            &:nth-of-type(2) {
+                top: -68px; // 第二个标签向上更多
+                transform: translateX(-50%);
+            }
+        }
+    }
+    
+    &.#{$namespace}-is-dragging {
+        // 拖动状态的样式可以在这里添加
+    }
+    
+    // 禁用状态
+    &.#{$namespace}-is-disabled {
+        opacity: getVar(opacity, disabled);
+        cursor: not-allowed;
+        
+        .#{$namespace}-slider__rail,
+        .#{$namespace}-slider__thumb {
+            cursor: not-allowed;
+        }
+        
+        .#{$namespace}-slider__track-fill {
+            background: getVar(color, bg-secondary);
+            box-shadow: none;
+        }
+        
+        .#{$namespace}-slider__thumb {
+            background: getVar(color, bg-secondary);
+            box-shadow: none;
+        }
+    }
+    
+    // 颜色变体 - 成功状态
+    &--success {
+        .#{$namespace}-slider__track-fill {
+            background: linear-gradient(135deg, getVar(color, success) 0%, getVar(color, success-active) 100%);
+            box-shadow: 0 1px 3px rgba(getVar(color, success), 0.3);
+        }
+        
+        .#{$namespace}-slider__thumb {
+            background: linear-gradient(135deg, getVar(color, success) 0%, getVar(color, success-active) 100%);
+            
+            &:hover,
+            &:focus {
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 0 0 4px rgba(getVar(color, success), 0.2);
+            }
+        }
+        
+        .#{$namespace}-slider__value-label {
+            background: linear-gradient(135deg, getVar(color, success) 0%, getVar(color, success-active) 100%);
+            
+            &::after {
+                border-top-color: getVar(color, success);
+            }
+        }
+    }
+        
+    // 颜色变体 - 警告状态
+    &--warning {
+        .#{$namespace}-slider__track-fill {
+            background: linear-gradient(135deg, getVar(color, warning) 0%, getVar(color, warning-active) 100%);
+            box-shadow: 0 1px 3px rgba(getVar(color, warning), 0.3);
+        }
+        
+        .#{$namespace}-slider__thumb {
+            background: linear-gradient(135deg, getVar(color, warning) 0%, getVar(color, warning-active) 100%);
+            
+            &:hover,
+            &:focus {
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 0 0 4px rgba(getVar(color, warning), 0.2);
+            }
+        }
+        
+        .#{$namespace}-slider__value-label {
+            background: linear-gradient(135deg, getVar(color, warning) 0%, getVar(color, warning-active) 100%);
+            
+            &::after {
+                border-top-color: getVar(color, warning);
+            }
+        }
+    }
+        
+    // 颜色变体 - 危险状态
+    &--danger {
+        .#{$namespace}-slider__track-fill {
+            background: linear-gradient(135deg, getVar(color, danger) 0%, getVar(color, danger-active) 100%);
+            box-shadow: 0 1px 3px rgba(getVar(color, danger), 0.3);
+        }
+        
+        .#{$namespace}-slider__thumb {
+            background: linear-gradient(135deg, getVar(color, danger) 0%, getVar(color, danger-active) 100%);
+            
+            &:hover,
+            &:focus {
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 0 0 4px rgba(getVar(color, danger), 0.2);
+            }
+        }
+        
+        .#{$namespace}-slider__value-label {
+            background: linear-gradient(135deg, getVar(color, danger) 0%, getVar(color, danger-active) 100%);
+            
+            &::after {
+                border-top-color: getVar(color, danger);
+            }
+        }
+    }
+        
+    // 颜色变体 - 信息状态
+    &--info {
+        .#{$namespace}-slider__track-fill {
+            background: linear-gradient(135deg, getVar(color, info) 0%, getVar(color, info-active) 100%);
+            box-shadow: 0 1px 3px rgba(getVar(color, info), 0.3);
+        }
+        
+        .#{$namespace}-slider__thumb {
+            background: linear-gradient(135deg, getVar(color, info) 0%, getVar(color, info-active) 100%);
+            
+            &:hover,
+            &:focus {
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 0 0 4px rgba(getVar(color, info), 0.2);
+            }
+        }
+        
+        .#{$namespace}-slider__value-label {
+            background: linear-gradient(135deg, getVar(color, info) 0%, getVar(color, info-active) 100%);
+            
+            &::after {
+                border-top-color: getVar(color, info);
+            }
+        }
+    }
+        
+    // 垂直模式下的颜色变体处理
+    &.#{$namespace}-is-vertical {
+        &.#{$namespace}-slider--success .#{$namespace}-slider__value-label::after,
+        &.#{$namespace}-slider--warning .#{$namespace}-slider__value-label::after,
+        &.#{$namespace}-slider--danger .#{$namespace}-slider__value-label::after,
+        &.#{$namespace}-slider--info .#{$namespace}-slider__value-label::after {
+            border-left-color: currentColor;
+            border-top-color: transparent;
+        }
+    }
+    
+    // 形状变体 - 圆角
+    &.#{$namespace}-is-shape-rounded {
+        .#{$namespace}-slider__rail,
+        .#{$namespace}-slider__track-fill {
+            border-radius: getVar(border-radius);
+        }
+    }
+    
+    // 形状变体 - 方形
+    &.#{$namespace}-is-shape-square {
+        .#{$namespace}-slider__rail,
+        .#{$namespace}-slider__track-fill {
+            border-radius: 0;
+        }
+        
+        .#{$namespace}-slider__thumb {
+            border-radius: getVar(border-radius, xs);
+        }
+    }
+    
+    // 前缀模式
+    &.#{$namespace}-is-with-prefix {
+        .#{$namespace}-slider__rail {
+            margin-left: getVar(inset, sm);
+        }
+    }
+    
+    // 后缀模式
+    &.#{$namespace}-is-with-suffix {
+        .#{$namespace}-slider__rail {
+            margin-right: getVar(inset, sm);
+        }
+    }
+    
+    // 尺寸变体 - 小尺寸
+    &--small {
+        .#{$namespace}-slider__rail,
+        .#{$namespace}-slider__track,
+        .#{$namespace}-slider__track-fill {
+            height: 4px;
+        }
+        
+        .#{$namespace}-slider__thumb {
+            width: 12px;
+            height: 12px;
+        }
+        
+        .#{$namespace}-slider__value-label {
+            font-size: getVar(font-size, caption);
+            padding: getVar(inset, xs);
+        }
+    }
+    
+    // 尺寸变体 - 大尺寸
+    &--large {
+        .#{$namespace}-slider__rail,
+        .#{$namespace}-slider__track,
+        .#{$namespace}-slider__track-fill {
+            height: 8px;
+        }
+        
+        .#{$namespace}-slider__thumb {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .#{$namespace}-slider__value-label {
+            font-size: getVar(font-size, body);
+            padding: getVar(inset, sm) getVar(inset);
+        }
+    }
+}

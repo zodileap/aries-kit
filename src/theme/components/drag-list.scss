@@ -1,0 +1,197 @@
+// @ari/theme/components/drag-list.scss
+
+@use "../global/index.scss" as *;
+
+.#{$namespace}-drag-list {
+  @include flex(flex-start, stretch, column);
+  width: 100%;
+  padding: 0;
+  transition: all getVar(duration, element-interaction);
+
+  &__wrapper {
+    @include flex(flex-start, stretch, column);
+    min-height: getVar(element-size);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__item {
+    position: relative;
+    @include flex(flex-start, center);
+    padding: getVar(inset, xs);
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius);
+    transition: all getVar(duration, element-interaction);
+    background: getVar(color, bg);
+    min-height: getVar(element-size, sm);
+    gap: getVar(inset, xs);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: move;
+
+    &:hover {
+      background: getVar(color, bg-secondary);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
+      border-color: getVar(color, brand);
+    }
+
+    // 拖拽状态 - 增强3D效果
+    &.#{$namespace}-is-dragging {
+      opacity: 0.8;
+      transform: scale(0.98);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      z-index: 1000;
+      background: getVar(color, bg-selected);
+      color: getVar(color, text);
+      border-color: getVar(color, border-brand);
+    }
+
+    // 拖拽悬停 - 向右缩进动画
+    &.#{$namespace}-is-drag-over {
+      border-color: getVar(color, border-brand);
+      background: getVar(color, bg-active);
+      transform: translateX(getVar(inset, sm));
+      box-shadow: getVar(color, box-shadow);
+    }
+
+    &.#{$namespace}-is-disabled {
+      cursor: not-allowed;
+      opacity: getVar(color, opacity-disabled);
+      background: getVar(color, bg-disabled);
+
+      &:hover {
+        background: getVar(color, bg-disabled);
+        transform: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+    min-height: getVar(element-size, sm);
+    @include flex(flex-start, center);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__empty-state {
+    @include flex();
+    min-height: 4rem;
+    padding: getVar(inset, md);
+    color: getVar(color, text-tertiary);
+    background: getVar(color, bg-secondary);
+    border: 2px dashed getVar(color, border);
+    border-radius: getVar(border-radius);
+    transition: all getVar(duration, element-interaction);
+
+    &:hover {
+      border-color: getVar(color, brand);
+      background: getVar(color, bg-brand-light);
+    }
+  }
+
+  &__drag-handle {
+    @include flex();
+    padding: getVar(inset, xxs);
+    cursor: grab;
+    color: getVar(color, text-secondary);
+    transition: all getVar(duration, element-interaction);
+    border-radius: getVar(border-radius, xs);
+
+    &:hover {
+      color: getVar(color, text);
+      // background-color: getVar(color, bg-active);
+      transform: scale(1.1);
+    }
+
+    &:active {
+      cursor: grabbing;
+      transform: scale(0.95);
+      // background-color: getVar(color, brand);
+      color: getVar(color, text-on-brand);
+    }
+
+    &.#{$namespace}-is-disabled {
+      cursor: not-allowed;
+      opacity: getVar(color, opacity-disabled);
+      
+      &:hover {
+        color: getVar(color, text-secondary);
+        background-color: transparent;
+        transform: none;
+      }
+    }
+  }
+
+  // 间距变体
+  &--xxs {
+    .#{$namespace}-drag-list__wrapper {
+      gap: getVar(inset, xxs);
+    }
+  }
+
+  &--xs {
+    .#{$namespace}-drag-list__wrapper {
+      gap: getVar(inset, xs);
+    }
+  }
+
+  &--sm {
+    .#{$namespace}-drag-list__wrapper {
+      gap: getVar(inset, sm);
+    }
+  }
+
+  &--md {
+    .#{$namespace}-drag-list__wrapper {
+      gap: getVar(inset, md);
+    }
+  }
+
+  &--lg {
+    .#{$namespace}-drag-list__wrapper {
+      gap: getVar(inset, lg);
+    }
+  }
+
+  &--xl {
+    .#{$namespace}-drag-list__wrapper {
+      gap: getVar(inset, xl);
+    }
+  }
+
+  &--xxl {
+    .#{$namespace}-drag-list__wrapper {
+      gap: getVar(inset, xxl);
+    }
+  }
+
+  // 全局状态
+  &.#{$namespace}-is-empty {
+    // 空状态由组件内容决定
+  }
+
+  &.#{$namespace}-is-disabled {
+    opacity: getVar(color, opacity-disabled);
+    
+    .#{$namespace}-drag-list__item {
+      cursor: not-allowed;
+      background: getVar(color, bg-disabled);
+
+      &:hover {
+        background: getVar(color, bg-disabled);
+        transform: none;
+        box-shadow: none;
+      }
+    }
+
+    .#{$namespace}-drag-list__drag-handle {
+      cursor: not-allowed;
+      
+      &:hover {
+        color: getVar(color, text-secondary);
+        background-color: transparent;
+      }
+    }
+  }
+}

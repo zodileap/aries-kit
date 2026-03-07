@@ -1,0 +1,260 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-icon {
+  @include flex();
+  position: relative;
+  fill: currentColor;
+  color: inherit;
+  font-style: normal;
+  line-height: 0;
+  transition: all getVar(duration, element-interaction);
+  
+  svg {
+    width: getVar(icon-size);
+    height: getVar(icon-size);
+    transition: inherit;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.05));
+  }
+
+  // 尺寸变体
+  &--xs {
+    svg {
+      width: getVar(icon-size, xs);
+      height: getVar(icon-size, xs);
+    }
+  }
+
+  &--sm {
+    svg {
+      width: getVar(icon-size, sm);
+      height: getVar(icon-size, sm);
+    }
+  }
+
+  &--lg {
+    svg {
+      width: getVar(icon-size, lg);
+      height: getVar(icon-size, lg);
+    }
+  }
+
+  &--xl {
+    svg {
+      width: getVar(icon-size, xl);
+      height: getVar(icon-size, xl);
+    }
+  }
+
+  &--xxl {
+    svg {
+      width: getVar(icon-size, xxl);
+      height: getVar(icon-size, xxl);
+    }
+  }
+
+  // 交互状态
+  &--clickable {
+    cursor: pointer;
+    border-radius: getVar(border-radius, xs);
+    padding: getVar(inset, xs);
+    
+    &:hover {
+      background-color: getVar(color, bg-active);
+      transform: scale(1.1);
+      
+      svg {
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+      }
+    }
+    
+    &:active {
+      transform: scale(1.05);
+    }
+  }
+
+  // 旋转动画
+  &--spinning {
+    svg {
+      animation: iconSpin 1s linear infinite;
+    }
+  }
+
+  // 脉冲动画
+  &--pulse {
+    svg {
+      animation: iconPulse 2s ease-in-out infinite;
+    }
+  }
+
+  // 摇摆动画
+  &--shake {
+    svg {
+      animation: iconShake 1s ease-in-out infinite;
+    }
+  }
+
+  // 填充风格
+  &--filled {
+    background-color: getVar(color, bg-secondary);
+    border-radius: getVar(border-radius, xs);
+    padding: getVar(inset, xs);
+    
+    &:hover {
+      background-color: getVar(color, bg-active);
+    }
+  }
+
+  // 边框风格
+  &--outlined {
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius, xs);
+    padding: getVar(inset, xs);
+    
+    &:hover {
+      border-color: getVar(color, brand);
+      background-color: getVar(color, bg-active);
+    }
+  }
+
+  // 圆形背景
+  &--circular {
+    background-color: getVar(color, bg-secondary);
+    border-radius: 50%;
+    padding: getVar(inset, sm);
+    
+    &:hover {
+      background-color: getVar(color, bg-active);
+      transform: scale(1.05);
+    }
+  }
+
+  // 禁用状态
+  &.#{$namespace}-is-disabled {
+    opacity: getVar(opacity, disabled);
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none;
+      background-color: transparent;
+    }
+  }
+
+  // 加载状态
+  &.#{$namespace}-is-loading {
+    svg {
+      animation: iconSpin 1s linear infinite;
+      opacity: 0.6;
+    }
+  }
+
+  // 错误状态
+  &.#{$namespace}-is-error {
+    color: getVar(color, danger) !important;
+    
+    svg {
+      animation: iconShake 1s ease-in-out infinite;
+      color: getVar(color, danger) !important;
+      stroke: getVar(color, danger) !important;
+    }
+  }
+
+  // 成功状态
+  &.#{$namespace}-is-success {
+    color: getVar(color, success) !important;
+    
+    svg {
+      animation: iconBounce 2s ease-in-out infinite;
+      color: getVar(color, success) !important;
+      stroke: getVar(color, success) !important;
+    }
+  }
+}
+
+// 图标组
+.#{$namespace}-icon-group {
+  @include flex(flex-start, center);
+  gap: getVar(inset, xs);
+  
+  .#{$namespace}-icon {
+    &:hover {
+      z-index: 1;
+    }
+  }
+  
+  // 堆叠模式
+  &--stacked {
+    .#{$namespace}-icon {
+      margin-right: calc(getVar(inset, sm) * -1);
+      
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+// 动画定义
+@keyframes iconSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes iconShake {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  10% {
+    transform: translateX(-6px) rotate(-2deg);
+  }
+  20% {
+    transform: translateX(6px) rotate(2deg);
+  }
+  30% {
+    transform: translateX(-4px) rotate(-1deg);
+  }
+  40% {
+    transform: translateX(4px) rotate(1deg);
+  }
+  50% {
+    transform: translateX(-2px) rotate(-0.5deg);
+  }
+  60% {
+    transform: translateX(2px) rotate(0.5deg);
+  }
+  70% {
+    transform: translateX(-1px) rotate(-0.2deg);
+  }
+  80% {
+    transform: translateX(1px) rotate(0.2deg);
+  }
+  90% {
+    transform: translateX(-0.5px) rotate(-0.1deg);
+  }
+}
+
+@keyframes iconBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25%, 75% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}

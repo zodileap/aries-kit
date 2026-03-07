@@ -1,0 +1,241 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-list {
+  position: relative;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, getVar(color, bg) 0%, getVar(color, bg-secondary) 100%);
+  border-radius: getVar(border-radius);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all getVar(duration, element-interaction);
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  // 列表结构元素
+  &__header {
+    padding: getVar(inset, md) getVar(inset, lg);
+    border-bottom: 1px solid getVar(color, border);
+    font-weight: getVar(font-weight, bold);
+    color: getVar(color, text);
+    font-size: getVar(font-size, title-3);
+    background: linear-gradient(135deg, getVar(color, bg-tertiary) 0%, getVar(color, bg-secondary) 100%);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__footer {
+    padding: getVar(inset, md) getVar(inset, lg);
+    border-top: 1px solid getVar(color, border);
+    color: getVar(color, text-secondary);
+    background: linear-gradient(135deg, getVar(color, bg-secondary) 0%, getVar(color, bg-tertiary) 100%);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__content {
+    position: relative;
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__loading {
+    @include flex();
+    padding: getVar(inset, xxl) 0;
+    color: getVar(color, text-secondary);
+    font-size: getVar(font-size, body);
+    background-color: rgba(getVar(color, bg-secondary), 0.5);
+
+    &::before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      margin-right: getVar(inset, sm);
+      border: 2px solid getVar(color, border);
+      border-top-color: getVar(color, brand);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  &__empty {
+    @include flex();
+    flex-direction: column;
+    padding: getVar(inset, xxl) 0;
+    color: getVar(color, text-tertiary);
+    font-size: getVar(font-size, body);
+    background: linear-gradient(
+      135deg,
+      rgba(getVar(color, bg-secondary), 0.5) 0%,
+      rgba(getVar(color, bg-tertiary), 0.3) 100%
+    );
+
+    &::before {
+      content: "📝";
+      font-size: getVar(font-size, title-1);
+      margin-bottom: getVar(inset, sm);
+      opacity: 0.5;
+    }
+  }
+
+  // 列表项和相关元素
+  &__item {
+    @include flex(flex-start, center);
+    padding: getVar(inset, md) getVar(inset, lg);
+    transition: all getVar(duration, element-interaction);
+    position: relative;
+    border-radius: getVar(border-radius, sm);
+    margin: getVar(inset, xs);
+    background-color: getVar(color, bg);
+
+    &:hover {
+      background: linear-gradient(135deg, getVar(color, bg-active) 0%, getVar(color, bg-secondary) 100%);
+      transform: translateX(getVar(inset, xs));
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      transform: translateX(getVar(inset, xs)) scale(0.98);
+    }
+
+    // 列表项变体
+    &--split {
+      border-bottom: 1px solid getVar(color, border);
+      border-radius: 0;
+      margin: 0;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    &--bordered {
+      border: 1px solid getVar(color, border);
+      margin-bottom: getVar(inset, xs);
+      border-radius: getVar(border-radius);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &:hover {
+        border-color: getVar(color, brand);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    &--clickable {
+      cursor: pointer;
+
+      &:hover {
+        background: linear-gradient(135deg, getVar(color, bg-brand-light) 0%, getVar(color, bg-active) 100%);
+      }
+    }
+
+    &--selected {
+      background: linear-gradient(135deg, getVar(color, bg-brand-light) 0%, rgba(getVar(color, brand), 0.1) 100%);
+      border-color: getVar(color, brand);
+      box-shadow: 0 0 0 2px rgba(getVar(color, brand), 0.2);
+    }
+  }
+
+  &__item-content {
+    flex: 1;
+    min-width: 0;
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__item-action {
+    @include flex();
+    gap: getVar(inset, md);
+    margin-left: getVar(inset, md);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__item-actions {
+    @include flex();
+    gap: getVar(inset, sm);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__item-action-item {
+    color: getVar(color, brand);
+    cursor: pointer;
+    font-size: getVar(font-size, callout);
+    transition: all getVar(duration, element-interaction);
+    position: relative;
+    padding: getVar(inset, xs);
+    border-radius: getVar(border-radius, sm);
+
+    &:hover {
+      color: getVar(color, text-on-brand);
+      background-color: getVar(color, brand);
+      transform: translateY(getVar(transform, hover-translate-y));
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: calc(-1 * getVar(inset, sm) / 2);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 1em;
+      background-color: getVar(color, border);
+    }
+  }
+
+  &__item-extra {
+    color: getVar(color, text-secondary);
+    font-size: getVar(font-size, callout);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  // 带边框的列表
+  &--bordered {
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius);
+
+    .#{$namespace}-list__header {
+      border-radius: getVar(border-radius) getVar(border-radius) 0 0;
+    }
+
+    &__footer {
+      border-radius: 0 0 getVar(border-radius) getVar(border-radius);
+    }
+  }
+
+  // 尺寸变体
+  &--size-sm {
+    .#{$namespace}-list__item {
+      padding: getVar(inset, sm) getVar(inset, md);
+    }
+
+    .#{$namespace}-list__header {
+      padding: getVar(inset, sm) getVar(inset, md);
+      font-size: getVar(font-size, body);
+    }
+
+    &__footer {
+      padding: getVar(inset, sm) getVar(inset, md);
+    }
+  }
+
+  &--size-lg {
+    .#{$namespace}-list__item {
+      padding: getVar(inset, lg) getVar(inset, xl);
+    }
+
+    .#{$namespace}-list__header {
+      padding: getVar(inset, lg) getVar(inset, xl);
+    }
+
+    &__footer {
+      padding: getVar(inset, lg) getVar(inset, xl);
+    }
+  }
+}

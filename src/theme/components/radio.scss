@@ -1,0 +1,284 @@
+@use "../global/index.scss" as *;
+
+// 单选框基础样式
+.#{$namespace}-radio {
+  position: relative;
+  @include flex(flex-start, center);
+  cursor: pointer;
+  margin-right: getVar(inset);
+  font-size: getVar(font-size, button);
+  line-height: 1;
+  transition: all getVar(duration, element-interaction);
+  
+  &.#{$namespace}-is-disabled {
+    cursor: not-allowed;
+    opacity: getVar(color, opacity-disabled);
+
+    .#{$namespace}-radio__inner {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+  
+  // 尺寸变体
+  &--sm {
+    font-size: getVar(font-size, footnote);
+    
+    .#{$namespace}-radio__inner {
+      width: 14px;
+      height: 14px;
+      
+      &::after {
+        width: 5px; // 从4px改为5px，增大小型内部圆点的尺寸
+        height: 5px; // 从4px改为5px，增大小型内部圆点的尺寸
+      }
+    }
+    
+    .#{$namespace}-radio__label {
+      padding-left: 6px;
+    }
+  }
+  
+  &--lg {
+    font-size: getVar(font-size, headline);
+    
+    .#{$namespace}-radio__inner {
+      width: 20px;
+      height: 20px;
+      
+      &::after {
+        width: 10px; // 从8px改为10px，增大大型内部圆点的尺寸
+        height: 10px; // 从8px改为10px，增大大型内部圆点的尺寸
+      }
+    }
+    
+    .#{$namespace}-radio__label {
+      padding-left: 10px;
+    }
+  }
+  
+  // 输入框包装器
+  &__input-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+  }
+  
+  // 真实输入框（隐藏）
+  &__input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    opacity: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    cursor: inherit;
+  }
+  
+  // 圆形外观
+  &__inner {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 1px solid getVar(color, border);
+    border-radius: 50%;
+    background-color: getVar(color, bg);
+    transition: all getVar(duration, element-interaction);
+    transform: translateY(0);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: getVar(color, bg);
+      transition: all getVar(duration, element-interaction);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    &:hover {
+      border-color: getVar(color, border-brand);
+      transform: translateY(0);
+      box-shadow: getVar(color, box-shadow);
+    }
+    
+    &.#{$namespace}-is-checked {
+      border-color: getVar(color, brand);
+      background-color: getVar(color, brand);
+      transform: scale(1.02);
+      box-shadow: getVar(color, box-shadow-rounded);
+      
+      &::after {
+        transform: translate(-50%, -50%) scale(1);
+        background-color: getVar(color, text-on-brand);
+        opacity: 1;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+  
+  // 标签文字
+  &__label {
+    padding-left: 8px;
+    color: getVar(color, text);
+    transition: all getVar(duration, element-interaction);
+    
+    &:hover {
+      color: getVar(color, text-active);
+    }
+    
+    &.#{$namespace}-is-checked {
+      color: getVar(color, brand);
+      font-weight: 500;
+    }
+  }
+  
+  // 禁用状态的嵌套样式
+  &.#{$namespace}-is-disabled {
+    .#{$namespace}-radio__inner {
+      border-color: getVar(color, border);
+      background-color: getVar(color, bg-secondary);
+      transform: none;
+      box-shadow: none;
+      
+      &:hover {
+        border-color: getVar(color, border);
+        transform: none;
+        box-shadow: none;
+      }
+    }
+    
+    .#{$namespace}-radio__label {
+      color: getVar(color, text-disabled);
+      
+      &:hover {
+        color: getVar(color, text-disabled);
+      }
+    }
+  }
+  
+  // 禁用且选中状态的inner样式
+  &.#{$namespace}-is-disabled.#{$namespace}-is-checked {
+    .#{$namespace}-radio__inner {
+      background-color: getVar(color, bg-secondary);
+      
+      &::after {
+        background-color: getVar(color, text-disabled);
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+// 单选框组样式
+.#{$namespace}-radio-group {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+// 单选按钮样式
+.#{$namespace}-radio-button {
+  position: relative;
+  @include flex();
+  padding: getVar(inset, xs) getVar(inset);
+  border: 1px solid getVar(color, border);
+  background-color: getVar(color, bg);
+  color: getVar(color, text);
+  font-size: getVar(font-size, button);
+  line-height: 1;
+  cursor: pointer;
+  transition: all getVar(duration, element-interaction);
+  margin-right: -1px;
+  transform: translateY(0);
+  
+  &:first-child {
+    border-top-left-radius: getVar(border-radius);
+    border-bottom-left-radius: getVar(border-radius);
+  }
+  
+  &:last-child {
+    border-top-right-radius: getVar(border-radius);
+    border-bottom-right-radius: getVar(border-radius);
+    margin-right: 0;
+  }
+  
+  &:hover {
+    background-color: getVar(color, bg-active);
+    border-color: getVar(color, border-brand);
+    transform: translateY(0);
+    box-shadow: getVar(color, box-shadow);
+    z-index: 2;
+  }
+  
+  // 尺寸变体
+  &--sm {
+    padding: getVar(inset, xs) getVar(inset, sm);
+    font-size: getVar(font-size, footnote);
+  }
+  
+  &--lg {
+    padding: getVar(inset, sm) getVar(inset, lg);
+    font-size: getVar(font-size, headline);
+  }
+  
+  // 真实输入框（隐藏）
+  &__input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    opacity: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    cursor: inherit;
+  }
+  
+  // 标签文字
+  &__label {
+    position: relative;
+    z-index: 0;
+    transition: all getVar(duration, element-interaction);
+  }
+  
+  // 状态修饰符
+  &.#{$namespace}-is-checked {
+    border-color: getVar(color, brand);
+    background-color: getVar(color, brand);
+    color: getVar(color, text-on-brand);
+    z-index: 3;
+    transform: translateY(0);
+    box-shadow: getVar(color, box-shadow-rounded);
+  }
+  
+  &.#{$namespace}-is-disabled {
+    cursor: not-allowed;
+    opacity: getVar(color, opacity-disabled);
+    border-color: getVar(color, border);
+    background-color: getVar(color, bg-secondary);
+    color: getVar(color, text-disabled);
+    transform: none;
+    
+    &:hover {
+      background-color: getVar(color, bg-secondary);
+      border-color: getVar(color, border);
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}

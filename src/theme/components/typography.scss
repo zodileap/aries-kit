@@ -1,0 +1,180 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-typography {
+  transition: all getVar(duration, element-interaction);
+  
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  // 变体修饰符
+  &--h1 {
+    font-size: getVar(font-size, large-title);
+    font-weight: getVar(font-weight, lg);
+    line-height: 1.2;
+    display: block;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: getVar(color, text);
+  }
+
+  &--h2 {
+    font-size: getVar(font-size, title-1);
+    font-weight: getVar(font-weight, lg);
+    line-height: 1.3;
+    display: block;
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: getVar(color, text);
+  }
+
+  &--h3 {
+    font-size: getVar(font-size, title-2);
+    font-weight: getVar(font-weight, lg);
+    line-height: 1.4;
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: getVar(color, text);
+  }
+
+  &--h4 {
+    font-size: getVar(font-size, title-3);
+    font-weight: getVar(font-weight, lg);
+    line-height: 1.5;
+    display: block;
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
+    color: getVar(color, text);
+  }
+
+  &--body {
+    font-size: getVar(font-size, body);
+    font-weight: getVar(font-weight, regular);
+    line-height: 1.6;
+    display: block;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: getVar(color, text);
+  }
+
+  &--caption {
+    font-size: getVar(font-size, caption);
+    font-weight: getVar(font-weight, regular);
+    line-height: 1.4;
+    display: block;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    color: getVar(color, text-secondary);
+  }
+
+  &--overline {
+    font-size: getVar(font-size, caption);
+    font-weight: getVar(font-weight, lg);
+    line-height: 1.5;
+    display: block;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: getVar(color, text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  // 颜色修饰符
+  &--primary {
+    color: getVar(color, brand);
+  }
+
+  &--secondary {
+    color: getVar(color, text-secondary);
+  }
+
+  &--error {
+    color: getVar(color, danger);
+  }
+
+  &--warning {
+    color: getVar(color, warning);
+  }
+
+  &--info {
+    color: getVar(color, info);
+  }
+
+  &--success {
+    color: getVar(color, success);
+  }
+
+  // 对齐修饰符
+  &--left {
+    text-align: left;
+  }
+
+  &--center {
+    text-align: center;
+  }
+
+  &--right {
+    text-align: right;
+  }
+
+  &--justify {
+    text-align: justify;
+  }
+
+  // 底部间距修饰符
+  &--gutter-bottom {
+    margin-bottom: 1em;
+  }
+
+  // 交互修饰符
+  &--interactive {
+    cursor: pointer;
+    user-select: none;
+    
+    &:hover {
+      color: getVar(color, brand);
+      transform: translateY(getVar(transform, hover-translate-y));
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // 行数限制修饰符
+  &--line-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // 字重修饰符
+  &--bold {
+    font-weight: getVar(font-weight, bold);
+  }
+
+  // 字体样式修饰符
+  &--italic {
+    font-style: italic;
+  }
+}
+
+// 文本工具类
+.text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-truncate-multiline {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

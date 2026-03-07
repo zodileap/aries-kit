@@ -1,0 +1,178 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-image {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    border-radius: getVar(border-radius, sm);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all getVar(duration, element-interaction);
+    background-color: getVar(color, bg-secondary);
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+    
+    &__img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all getVar(duration, element-interaction);
+        border-radius: getVar(border-radius, sm);
+    }
+
+    &__fallback {
+        @include flex();
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, 
+            getVar(color, bg-tertiary) 0%, 
+            getVar(color, bg-secondary) 100%);
+        color: getVar(color, text-secondary);
+        font-size: getVar(font-size, caption);
+        border-radius: getVar(border-radius, sm);
+        transition: all getVar(duration, element-interaction);
+
+        &:hover {
+            background: linear-gradient(135deg, 
+                getVar(color, bg-secondary) 0%, 
+                getVar(color, bg-tertiary) 100%);
+        }
+    }
+    
+    // 变体样式
+    &--background {
+        .#{$namespace}-image__img {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+        }
+    }
+    
+    &--placeholder {
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                getVar(color, bg-secondary) 25%, 
+                getVar(color, bg-active) 50%, 
+                getVar(color, bg-secondary) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite ease-in-out;
+            border-radius: getVar(border-radius, sm);
+            z-index: 1;
+        }
+    }
+    
+    &--preview {
+        cursor: pointer;
+        
+        &:hover {
+            .#{$namespace}-image__img {
+                transform: scale(1.1);
+            }
+        }
+
+        &:active {
+            .#{$namespace}-image__img {
+                transform: scale(0.95);
+            }
+        }
+    }
+
+    &--rounded {
+        border-radius: getVar(border-radius);
+
+        .#{$namespace}-image__img,
+        .#{$namespace}-image__fallback {
+            border-radius: getVar(border-radius);
+        }
+    }
+
+    &--circle {
+        border-radius: 50%;
+
+        .#{$namespace}-image__img,
+        .#{$namespace}-image__fallback {
+            border-radius: 50%;
+        }
+    }
+
+    // 尺寸变体
+    &--size-xs {
+        width: 32px;
+        height: 32px;
+    }
+
+    &--size-sm {
+        width: 64px;
+        height: 64px;
+    }
+
+    &--size-md {
+        width: 128px;
+        height: 128px;
+    }
+
+    &--size-lg {
+        width: 256px;
+        height: 256px;
+    }
+
+    &--size-xl {
+        width: 512px;
+        height: 512px;
+    }
+
+    // 加载状态
+    &.#{$namespace}-is-loading {
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top-color: getVar(color, brand);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 2;
+        }
+    }
+
+    // 错误状态
+    &.#{$namespace}-is-error {
+        border-color: getVar(color, danger);
+        background-color: rgba(getVar(color, danger), 0.1);
+
+        .#{$namespace}-image__fallback {
+            color: getVar(color, danger);
+        }
+    }
+}
+
+// 动画定义
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

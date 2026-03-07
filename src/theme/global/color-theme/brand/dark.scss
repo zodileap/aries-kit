@@ -1,0 +1,249 @@
+@use "sass:color";
+@use "../../color.scss" as *;
+@use "../theme-config.scss" as *;
+
+// 暗色主题 - 只提供颜色值
+[data-theme="brand"][data-color-theme="dark"] {
+    color-scheme: dark;
+
+    @include theme-config(
+        // 品牌色 - 更饱和的紫罗兰，提升暗色识别度
+        $brand: $z-ramp-violet-550,
+        $brand-active: $z-ramp-violet-400,
+        $brand-secondary: $z-ramp-violet-600,
+        $brand-tertiary: $z-ramp-violet-700,
+
+        // 活跃色 - 更明确的紫罗兰梯度
+        $active: $z-ramp-violet-500,
+        $active-active: $z-ramp-violet-450,
+        $active-secondary: $z-ramp-violet-400,
+        $active-tertiary: $z-ramp-violet-650,
+
+        // 主色 - 更柔和的暗主题蓝色渐变
+        $primary: $z-ramp-blue-500,
+        $primary-active: $z-ramp-blue-450,
+        $primary-secondary: $z-ramp-blue-400,
+        $primary-tertiary: $z-ramp-blue-650,
+
+        // 成功色 - 更柔和的暗主题绿色渐变
+        $success: $z-ramp-green-500,
+        $success-active: $z-ramp-green-450,
+        $success-secondary: $z-ramp-green-400,
+        $success-tertiary: $z-ramp-green-650,
+
+        // 警告色 - 更柔和的暗主题橙色渐变
+        $warning: $z-ramp-orange-550,
+        $warning-active: $z-ramp-orange-450,
+        $warning-secondary: $z-ramp-orange-400,
+        $warning-tertiary: $z-ramp-orange-650,
+
+        // 危险色 - 更柔和的暗主题红色渐变
+        $danger: $z-ramp-pale-red-500,
+        $danger-active: $z-ramp-pale-red-450,
+        $danger-secondary: $z-ramp-pale-red-400,
+        $danger-tertiary: $z-ramp-pale-red-650,
+
+        // 信息色 - 保持紫调，整体加深一档
+        $info: $z-ramp-pale-violet-550,
+        $info-active: $z-ramp-pale-violet-500,
+        $info-secondary: $z-ramp-pale-violet-450,
+        $info-tertiary: $z-ramp-pale-violet-700,
+
+        // 背景色 - 主背景更中性偏黑，面板去紫化
+        $bg: color.mix($z-ramp-grey-900, $z-ramp-violet-950, 98%),  // 主背景 - 更偏黑
+        $bg-secondary: color.mix($z-ramp-grey-850, $z-ramp-violet-900, 92%),  // 菜单/卡片背景 - 更中性
+        $bg-tertiary: color.mix($z-ramp-grey-800, $z-ramp-violet-850, 90%),   // 第三层背景
+        $bg-opacity: rgba(color.mix($z-ramp-grey-900, $z-ramp-violet-950, 98%), 0.92),
+        $bg-opacity-blur: rgba(color.mix($z-ramp-grey-850, $z-ramp-violet-900, 92%), 0.70),
+        $bg-solid: color.mix($z-ramp-grey-900, $z-ramp-violet-950, 98%),
+        $bg-active: color.mix($z-ramp-grey-800, $z-ramp-violet-900, 94%),     // 激活态背景 - 更中性
+        $bg-selected: color.mix($z-ramp-grey-750, $z-ramp-violet-900, 94%),   // 选中态背景 - 降低紫调
+        $bg-inverse: $z-ramp-white-900,
+        $bg-app-layout: color.mix($z-ramp-grey-900, $z-ramp-violet-950, 96%), // 与主背景一致
+        $bg-glass: rgba(color.mix($z-ramp-grey-800, $z-ramp-violet-850, 85%), 0.78),
+        // 边框色 - 深色主题边框，带微妙紫调
+        $border: color.mix($z-ramp-grey-600, $z-ramp-violet-800, 90%),        // 基础边框 - 更中性
+        $border-strong: color.mix($z-ramp-grey-550, $z-ramp-violet-750, 88%), // 强调边框
+        $border-active: $z-ramp-violet-400,
+        $border-brand: $z-ramp-violet-400,
+        $border-primary: $z-ramp-blue-500,
+        $border-success: $z-ramp-green-500,
+        $border-warning: $z-ramp-orange-550,
+        $border-danger: $z-ramp-pale-red-500,
+        $border-info: $z-ramp-pale-violet-550,
+        $border-divider: color.mix($z-ramp-grey-650, $z-ramp-violet-850, 90%),  // 分割线边框
+        $border-glass: rgba(color.mix($z-ramp-grey-500, $z-ramp-violet-700, 80%), 0.3),
+        // 文本色 - 更中性的灰白层级，降低紫调感
+        $text: $z-ramp-white-250,         // 主文本 - 稍亮
+        $text-secondary: $z-ramp-grey-350, // 次要文本 - 中性灰
+        $text-tertiary: $z-ramp-grey-500,  // 第三级文本 - 中灰色
+        $text-active: $z-ramp-violet-350,
+        $text-danger: $z-ramp-pale-red-500,
+        $text-success: $z-ramp-green-500,
+        $text-warning: $z-ramp-orange-550,
+        $text-info: $z-ramp-pale-violet-450,
+        $text-brand: $z-ramp-violet-350,
+        $text-disabled: $z-ramp-grey-550,
+
+        // 文本在背景上的颜色 - 与文本层级保持一致
+        $text-on-bg: $z-ramp-white-250,
+        $text-on-bg-active: $z-ramp-violet-350,
+        $text-on-bg-secondary: $z-ramp-grey-350,
+        $text-on-bg-tertiary: $z-ramp-grey-500,
+        $text-on-bg-brand: $z-ramp-white-250,
+        $text-on-brand: $z-ramp-white-1000,       // 品牌色按钮用白字
+        $text-on-active: $z-ramp-white-1000,      // 活跃色按钮用白字
+        $text-on-primary: $z-ramp-white-1000,     // 主色按钮用白字
+        $text-on-success: $z-ramp-white-1000,    // 成功色按钮提升对比度
+        $text-on-warning: $z-ramp-white-1000,   // 警告色按钮提升对比度
+        $text-on-danger: $z-ramp-white-1000,    // 危险色按钮提升对比度
+        $text-on-info: $z-ramp-white-1000,      // 信息色按钮提升对比度
+
+        // Callout组件内容文字颜色
+        $text-callout: $z-ramp-grey-200,       // 亮色文字，在有颜色背景上清晰可见
+        $text-callout-success: $z-ramp-grey-200,  // 深灰色，在绿色背景上更清晰
+        $text-callout-warning: $z-ramp-grey-200,  // 深灰色，在橙色背景上更清晰
+        $text-callout-danger: $z-ramp-grey-100,   // 深灰色，在红色背景上更清晰
+        $text-callout-info: $z-ramp-grey-200,    // 保持白色，紫色背景对比度好
+
+        // 标签颜色 - 暗主题协调色系（与violet融合）
+        $tag-blue: $z-ramp-blue-500,
+        $tag-blue-text: $z-ramp-grey-100,
+        $tag-blue-hover: $z-ramp-blue-350,
+        $tag-blue-border: $z-ramp-blue-650,
+        $tag-blue-bg-hover: $z-ramp-blue-750,
+
+        $tag-green: $z-ramp-green-500,
+        $tag-green-text: $z-ramp-black-500,
+        $tag-green-hover: $z-ramp-green-350,
+        $tag-green-border: $z-ramp-green-650,
+        $tag-green-bg-hover: $z-ramp-green-750,
+
+        $tag-grey: color.mix($z-ramp-grey-400, $z-ramp-violet-600, 85%),
+        $tag-grey-text: $z-ramp-grey-100,
+        $tag-grey-hover: color.mix($z-ramp-grey-350, $z-ramp-violet-550, 85%),
+        $tag-grey-border: color.mix($z-ramp-grey-650, $z-ramp-violet-750, 85%),
+        $tag-grey-bg-hover: color.mix($z-ramp-grey-750, $z-ramp-violet-850, 85%),
+
+        $tag-orange: $z-ramp-orange-550,
+        $tag-orange-text: $z-ramp-grey-100,
+        $tag-orange-hover: $z-ramp-orange-350,
+        $tag-orange-border: $z-ramp-orange-650,
+        $tag-orange-bg-hover: $z-ramp-orange-750,
+
+        $tag-persimmon: $z-ramp-persimmon-400,
+        $tag-persimmon-text: $z-ramp-grey-100,
+        $tag-persimmon-hover: $z-ramp-persimmon-350,
+        $tag-persimmon-border: $z-ramp-persimmon-650,
+        $tag-persimmon-bg-hover: $z-ramp-persimmon-750,
+
+        $tag-pink: color.mix($z-ramp-pink-400, $z-ramp-violet-400, 70%),
+        $tag-pink-text: $z-ramp-grey-100,
+        $tag-pink-hover: color.mix($z-ramp-pink-350, $z-ramp-violet-350, 70%),
+        $tag-pink-border: color.mix($z-ramp-pink-650, $z-ramp-violet-650, 70%),
+        $tag-pink-bg-hover: color.mix($z-ramp-pink-750, $z-ramp-violet-750, 70%),
+
+        $tag-purple: color.mix($z-ramp-purple-400, $z-ramp-violet-400, 60%),
+        $tag-purple-text: $z-ramp-grey-100,
+        $tag-purple-hover: color.mix($z-ramp-purple-350, $z-ramp-violet-350, 60%),
+        $tag-purple-border: color.mix($z-ramp-purple-650, $z-ramp-violet-650, 60%),
+        $tag-purple-bg-hover: color.mix($z-ramp-purple-750, $z-ramp-violet-750, 60%),
+
+        $tag-red: $z-ramp-pale-red-500,
+        $tag-red-text: $z-ramp-grey-100,
+        $tag-red-hover: $z-ramp-pale-red-350,
+        $tag-red-border: $z-ramp-pale-red-650,
+        $tag-red-bg-hover: $z-ramp-pale-red-750,
+
+        $tag-teal: $z-ramp-teal-400,
+        $tag-teal-text: $z-ramp-grey-100,
+        $tag-teal-hover: $z-ramp-teal-350,
+        $tag-teal-border: $z-ramp-teal-650,
+        $tag-teal-bg-hover: $z-ramp-teal-750,
+
+        $tag-violet: $z-ramp-violet-400,
+        $tag-violet-text: $z-ramp-grey-100,
+        $tag-violet-hover: $z-ramp-violet-350,
+        $tag-violet-border: $z-ramp-violet-650,
+        $tag-violet-bg-hover: $z-ramp-violet-750,
+
+        $tag-yellow: $z-ramp-yellow-400,
+        $tag-yellow-text: $z-ramp-grey-800,
+        $tag-yellow-hover: $z-ramp-yellow-350,
+        $tag-yellow-border: $z-ramp-yellow-650,
+        $tag-yellow-bg-hover: $z-ramp-yellow-750,
+
+        // 标签颜色 - 暗主题淡色系（与violet融合）
+        $tag-pale-blue: color.mix($z-ramp-pale-blue-400, $z-ramp-violet-450, 80%),
+        $tag-pale-blue-text: $z-ramp-grey-100,
+        $tag-pale-blue-hover: color.mix($z-ramp-pale-blue-350, $z-ramp-violet-400, 80%),
+        $tag-pale-blue-border: color.mix($z-ramp-pale-blue-650, $z-ramp-violet-700, 80%),
+        $tag-pale-blue-bg-hover: color.mix($z-ramp-pale-blue-750, $z-ramp-violet-800, 80%),
+        $tag-pale-green: color.mix($z-ramp-pale-green-400, $z-ramp-violet-500, 90%),
+        $tag-pale-green-text: $z-ramp-grey-100,
+        $tag-pale-green-hover: color.mix($z-ramp-pale-green-350, $z-ramp-violet-450, 90%),
+        $tag-pale-green-border: color.mix($z-ramp-pale-green-650, $z-ramp-violet-750, 90%),
+        $tag-pale-green-bg-hover: color.mix($z-ramp-pale-green-750, $z-ramp-violet-850, 90%),
+        $tag-pale-persimmon: color.mix($z-ramp-pale-persimmon-400, $z-ramp-violet-450, 85%),
+        $tag-pale-persimmon-text: $z-ramp-grey-100,
+        $tag-pale-persimmon-hover: color.mix($z-ramp-pale-persimmon-350, $z-ramp-violet-400, 85%),
+        $tag-pale-persimmon-border: color.mix($z-ramp-pale-persimmon-650, $z-ramp-violet-750, 85%),
+        $tag-pale-persimmon-bg-hover: color.mix($z-ramp-pale-persimmon-750, $z-ramp-violet-850, 85%),
+        $tag-pale-pink: color.mix($z-ramp-pale-pink-400, $z-ramp-violet-450, 75%),
+        $tag-pale-pink-text: $z-ramp-grey-100,
+        $tag-pale-pink-hover: color.mix($z-ramp-pale-pink-350, $z-ramp-violet-400, 75%),
+        $tag-pale-pink-border: color.mix($z-ramp-pale-pink-650, $z-ramp-violet-700, 75%),
+        $tag-pale-pink-bg-hover: color.mix($z-ramp-pale-pink-750, $z-ramp-violet-800, 75%),
+        $tag-pale-purple: color.mix($z-ramp-pale-purple-400, $z-ramp-violet-450, 65%),
+        $tag-pale-purple-text: $z-ramp-grey-100,
+        $tag-pale-purple-hover: color.mix($z-ramp-pale-purple-350, $z-ramp-violet-400, 65%),
+        $tag-pale-purple-border: color.mix($z-ramp-pale-purple-650, $z-ramp-violet-700, 65%),
+        $tag-pale-purple-bg-hover: color.mix($z-ramp-pale-purple-750, $z-ramp-violet-800, 65%),
+        $tag-pale-red: color.mix($z-ramp-pale-red-400, $z-ramp-violet-500, 85%),
+        $tag-pale-red-text: $z-ramp-grey-100,
+        $tag-pale-red-hover: color.mix($z-ramp-pale-red-350, $z-ramp-violet-450, 85%),
+        $tag-pale-red-border: color.mix($z-ramp-pale-red-650, $z-ramp-violet-750, 85%),
+        $tag-pale-red-bg-hover: color.mix($z-ramp-pale-red-750, $z-ramp-violet-850, 85%),
+        $tag-pale-violet: $z-ramp-pale-violet-400,
+        $tag-pale-violet-text: $z-ramp-grey-100,
+        $tag-pale-violet-hover: $z-ramp-pale-violet-350,
+        $tag-pale-violet-border: $z-ramp-pale-violet-650,
+        $tag-pale-violet-bg-hover: $z-ramp-pale-violet-750,
+
+        $tag-pale-yellow: color.mix($z-ramp-pale-yellow-400, $z-ramp-violet-500, 90%),
+        $tag-pale-yellow-text: $z-ramp-grey-800,
+        $tag-pale-yellow-hover: color.mix($z-ramp-pale-yellow-350, $z-ramp-violet-450, 90%),
+        $tag-pale-yellow-border: color.mix($z-ramp-pale-yellow-650, $z-ramp-violet-750, 90%),
+        $tag-pale-yellow-bg-hover: color.mix($z-ramp-pale-yellow-750, $z-ramp-violet-850, 90%),
+
+        // Switch组件专用颜色 - 深色主题
+        $switch-unchecked: $z-ramp-grey-600,
+        $switch-unchecked-hover: $z-ramp-grey-550,
+        $switch-checked: $z-ramp-violet-400,
+        $switch-checked-hover: $z-ramp-violet-350,
+
+        // 阴影 - 现代深色主题，四周都有阴影，下方更明显
+        $box-shadow:
+            (
+                0 1px 3px rgba($z-ramp-black-500, 0.25),
+                0 4px 12px rgba($z-ramp-black-600, 0.2),
+                0 8px 32px rgba($z-ramp-black-700, 0.15),
+                1px 0 3px rgba($z-ramp-black-500, 0.12),
+                -1px 0 3px rgba($z-ramp-black-500, 0.12)
+            ),
+        $box-shadow-popover: (
+            0 4px 16px rgba($z-ramp-black-500, 0.3),
+            0 8px 32px rgba($z-ramp-black-600, 0.25),
+            0 16px 48px rgba($z-ramp-black-700, 0.2)
+        ),
+        $box-shadow-rounded: (
+            0 4px 12px rgba($z-ramp-black-500, 0.4),
+            0 8px 24px rgba($z-ramp-black-600, 0.3),
+            0 16px 32px rgba($z-ramp-black-700, 0.2)
+        ),
+        // 透明度
+        $opacity-disabled: 0.4,
+        $opacity-hover: 0.8,
+        $opacity-active: 0.9
+    );
+}

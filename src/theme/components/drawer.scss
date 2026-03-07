@@ -1,0 +1,413 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-drawer {
+  position: fixed;
+  z-index: getVar(z-index, drawer);
+  overflow: visible;
+
+  &.#{$namespace}-is-contained {
+    position: absolute;
+  }
+
+  &__mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: getVar(color, bg-mask);
+    backdrop-filter: blur(4px);
+    z-index: getVar(z-index, mask);
+    transition: all getVar(duration, element-visibility);
+    opacity: 0;
+    visibility: hidden;
+
+    &.#{$namespace}-is-visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    &.#{$namespace}-is-entering {
+      animation: drawerMaskEnter getVar(duration, element-visibility) ease-out;
+    }
+    
+    &.#{$namespace}-is-leaving {
+      animation: drawerMaskLeave getVar(duration, element-visibility) ease-in;
+    }
+
+    &.#{$namespace}-is-contained {
+      position: absolute;
+    }
+  }
+
+  &__content {
+    position: relative;
+    background: getVar(color, bg-opacity);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: getVar(color, box-shadow-popover);
+    border: 1px solid getVar(color, border-glass);
+    @include flex(flex-start, stretch, column);
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    
+    // 自定义滚动条
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: getVar(color, bg-secondary);
+      border-radius: getVar(border-radius, sm);
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: getVar(color, border-active);
+      border-radius: getVar(border-radius, sm);
+      
+      &:hover {
+        background: getVar(color, text-secondary);
+      }
+    }
+  }
+
+  &__header {
+    padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
+    border-bottom: 1px solid getVar(color, border);
+    @include flex(space-between, center);
+    background: linear-gradient(135deg, getVar(color, bg) 0%, getVar(color, bg-secondary) 100%);
+    flex-shrink: 0;
+
+    & > .#{$namespace}-container {
+      padding: 0;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    flex: 1;
+    font-size: getVar(font-size, title);
+    font-weight: 600;
+    color: getVar(color, text);
+  }
+
+  &__close {
+    padding: getVar(inset, xs);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    @include flex();
+    color: getVar(color, text-secondary);
+    transition: all getVar(duration, element-interaction);
+    border-radius: getVar(border-radius, sm);
+    transform: scale(1);
+
+    &:hover {
+      color: getVar(color, text);
+      background-color: getVar(color, bg-active);
+      transform: scale(1.1);
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px getVar(color, brand-secondary);
+    }
+  }
+
+  &__body {
+    flex: 1;
+    padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
+    overflow: auto;
+    background-color: getVar(color, bg);
+  }
+
+  &__footer {
+    padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
+    border-top: 1px solid getVar(color, border);
+    @include flex(flex-end);
+    gap: getVar(inset, sm);
+    background: linear-gradient(135deg, getVar(color, bg-secondary) 0%, getVar(color, bg) 100%);
+    flex-shrink: 0;
+
+    & > .#{$namespace}-container {
+      padding: 0;
+    }
+  }
+
+  // 方向样式
+  &--left,
+  &--right,
+  &--top,
+  &--bottom {
+    transition: transform getVar(duration, element-visibility);
+    will-change: transform;
+  }
+  
+  &--left {
+    top: 0;
+    left: 0;
+    height: 100%;
+    transform: translateX(-100%);
+
+    &.#{$namespace}-is-visible {
+      transform: translateX(0);
+    }
+    
+    &.#{$namespace}-is-entering {
+      animation: drawerSlideInLeft getVar(duration, element-visibility) cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    &.#{$namespace}-is-leaving {
+      animation: drawerSlideOutLeft getVar(duration, element-visibility) ease-in;
+    }
+
+    .#{$namespace}-drawer__content {
+      border-radius: 0 getVar(border-radius, lg) getVar(border-radius, lg) 0;
+      height: 100%;
+      border-left: none;
+    }
+  }
+
+  &--right {
+    top: 0;
+    right: 0;
+    height: 100%;
+    transform: translateX(100%);
+
+    &.#{$namespace}-is-visible {
+      transform: translateX(0);
+    }
+    
+    &.#{$namespace}-is-entering {
+      animation: drawerSlideInRight getVar(duration, element-visibility) cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    &.#{$namespace}-is-leaving {
+      animation: drawerSlideOutRight getVar(duration, element-visibility) ease-in;
+    }
+
+    .#{$namespace}-drawer__content {
+      border-radius: getVar(border-radius, lg) 0 0 getVar(border-radius, lg);
+      height: 100%;
+      border-right: none;
+    }
+  }
+
+  &--top {
+    top: 0;
+    left: 0;
+    width: 100%;
+    transform: translateY(-100%);
+
+    &.#{$namespace}-is-visible {
+      transform: translateY(0);
+    }
+    
+    &.#{$namespace}-is-entering {
+      animation: drawerSlideInTop getVar(duration, element-visibility) cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    &.#{$namespace}-is-leaving {
+      animation: drawerSlideOutTop getVar(duration, element-visibility) ease-in;
+    }
+
+    .#{$namespace}-drawer__content {
+      border-radius: 0 0 getVar(border-radius, lg) getVar(border-radius, lg);
+      width: 100%;
+      border-top: none;
+    }
+  }
+
+  &--bottom {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    transform: translateY(100%);
+
+    &.#{$namespace}-is-visible {
+      transform: translateY(0);
+    }
+    
+    &.#{$namespace}-is-entering {
+      animation: drawerSlideInBottom getVar(duration, element-visibility) cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    &.#{$namespace}-is-leaving {
+      animation: drawerSlideOutBottom getVar(duration, element-visibility) ease-in;
+    }
+
+    .#{$namespace}-drawer__content {
+      border-radius: getVar(border-radius, lg) getVar(border-radius, lg) 0 0;
+      width: 100%;
+      border-bottom: none;
+    }
+  }
+  
+  // 尺寸变体
+  &--small {
+    &.#{$namespace}-drawer--left,
+    &.#{$namespace}-drawer--right {
+      width: 280px;
+    }
+    
+    &.#{$namespace}-drawer--top,
+    &.#{$namespace}-drawer--bottom {
+      height: 240px;
+    }
+  }
+  
+  &--medium {
+    &.#{$namespace}-drawer--left,
+    &.#{$namespace}-drawer--right {
+      width: 380px;
+    }
+    
+    &.#{$namespace}-drawer--top,
+    &.#{$namespace}-drawer--bottom {
+      height: 320px;
+    }
+  }
+  
+  &--large {
+    &.#{$namespace}-drawer--left,
+    &.#{$namespace}-drawer--right {
+      width: 520px;
+    }
+    
+    &.#{$namespace}-drawer--top,
+    &.#{$namespace}-drawer--bottom {
+      height: 420px;
+    }
+  }
+  
+  // 无头部样式
+  &.#{$namespace}-is-headerless {
+    .#{$namespace}-drawer__content {
+      .#{$namespace}-drawer__body {
+        padding-top: getVar(inset, container-vertical);
+      }
+    }
+  }
+  
+  // 无底部样式
+  &.#{$namespace}-is-footerless {
+    .#{$namespace}-drawer__content {
+      .#{$namespace}-drawer__body {
+        padding-bottom: getVar(inset, container-vertical);
+      }
+    }
+  }
+}
+
+// 抽屉动画定义
+@keyframes drawerMaskEnter {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+@keyframes drawerMaskLeave {
+  from {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+  to {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+}
+
+@keyframes drawerSlideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  60% {
+    transform: translateX(8px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes drawerSlideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes drawerSlideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  60% {
+    transform: translateX(-8px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes drawerSlideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes drawerSlideInTop {
+  from {
+    transform: translateY(-100%);
+  }
+  60% {
+    transform: translateY(8px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes drawerSlideOutTop {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes drawerSlideInBottom {
+  from {
+    transform: translateY(100%);
+  }
+  60% {
+    transform: translateY(-8px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes drawerSlideOutBottom {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}

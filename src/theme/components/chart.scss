@@ -1,0 +1,418 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-chart {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 300px;
+    max-height: 100vh;
+    overflow: hidden;
+    font-family: getVar(font-family, base);
+    @include flex(flex-start, stretch, column);
+    background-color: getVar(color, bg);
+    border-radius: getVar(border-radius);
+    border: 1px solid getVar(color, border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all getVar(duration, element-interaction);
+
+    svg {
+        fill: getVar(color, text-secondary);
+        max-width: 100%;
+        max-height: 100%;
+        transition: all getVar(duration, element-interaction);
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.05));
+    }
+
+    // 图例位置变体
+    &--legend-top {
+        .#{$namespace}-chart__legend {
+            order: -1;
+            justify-content: center;
+            border-top: none;
+            border-bottom: 1px solid getVar(color, border);
+        }
+    }
+
+    &--legend-bottom {
+        .#{$namespace}-chart__legend {
+            order: 1;
+            justify-content: center;
+        }
+    }
+
+    &--legend-left {
+        .#{$namespace}-chart__content {
+            flex-direction: row;
+        }
+        
+        .#{$namespace}-chart__legend {
+            order: -1;
+            flex-direction: column;
+            width: 150px;
+            border-top: none;
+            border-right: 1px solid getVar(color, border);
+        }
+    }
+
+    &--legend-right {
+        .#{$namespace}-chart__content {
+            flex-direction: row;
+        }
+        
+        .#{$namespace}-chart__legend {
+            order: 1;
+            flex-direction: column;
+            width: 150px;
+            border-top: none;
+            border-left: 1px solid getVar(color, border);
+        }
+    }
+
+    // 标题元素
+    &__title {
+        padding: getVar(inset, sm);
+        font-size: getVar(font-size, title);
+        font-weight: getVar(font-weight, semibold);
+        text-align: center;
+        color: getVar(color, text);
+        flex-shrink: 0;
+        border-bottom: 1px solid getVar(color, border);
+        background: linear-gradient(135deg, 
+            getVar(color, bg) 0%, 
+            getVar(color, bg-secondary) 100%);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    // 内容区域
+    &__content {
+        position: relative;
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        @include flex(flex-start, stretch, column);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    // 图表容器
+    &__chart-container {
+        flex: 1;
+        @include flex(center, center);
+        width: 100%;
+        position: relative;
+        min-height: 0;
+        overflow: hidden;
+        background: radial-gradient(circle at center, 
+            rgba(getVar(color, brand), 0.02) 0%, 
+            transparent 70%);
+    }
+
+    // 饼图元素
+    &__pie {
+        width: 100%;
+        height: 100%;
+    }
+
+    // 饼图切片
+    &__slice {
+        cursor: pointer;
+        transition: all getVar(duration, element-interaction);
+        stroke: getVar(color, bg-solid);
+        stroke-width: 0.02;
+
+        &:hover {
+            filter: brightness(1.08);
+            transform: scale(1.02);
+        }
+
+        &.#{$namespace}-is-selected {
+            filter: brightness(1.15);
+            transform: scale(1.05);
+            stroke-width: 0.03;
+        }
+
+        text {
+            font-size: 0.08;
+            fill: getVar(color, bg-solid);
+            stroke: getVar(color, text);
+            stroke-width: 0.01;
+            text-anchor: middle;
+            font-weight: getVar(font-weight, bold);
+            paint-order: stroke fill;
+            transition: all getVar(duration, element-interaction);
+        }
+    }
+
+    // 柱状图元素
+    &__bar {
+        width: 100%;
+        height: 100%;
+
+        line {
+            stroke: getVar(color, border);
+            stroke-width: 0.005;
+            transition: all getVar(duration, element-interaction);
+        }
+
+        g[key^="y-tick-"], g[key^="x-label-"] {
+            line {
+                stroke: getVar(color, border);
+                stroke-width: 0.003;
+            }
+            text {
+                font-size: 0.03;
+                fill: getVar(color, text-secondary);
+                font-weight: getVar(font-weight, medium);
+            }
+        }
+
+        text[transform^="rotate"] {
+            font-size: 0.03;
+            fill: getVar(color, text-secondary);
+            text-anchor: middle;
+            font-weight: getVar(font-weight, medium);
+        }
+    }
+
+    // 柱状图项目
+    &__bar-item {
+        cursor: pointer;
+        transition: all getVar(duration, element-interaction);
+
+        rect {
+            transition: all getVar(duration, element-interaction);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+        
+        text {
+            font-size: 0.025;
+            fill: getVar(color, text);
+            text-anchor: middle;
+            font-weight: getVar(font-weight, medium);
+        }
+
+        &:hover {
+            rect {
+                filter: brightness(1.08) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+            }
+        }
+
+        &.#{$namespace}-is-selected {
+            rect {
+                filter: brightness(1.15) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+            }
+        }
+
+        &.#{$namespace}-is-dimmed {
+            opacity: 0.2;
+            transition: opacity getVar(duration, element-interaction);
+            
+            &:hover {
+                opacity: 0.6;
+            }
+        }
+    }
+
+    // 折线图元素
+    &__line {
+        width: 100%;
+        height: 100%;
+
+        line[x1="0.1"] {
+            stroke: getVar(color, border);
+            stroke-width: 0.005;
+        }
+
+        line[stroke-dasharray] {
+            stroke: getVar(color, border-secondary);
+            stroke-width: 0.002;
+        }
+
+        g[key^="y-tick-"], g[key^="x-label-"] {
+            line {
+                stroke: getVar(color, border);
+                stroke-width: 0.003;
+            }
+            text {
+                font-size: 0.03;
+                fill: getVar(color, text-secondary);
+                font-weight: getVar(font-weight, medium);
+            }
+        }
+
+        text[transform^="rotate"] {
+            font-size: 0.03;
+            fill: getVar(color, text-secondary);
+            text-anchor: middle;
+            font-weight: getVar(font-weight, medium);
+        }
+    }
+
+    // 折线图系列
+    &__line-serie {
+        transition: all getVar(duration, element-interaction);
+
+        path {
+            fill: none;
+            stroke-linejoin: round;
+            stroke-linecap: round;
+            transition: all getVar(duration, element-interaction);
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+            cursor: pointer;
+        }
+        
+        // 可见的数据点
+        circle:not([fill="transparent"]) {
+            fill: getVar(color, bg-solid);
+            stroke-width: 0.006;
+            transition: all getVar(duration, element-interaction);
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+            pointer-events: none;
+        }
+        
+        // 透明触摸区域
+        circle[fill="transparent"] {
+            cursor: pointer;
+            
+            &:hover + circle {
+                filter: brightness(1.08) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+            }
+        }
+        
+        text {
+            font-size: 0.025;
+            fill: getVar(color, text);
+            text-anchor: middle;
+            font-weight: getVar(font-weight, medium);
+            pointer-events: none;
+        }
+
+        &:hover {
+            path {
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+                stroke-width: 0.008;
+            }
+        }
+
+        &.#{$namespace}-is-selected {
+            path {
+                filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25));
+                stroke-width: 0.01;
+            }
+            
+            circle:not([fill="transparent"]) {
+                filter: brightness(1.15) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
+            }
+        }
+
+        &.#{$namespace}-is-dimmed {
+            opacity: 0.2;
+            transition: opacity getVar(duration, element-interaction);
+            
+            &:hover {
+                opacity: 0.6;
+            }
+        }
+    }
+
+    // 空状态
+    &__empty {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        @include flex(center, center, column);
+        color: getVar(color, text-secondary);
+        z-index: 1;
+        gap: getVar(inset, xs);
+
+        .ari-icon {
+            font-size: getVar(icon-size, xxl);
+            color: getVar(color, text-tertiary);
+            animation: chartEmptyPulse 2s ease-in-out infinite;
+        }
+        
+        span {
+            font-size: getVar(font-size, body);
+            font-weight: getVar(font-weight, medium);
+        }
+    }
+
+    // 图例
+    &__legend {
+        @include flex(flex-start, center);
+        flex-wrap: wrap;
+        padding: getVar(inset, sm);
+        flex-shrink: 0;
+        gap: getVar(inset, xs);
+        background: linear-gradient(135deg, 
+            getVar(color, bg) 0%, 
+            getVar(color, bg-secondary) 100%);
+        border-top: 1px solid getVar(color, border);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    // 图例项目
+    &__legend-item {
+        @include flex(flex-start, center);
+        margin: 0;
+        padding: getVar(inset, xs);
+        font-size: getVar(font-size, caption);
+        border-radius: getVar(border-radius, sm);
+        cursor: pointer;
+        transition: all getVar(duration, element-interaction);
+        color: getVar(color, text);
+        border: 1px solid transparent;
+
+        &:hover {
+            background-color: getVar(color, bg-active);
+            border-color: getVar(color, brand);
+        }
+
+        &.#{$namespace}-is-selected {
+            background-color: getVar(color, brand-secondary);
+            border-color: getVar(color, brand);
+            font-weight: getVar(font-weight, semibold);
+            color: getVar(color, text);
+        }
+
+        &.#{$namespace}-is-dimmed {
+            opacity: 0.4;
+            transition: opacity getVar(duration, element-interaction);
+            
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+
+    // 图例颜色
+    &__legend-color {
+        width: getVar(element-size, xs);
+        height: getVar(element-size, xs);
+        border-radius: getVar(border-radius, xs);
+        margin-right: getVar(inset, xs);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    // 图例标签
+    &__legend-label {
+        max-width: 120px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: inherit;
+    }
+}
+
+// 动画定义
+@keyframes chartEmptyPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+}

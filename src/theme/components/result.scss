@@ -1,0 +1,211 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-result {
+    @include flex(center, center, column);
+    padding: getVar(inset, lg);
+    text-align: center;
+    background: linear-gradient(135deg, 
+        getVar(color, bg) 0%, 
+        getVar(color, bg-secondary) 100%);
+    border-radius: getVar(border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transition: all getVar(duration, element-interaction);
+
+    // 结果页面元素
+    &__icon-container {
+        margin-bottom: getVar(inset, md);
+        padding: getVar(inset);
+        border-radius: 50%;
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, bg-tertiary), 0.8) 0%, 
+            rgba(getVar(color, bg-secondary), 0.6) 100%);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: all getVar(duration, element-interaction);
+
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+    }
+
+    &__icon {
+        font-size: 3rem;
+        transition: all getVar(duration, element-interaction);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    &__image {
+        max-width: 6rem;
+        max-height: 6rem;
+        border-radius: getVar(border-radius);
+        transition: all getVar(duration, element-interaction);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    &__title {
+        margin-bottom: getVar(inset, sm);
+        font-weight: getVar(font-weight, bold);
+        color: getVar(color, text);
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__subtitle {
+        margin-bottom: getVar(inset, md);
+        color: getVar(color, text-secondary);
+        font-weight: getVar(font-weight, medium);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__content {
+        margin-bottom: getVar(inset, md);
+        color: getVar(color, text-secondary);
+        line-height: 1.6;
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__extra {
+        margin-top: getVar(inset, md);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    // 状态修饰符
+    &--success {
+        border: 2px solid getVar(color, border-success);
+        background: linear-gradient(135deg, 
+            getVar(color, success-tertiary) 0%, 
+            rgba(getVar(color, success), 0.05) 50%,
+            getVar(color, bg) 100%);
+        box-shadow: 0 4px 20px rgba(getVar(color, success), 0.15);
+
+        .#{$namespace}-result__icon-container {
+            background: linear-gradient(135deg, 
+                getVar(color, success-secondary) 0%, 
+                getVar(color, success) 100%);
+            border: 2px solid getVar(color, success);
+            color: getVar(color, text-on-success);
+        }
+
+        .#{$namespace}-result__icon {
+            color: getVar(color, text-on-success);
+            filter: drop-shadow(0 2px 8px rgba(getVar(color, success), 0.4));
+        }
+
+        .#{$namespace}-result__title {
+            color: getVar(color, text-success);
+            font-weight: getVar(font-weight, bold);
+        }
+    }
+
+    &--error {
+        border: 2px solid getVar(color, border-danger);
+        background: linear-gradient(135deg, 
+            getVar(color, danger-tertiary) 0%, 
+            rgba(getVar(color, danger), 0.05) 50%,
+            getVar(color, bg) 100%);
+        box-shadow: 0 4px 20px rgba(getVar(color, danger), 0.15);
+
+        .#{$namespace}-result__icon-container {
+            background: linear-gradient(135deg, 
+                getVar(color, danger-secondary) 0%, 
+                getVar(color, danger) 100%);
+            border: 2px solid getVar(color, danger);
+            color: getVar(color, text-on-danger);
+        }
+
+        .#{$namespace}-result__icon {
+            color: getVar(color, text-on-danger);
+            filter: drop-shadow(0 2px 8px rgba(getVar(color, danger), 0.4));
+        }
+
+        .#{$namespace}-result__title {
+            color: getVar(color, text-danger);
+            font-weight: getVar(font-weight, bold);
+        }
+    }
+
+    &--warning {
+        border: 2px solid getVar(color, border-warning);
+        background: linear-gradient(135deg, 
+            getVar(color, warning-tertiary) 0%, 
+            rgba(getVar(color, warning), 0.05) 50%,
+            getVar(color, bg) 100%);
+        box-shadow: 0 4px 20px rgba(getVar(color, warning), 0.15);
+
+        .#{$namespace}-result__icon-container {
+            background: linear-gradient(135deg, 
+                getVar(color, warning-secondary) 0%, 
+                getVar(color, warning) 100%);
+            border: 2px solid getVar(color, warning);
+            color: getVar(color, text-on-warning);
+        }
+
+        .#{$namespace}-result__icon {
+            color: getVar(color, text-on-warning);
+            filter: drop-shadow(0 2px 8px rgba(getVar(color, warning), 0.4));
+        }
+
+        .#{$namespace}-result__title {
+            color: getVar(color, text-warning);
+            font-weight: getVar(font-weight, bold);
+        }
+    }
+
+    &--info {
+        border: 2px solid getVar(color, border-info);
+        background: linear-gradient(135deg, 
+            getVar(color, info-tertiary) 0%, 
+            rgba(getVar(color, info), 0.05) 50%,
+            getVar(color, bg) 100%);
+        box-shadow: 0 4px 20px rgba(getVar(color, info), 0.15);
+
+        .#{$namespace}-result__icon-container {
+            background: linear-gradient(135deg, 
+                getVar(color, info-secondary) 0%, 
+                getVar(color, info) 100%);
+            border: 2px solid getVar(color, info);
+            color: getVar(color, text-on-info);
+        }
+
+        .#{$namespace}-result__icon {
+            color: getVar(color, text-on-info);
+            filter: drop-shadow(0 2px 8px rgba(getVar(color, info), 0.4));
+        }
+
+        .#{$namespace}-result__title {
+            color: getVar(color, text-info);
+            font-weight: getVar(font-weight, bold);
+        }
+    }
+
+    // 尺寸变体
+    &--size-sm {
+        padding: getVar(inset);
+
+        .#{$namespace}-result__icon {
+            font-size: 2rem;
+        }
+
+        .#{$namespace}-result__image {
+            max-width: 4rem;
+            max-height: 4rem;
+        }
+    }
+
+    &--size-lg {
+        padding: getVar(inset, xl);
+
+        .#{$namespace}-result__icon {
+            font-size: 4rem;
+        }
+
+        .#{$namespace}-result__image {
+            max-width: 8rem;
+            max-height: 8rem;
+        }
+    }
+}

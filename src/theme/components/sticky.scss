@@ -1,0 +1,105 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-sticky {
+  display: block;
+  box-sizing: border-box;
+  z-index: getVar(z-index, sticky);
+  border-radius: getVar(border-radius, container);
+  transition: all getVar(duration, element-interaction);
+
+  // 粘性状态样式
+  &.#{$namespace}-is-sticky {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    background: linear-gradient(135deg, 
+      rgba(getVar(color, bg), 0.95) 0%,
+      rgba(getVar(color, bg-secondary), 0.9) 100%);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(getVar(color, border), 0.3);
+    transform: translateY(getVar(transform, hover-translate-y));
+
+    // 添加微妙的内部阴影
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, 
+        rgba(getVar(color, bg-tertiary), 0.5) 0%,
+        transparent 50%,
+        rgba(getVar(color, bg-secondary), 0.3) 100%);
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: -1;
+    }
+  }
+
+  // 位置变体 - 顶部
+  &--top {
+    top: 0;
+
+    &.#{$namespace}-is-sticky {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(getVar(color, brand), 0.2);
+    }
+  }
+
+  // 位置变体 - 底部
+  &--bottom {
+    bottom: 0;
+
+    &.#{$namespace}-is-sticky {
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+      border-top: 1px solid rgba(getVar(color, brand), 0.2);
+    }
+  }
+
+  // 位置变体 - 左侧
+  &--left {
+    left: 0;
+
+    &.#{$namespace}-is-sticky {
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+      border-right: 1px solid rgba(getVar(color, brand), 0.2);
+    }
+  }
+
+  // 位置变体 - 右侧
+  &--right {
+    right: 0;
+
+    &.#{$namespace}-is-sticky {
+      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+      border-left: 1px solid rgba(getVar(color, brand), 0.2);
+    }
+  }
+
+  // 启用状态
+  &.#{$namespace}-is-enabled {
+    position: sticky;
+  }
+
+  // 附加效果变体 - 强阴影
+  &--shadow-strong {
+    &.#{$namespace}-is-sticky {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  // 附加效果变体 - 透明
+  &--transparent {
+    &.#{$namespace}-is-sticky {
+      background: rgba(getVar(color, bg), 0.8);
+      backdrop-filter: blur(12px);
+    }
+  }
+
+  // 附加效果变体 - 边框
+  &--bordered {
+    &.#{$namespace}-is-sticky {
+      border: 2px solid getVar(color, brand);
+      box-shadow: 0 0 0 4px rgba(getVar(color, brand), 0.1);
+    }
+  }
+}

@@ -1,0 +1,278 @@
+// @ari/theme/components/select.scss
+
+@use "../global/index.scss" as *;
+@use "sass:map";
+
+.#{$namespace}-select {
+  width: auto;
+  box-sizing: border-box;
+  display: inline-flex;
+
+  &__trigger {
+    @include flex(space-between);
+    height: getVar(element-size);
+    width: 100%;
+    padding: 0 getVar(inset, sm);
+    border: 1px solid getVar(color, border);
+    @include adaptive-border-radius("", getVar(element-size));
+    cursor: pointer;
+    transition: all getVar(duration, element-interaction);
+    display: inline-flex;
+    gap: getVar(inset, sm);
+    background-color: getVar(color, bg);
+    transform: translateY(0);
+
+    &.#{$namespace}-is-multiple {
+      height: auto;
+      min-height: getVar(element-size);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    &:hover {
+      background-color: getVar(color, bg-active);
+      border-color: getVar(color, border-active);
+      transform: translateY(0);
+      box-shadow: getVar(color, box-shadow);
+    }
+
+    &.#{$namespace}-is-disabled {
+      cursor: not-allowed;
+      opacity: getVar(opacity, disabled);
+      transform: none;
+
+      &:hover {
+        background-color: getVar(color, bg);
+        border-color: getVar(color, border);
+        transform: none;
+        box-shadow: none;
+      }
+    }
+
+    &.#{$namespace}-is-open {
+      border-color: getVar(color, brand);
+      box-shadow: getVar(color, box-shadow-input);
+      transform: translateY(0);
+
+      .#{$namespace}-select__arrow {
+        transform: rotate(180deg);
+      }
+    }
+
+    &.#{$namespace}-is-borderless {
+      border-color: transparent;
+      box-shadow: none;
+
+      &:hover {
+        border-color: transparent;
+        box-shadow: none;
+      }
+
+      &.#{$namespace}-is-open {
+        border-color: transparent;
+        box-shadow: none;
+      }
+    }
+  }
+
+  &__values-container {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: getVar(inset, xs);
+    align-items: center;
+    min-width: 0;
+    overflow: hidden;
+  }
+  
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: getVar(inset, xs);
+    padding: getVar(inset, xs) 0;
+  }
+  
+  &__selected-tag {
+    margin: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: getVar(color, bg-active);
+    color: getVar(color, text-secondary);
+    transition: all getVar(duration, element-interaction);
+    
+    &:hover {
+      background-color: getVar(color, bg-tertiary);
+      transform: translateY(0);
+      box-shadow: getVar(color, box-shadow);
+    }
+  }
+
+  &__value {
+    margin: 0;
+    font-size: getVar(font-size, button);
+  }
+
+  &__suffix {
+    @include flex();
+    gap: getVar(inset, sm);
+  }
+
+  &__arrow {
+    color: getVar(color, text);
+    transition: transform getVar(duration, element-interaction);
+  }
+
+  &__clear-icon {
+    cursor: pointer;
+    color: getVar(color, text-secondary);
+    transition: all getVar(duration, element-interaction);
+
+    &:hover {
+      color: getVar(color, text);
+      transform: scale(1.1);
+    }
+  }
+
+  &__dropdown {
+    position: fixed;
+    max-height: 15rem;
+    overflow-y: auto;
+    background-color: getVar(color, bg-solid);
+    border: 1px solid getVar(color, border);
+    @include adaptive-border-radius("", getVar(element-size));
+    box-shadow: getVar(color, box-shadow-popover);
+    z-index: getVar(z-index, popover);
+    padding: getVar(inset, xs);
+    @include flex(flex-start, stretch, column);
+    gap: getVar(inset, sm);
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+    transition: all getVar(duration, element-interaction);
+    
+    &.#{$namespace}-is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    
+    &.#{$namespace}-is-sortable-mode {
+      z-index: calc(getVar(z-index, popover) + 100);
+    }
+  }
+  
+  &__search-container {
+    padding: getVar(inset, xs);
+    border-bottom: 1px solid getVar(color, border);
+    margin-bottom: getVar(inset, xs);
+  }
+  
+  &__search-input {
+    width: 100%;
+  }
+  
+  &__empty-message {
+    padding: getVar(inset, sm);
+    color: getVar(color, text-secondary);
+    text-align: center;
+    font-size: getVar(font-size, button);
+  }
+
+  &__option {
+    padding: getVar(inset, xs) getVar(inset, sm);
+    color: getVar(color, text);
+    cursor: pointer;
+    transition: all getVar(duration, element-interaction);
+    height: getVar(element-size, sm);
+    @include flex(flex-start);
+    @include adaptive-border-radius("", getVar(element-size, sm));
+    transform: translateX(0);
+
+    &:hover {
+      background-color: getVar(color, bg-active);
+      transform: translateX(0);
+      box-shadow: getVar(color, box-shadow);
+    }
+
+    &.#{$namespace}-is-selected {
+      background-color: getVar(color, brand-secondary);
+      color: getVar(color, text-on-brand);
+      border-left: 3px solid getVar(color, brand);
+    }
+
+    &.#{$namespace}-is-disabled {
+      cursor: not-allowed;
+      opacity: getVar(opacity, disabled);
+      transform: none;
+
+      &:hover {
+        background-color: transparent;
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  // Sortable模式样式
+  &--sortable {
+    display: flex;
+    flex-direction: column;
+    gap: getVar(inset, sm);
+  }
+
+  &__label {
+    margin: 0;
+    font-size: getVar(font-size, button);
+    font-weight: 500;
+    color: getVar(color, text);
+  }
+
+  &__sortable-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: getVar(inset, xs);
+  }
+
+  &__drag-list {
+    margin-bottom: getVar(inset, xs);
+  }
+
+  &__sortable-item-content {
+    @include flex(space-between);
+    width: 100%;
+    align-items: center;
+    gap: getVar(inset, sm);
+  }
+
+  &__item-label {
+    color: getVar(color, text);
+    font-size: getVar(font-size, button);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+
+  &__remove-button {
+    @include flex;
+    color: getVar(color, text-secondary);
+    cursor: pointer;
+    transition: color getVar(duration, element-interaction);
+
+    &:hover {
+      color: getVar(color, danger);
+    }
+
+    &.#{$namespace}-is-disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  &__count {
+    text-align: right;
+    font-size: getVar(font-size, caption);
+    color: getVar(color, text-secondary);
+    margin-top: getVar(inset, xs);
+  }
+}

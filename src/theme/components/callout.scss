@@ -1,0 +1,263 @@
+@use "../global/index" as *;
+
+.#{$namespace}-callout {
+  border-radius: getVar(border-radius);
+  border: 1px solid getVar(color, border);
+  margin: getVar(inset) 0;
+  overflow: hidden;
+  transition: all getVar(duration, element-interaction);
+
+  // 告示框头部
+  &__header {
+    @include flex(space-between, center);
+    padding: getVar(inset, sm) getVar(inset);
+    font-weight: getVar(font-weight, semibold);
+    border-bottom: 1px solid transparent;
+    transition: all getVar(duration, element-interaction);
+
+    &.#{$namespace}-is-clickable {
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        background-color: getVar(color, bg-hover);
+      }
+    }
+  }
+
+  // 标题包装器
+  &__title-wrapper {
+    @include flex(flex-start, center);
+    gap: getVar(inset, xs);
+  }
+
+  // 图标
+  &__icon {
+    font-size: getVar(font-size, lg);
+    flex-shrink: 0;
+  }
+
+  // 标题
+  &__title {
+    font-size: getVar(font-size);
+    line-height: 1;
+  }
+
+  // 切换图标
+  &__toggle-icon {
+    font-size: getVar(font-size, lg);
+    transition: transform getVar(duration, element-interaction);
+    color: getVar(color, text-secondary);
+  }
+
+  // 内容区域
+  &__content {
+    transition: all getVar(duration, element-interaction);
+    overflow: hidden;
+
+    &.#{$namespace}-is-hidden {
+      max-height: 0;
+      border-top: none;
+    }
+  }
+
+  // 内容主体
+  &__body {
+    padding: getVar(inset);
+    font-size: getVar(font-size, sm);
+    line-height: getVar(line-height, relaxed);
+    color: getVar(color, text-callout);
+
+    // 内容中的段落间距
+    p {
+      margin: getVar(inset, xs) 0;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    // 内容中的代码样式
+    code {
+      background-color: getVar(color, bg-soft);
+      padding: 2px 4px;
+      border-radius: getVar(border-radius, xs);
+      font-family: getVar(font-family, mono);
+      font-size: 0.9em;
+    }
+
+    // 内容中的预格式化文本样式
+    pre {
+      background-color: getVar(color, bg-secondary);
+      padding: getVar(inset, sm);
+      border-radius: getVar(border-radius, sm);
+      font-family: getVar(font-family, mono);
+      font-size: 0.9em;
+      line-height: 1.4;
+      overflow-x: auto;
+      color: getVar(color, text-secondary);
+      border: 1px solid getVar(color, border);
+      margin: getVar(inset, xs) 0;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    // 内容中的链接样式
+    a {
+      color: inherit;
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  // 可折叠状态下的边框
+  &.#{$namespace}-is-collapsible {
+    .#{$namespace}-callout__header {
+      border-bottom-color: getVar(color, border);
+    }
+
+    &.#{$namespace}-is-expanded {
+      .#{$namespace}-callout__content {
+        max-height: none;
+      }
+    }
+  }
+
+  // Note 类型样式
+  &--note {
+    background-color: getVar(color, bg-soft);
+    border-color: getVar(color, border);
+
+    .#{$namespace}-callout__icon {
+      color: getVar(color, text-secondary);
+    }
+
+    .#{$namespace}-callout__title {
+      color: getVar(color, text);
+    }
+
+    .#{$namespace}-callout__body {
+      color: getVar(color, text-callout);
+    }
+  }
+
+  // Tip 类型样式
+  &--tip {
+    background-color: getVar(color, success-tertiary);
+    border-color: getVar(color, success);
+
+    .#{$namespace}-callout__icon {
+      color: getVar(color, text-on-success);
+    }
+
+    .#{$namespace}-callout__title {
+      color: getVar(color, text-on-success);
+    }
+
+    .#{$namespace}-callout__body {
+      color: getVar(color, text-callout-success);
+    }
+
+    &.#{$namespace}-is-collapsible .#{$namespace}-callout__header {
+      border-bottom-color: getVar(color, success-secondary);
+    }
+  }
+
+  // Info 类型样式
+  &--info {
+    background-color: getVar(color, info-tertiary);
+    border-color: getVar(color, info);
+
+    .#{$namespace}-callout__icon {
+      color: getVar(color, text-on-info);
+    }
+
+    .#{$namespace}-callout__title {
+      color: getVar(color, text-on-info);
+    }
+
+    .#{$namespace}-callout__body {
+      color: getVar(color, text-callout-info);
+    }
+
+    &.#{$namespace}-is-collapsible .#{$namespace}-callout__header {
+      border-bottom-color: getVar(color, info-secondary);
+    }
+  }
+
+  // Warning 类型样式
+  &--warning {
+    background-color: getVar(color, warning-tertiary);
+    border-color: getVar(color, warning);
+
+    .#{$namespace}-callout__icon {
+      color: getVar(color, text-on-warning);
+    }
+
+    .#{$namespace}-callout__title {
+      color: getVar(color, text-on-warning);
+    }
+
+    .#{$namespace}-callout__body {
+      color: getVar(color, text-callout-warning);
+    }
+
+    &.#{$namespace}-is-collapsible .#{$namespace}-callout__header {
+      border-bottom-color: getVar(color, warning-secondary);
+    }
+  }
+
+  // Danger 类型样式
+  &--danger {
+    background-color: getVar(color, danger-tertiary);
+    border-color: getVar(color, danger);
+
+    .#{$namespace}-callout__icon {
+      color: getVar(color, text-on-danger);
+    }
+
+    .#{$namespace}-callout__title {
+      color: getVar(color, text-on-danger);
+    }
+
+    .#{$namespace}-callout__body {
+      color: getVar(color, text-callout-danger);
+    }
+
+    &.#{$namespace}-is-collapsible .#{$namespace}-callout__header {
+      border-bottom-color: getVar(color, danger-secondary);
+    }
+  }
+
+  // 响应式设计
+  @include res(sm) {
+    margin: getVar(inset, sm) 0;
+
+    &__header {
+      padding: getVar(inset, xs) getVar(inset, sm);
+    }
+
+    &__body {
+      padding: getVar(inset, sm);
+      font-size: getVar(font-size, xs);
+    }
+
+    &__icon,
+    &__toggle-icon {
+      font-size: getVar(font-size);
+    }
+  }
+}

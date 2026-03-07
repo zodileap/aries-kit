@@ -1,0 +1,105 @@
+{
+  "name": "@aries-kit/react",
+  "version": "0.2.1",
+  "description": "Aries Kit React component and hooks library.",
+  "license": "MIT",
+  "main": "index.umd.js",
+  "module": "index.es.js",
+  "types": "types/index.d.ts",
+  "typings": "types/index.d.ts",
+  "source": "src/index.ts",
+  "style": "assets/style.css",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zodileap/aries-kit.git"
+  },
+  "homepage": "https://github.com/zodileap/aries-kit",
+  "bugs": {
+    "url": "https://github.com/zodileap/aries-kit/issues"
+  },
+  "keywords": [
+    "react",
+    "component-library",
+    "hooks",
+    "design-system",
+    "frontend"
+  ],
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./index.es.js",
+      "require": "./index.umd.js"
+    },
+    "./style.css": "./assets/style.css",
+    "./theme/index.scss": "./theme/index.scss",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "assets",
+    "theme",
+    "types",
+    "*.js",
+    "*.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json && vite build",
+    "postbuild": "node -r esbuild-register scripts/resolveCatalogDeps.ts",
+    "build:ts": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "preview:code": "node -r esbuild-register scripts/generateSourceMap.ts",
+    "dev:preview": "node -r esbuild-register scripts/getIconName.ts && node -r esbuild-register scripts/generateSourceMap.ts && vite --config vite.preview.ts",
+    "build:preview": "node -r esbuild-register scripts/getIconName.ts && node -r esbuild-register scripts/generateSourceMap.ts && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json && vite build --config vite.preview.ts",
+    "deploy": "bash preview/deploy.sh"
+  },
+  "dependencies": {
+    "i18next": "^23.15.2",
+    "i18next-browser-languagedetector": "^8.0.0",
+    "lottie-react": "^2.4.1",
+    "monaco-editor": "^0.52.2",
+    "react-i18next": "^15.0.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.11.1",
+    "@svgr/core": "^8.1.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.13.2",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "esbuild-register": "^3.6.0",
+    "eslint": "^9.11.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "fs-extra": "^11.2.0",
+    "globals": "^15.15.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^6.26.2",
+    "sass": "^1.85.1",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.7.0",
+    "typescript-transform-paths": "^3.5.1",
+    "vite": "^5.4.8",
+    "vite-plugin-dts": "^4.2.4",
+    "vite-plugin-svgr": "^4.3.0",
+    "vite-plugin-top-level-await": "^1.5.0",
+    "vite-plugin-wasm": "^3.4.1"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "react-router-dom": ">=6"
+  }
+}

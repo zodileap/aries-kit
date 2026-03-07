@@ -1,0 +1,86 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-fixed-size-grid {
+  position: relative;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  border-radius: getVar(border-radius, container);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all getVar(duration, element-interaction);
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  // 网格项容器
+  &__container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  // 网格项目
+  &__item {
+    position: absolute;
+    box-sizing: border-box;
+    border-radius: getVar(border-radius, container);
+    transition: all getVar(duration, element-interaction);
+    background-color: getVar(color, bg);
+    border: 1px solid getVar(color, border);
+
+    &:hover {
+      background-color: getVar(color, bg-active);
+      border-color: getVar(color, brand);
+      transform: translateY(getVar(transform, hover-translate-y));
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    &.#{$namespace}-is-selected {
+      background-color: getVar(color, bg-brand-light);
+      border-color: getVar(color, brand);
+      box-shadow: 0 0 0 2px rgba(getVar(color, brand), 0.2);
+    }
+  }
+
+  // 滚动条样式
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: getVar(color, bg-secondary);
+    border-radius: getVar(border-radius, container);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: getVar(color, text-tertiary);
+    border-radius: getVar(border-radius, container);
+    transition: all getVar(duration, element-interaction);
+
+    &:hover {
+      background-color: getVar(color, text-secondary);
+    }
+  }
+
+  // 状态变体
+  &.#{$namespace}-is-loading {
+    pointer-events: none;
+    opacity: 0.7;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border: 2px solid getVar(color, border);
+      border-top-color: getVar(color, brand);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+}

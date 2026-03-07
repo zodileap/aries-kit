@@ -1,0 +1,432 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-timeline {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-size: getVar(font-size, body);
+    transition: all getVar(duration, element-interaction);
+    position: relative;
+    
+    // 时间轴主要元素
+    &__item {
+        position: relative;
+        padding-bottom: getVar(inset, lg);
+        transition: all getVar(duration, element-interaction);
+        border-radius: getVar(border-radius, sm);
+        
+        &:hover {
+            .#{$namespace}-timeline__content {
+                transform: translateY(-#{getVar(inset, xs)});
+                background: getVar(color, bg-opacity-blur);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                box-shadow: getVar(color, box-shadow-popover);
+                border: 1px solid getVar(color, border-active);
+            }
+        }
+        
+        &.#{$namespace}-is-last {
+            padding-bottom: 0;
+            
+            .#{$namespace}-timeline__tail {
+                display: none;
+            }
+        }
+        
+        &.#{$namespace}-is-dashed {
+            .#{$namespace}-timeline__tail {
+                border-left-style: dashed;
+                border-image: linear-gradient(180deg, 
+                    getVar(color, border) 0%,
+                    rgba(getVar(color, border), 0.3) 100%) 1;
+            }
+        }
+    }
+    
+    &__tail {
+        position: absolute;
+        left: 5px;
+        top: 16px;
+        height: calc(100% - 16px);
+        border-left: 2px solid getVar(color, border);
+        transition: all getVar(duration, element-interaction);
+        
+        &::before {
+            content: '';
+            position: absolute;
+            left: -1px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(getVar(color, brand), 0.3) 0%,
+                transparent 100%);
+            opacity: 0;
+            transition: opacity getVar(duration, element-interaction);
+        }
+        
+        &:hover {
+            &::before {
+                opacity: 1;
+            }
+        }
+    }
+    
+    &__head {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: linear-gradient(135deg, 
+            getVar(color, bg) 0%, 
+            getVar(color, bg-secondary) 100%);
+        border-radius: 50%;
+        border: 2px solid getVar(color, border);
+        left: -1px;
+        top: 4px;
+        z-index: 2;
+        transition: all getVar(duration, element-interaction);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        
+        &:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border-color: getVar(color, brand);
+        }
+    }
+    
+    &__dot {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        box-sizing: border-box;
+        transition: all getVar(duration, element-interaction);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        
+        // 节点类型
+        &.#{$namespace}-is-type-filled {
+            border: 2px solid;
+            background: linear-gradient(135deg, 
+                var(--dot-color, getVar(color, brand)) 0%,
+                var(--dot-color-active, getVar(color, brand-active)) 100%);
+        }
+        
+        &.#{$namespace}-is-type-hollow {
+            border: 2px solid;
+            background: linear-gradient(135deg, 
+                getVar(color, bg) 0%, 
+                getVar(color, bg-secondary) 100%);
+            
+            &::after {
+                content: '';
+                position: absolute;
+                top: 2px;
+                left: 2px;
+                right: 2px;
+                bottom: 2px;
+                border-radius: 50%;
+                background: var(--dot-color, getVar(color, brand));
+                opacity: 0.3;
+            }
+        }
+        
+        &.#{$namespace}-is-type-borderless {
+            border: none;
+            background: linear-gradient(135deg, 
+                var(--dot-color, getVar(color, brand)) 0%,
+                var(--dot-color-active, getVar(color, brand-active)) 100%);
+            box-shadow: 0 2px 6px rgba(var(--dot-color-rgb, 103, 58, 183), 0.3);
+        }
+        
+        // 颜色变体
+        &.#{$namespace}-is-color-primary {
+            --dot-color: #{getVar(color, brand)};
+            --dot-color-active: #{getVar(color, brand-active)};
+            --dot-color-rgb: 103, 58, 183;
+            border-color: getVar(color, brand);
+        }
+        
+        &.#{$namespace}-is-color-success {
+            --dot-color: #{getVar(color, success)};
+            --dot-color-active: #{rgba(getVar(color, success), 0.8)};
+            --dot-color-rgb: 76, 175, 80;
+            border-color: getVar(color, success);
+        }
+        
+        &.#{$namespace}-is-color-warning {
+            --dot-color: #{getVar(color, warning)};
+            --dot-color-active: #{rgba(getVar(color, warning), 0.8)};
+            --dot-color-rgb: 255, 193, 7;
+            border-color: getVar(color, warning);
+        }
+        
+        &.#{$namespace}-is-color-danger {
+            --dot-color: #{getVar(color, danger)};
+            --dot-color-active: #{rgba(getVar(color, danger), 0.8)};
+            --dot-color-rgb: 244, 67, 54;
+            border-color: getVar(color, danger);
+        }
+        
+        &.#{$namespace}-is-color-info {
+            --dot-color: #{getVar(color, info)};
+            --dot-color-active: #{rgba(getVar(color, info), 0.8)};
+            --dot-color-rgb: 33, 150, 243;
+            border-color: getVar(color, info);
+        }
+        
+        // 自定义图标容器
+        > * {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: getVar(font-size, caption);
+            line-height: 1;
+            color: getVar(color, text-on-brand);
+            z-index: 1;
+        }
+        
+        &:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+    }
+    
+    &__content {
+        position: relative;
+        margin-left: getVar(inset, xl);
+        word-break: break-word;
+        padding: getVar(inset, sm);
+        border-radius: getVar(border-radius, sm);
+        transition: all getVar(duration, element-interaction);
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, bg), 0.8) 0%,
+            rgba(getVar(color, bg-secondary), 0.6) 100%);
+    }
+    
+    &__label {
+        color: getVar(color, text-secondary);
+        font-size: getVar(font-size, caption);
+        margin-bottom: getVar(inset, xs);
+        font-weight: getVar(font-weight, medium);
+        transition: all getVar(duration, element-interaction);
+        padding: getVar(inset, xs);
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, bg-tertiary), 0.5) 0%,
+            rgba(getVar(color, bg-secondary), 0.3) 100%);
+        border-radius: getVar(border-radius, sm);
+        border-left: 2px solid rgba(getVar(color, brand), 0.3);
+    }
+    
+    // 布局方向变体
+    &.#{$namespace}-is-direction-vertical {
+        // 垂直布局模式变体
+        &.#{$namespace}-is-mode-left {
+            .#{$namespace}-timeline__tail {
+                left: 5px;
+            }
+            
+            .#{$namespace}-timeline__head {
+                left: -1px;
+            }
+            
+            .#{$namespace}-timeline__content {
+                margin-left: getVar(inset, xl);
+            }
+        }
+        
+        &.#{$namespace}-is-mode-right {
+            .#{$namespace}-timeline__item {
+                direction: rtl;
+                transform: none;
+                
+                &:hover {
+                    .#{$namespace}-timeline__content {
+                        transform: translateY(-#{getVar(inset, xs)});
+                        background: getVar(color, bg-opacity-blur);
+                        backdrop-filter: blur(16px);
+                        -webkit-backdrop-filter: blur(16px);
+                        box-shadow: getVar(color, box-shadow-popover);
+                        border: 1px solid getVar(color, border-active);
+                    }
+                }
+            }
+            
+            .#{$namespace}-timeline__tail {
+                left: auto;
+                right: 5px;
+                
+                &::before {
+                    left: auto;
+                    right: -1px;
+                }
+            }
+            
+            .#{$namespace}-timeline__head {
+                left: auto;
+                right: -1px;
+            }
+            
+            .#{$namespace}-timeline__content {
+                direction: ltr;
+                margin-left: 0;
+                margin-right: getVar(inset, xl);
+                text-align: right;
+            }
+            
+            .#{$namespace}-timeline__label {
+                text-align: right;
+            }
+        }
+        
+        &.#{$namespace}-is-mode-center {
+            .#{$namespace}-timeline__item {
+                padding-left: 50%;
+                position: relative;
+                
+                &:nth-child(even) {
+                    padding-left: 0;
+                    padding-right: 50%;
+                    
+                    .#{$namespace}-timeline__content {
+                        margin-left: 0;
+                        margin-right: calc(#{getVar(inset, xl)} + #{getVar(inset, lg)});
+                        text-align: right;
+                    }
+                    
+                    .#{$namespace}-timeline__label {
+                        left: auto;
+                        right: calc(50% + #{getVar(inset, xl)} + #{getVar(inset, lg)});
+                        text-align: right;
+                        
+                        &.#{$namespace}-is-right {
+                            display: none;
+                        }
+                        
+                        &.#{$namespace}-is-left {
+                            display: block;
+                        }
+                    }
+                }
+            }
+            
+            .#{$namespace}-timeline__tail {
+                left: 50%;
+                transform: translateX(-50%);
+                
+                &::before {
+                    left: -1px;
+                }
+            }
+            
+            .#{$namespace}-timeline__head {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .#{$namespace}-timeline__label {
+                position: absolute;
+                top: 0;
+                left: calc(50% + #{getVar(inset, xl)} + #{getVar(inset, lg)});
+                width: calc(50% - #{getVar(inset, xl)} - #{getVar(inset, xxl)});
+                
+                &.#{$namespace}-is-left {
+                    display: none;
+                }
+                
+                &.#{$namespace}-is-right {
+                    display: block;
+                }
+            }
+        }
+    }
+    
+    &.#{$namespace}-is-direction-horizontal {
+        @include flex(flex-start, stretch);
+        gap: getVar(gap, lg);
+        
+        .#{$namespace}-timeline__item {
+            flex: 1;
+            padding-bottom: 0;
+            padding-right: 0;
+            min-width: 0;
+            
+            &:hover {
+                .#{$namespace}-timeline__content {
+                    transform: translateY(-#{getVar(inset, xs)});
+                    background: getVar(color, bg-opacity-blur);
+                    backdrop-filter: blur(16px);
+                    -webkit-backdrop-filter: blur(16px);
+                    box-shadow: getVar(color, box-shadow-popover);
+                    border: 1px solid getVar(color, border-active);
+                }
+            }
+            
+            &.#{$namespace}-is-last {
+                .#{$namespace}-timeline__tail {
+                    display: none;
+                }
+            }
+        }
+        
+        .#{$namespace}-timeline__tail {
+            position: absolute;
+            left: auto;
+            top: 6px;
+            right: calc(-#{getVar(gap, lg)} / 2);
+            width: getVar(gap, lg);
+            height: 2px;
+            border-left: none;
+            border-top: 2px solid getVar(color, border);
+            
+            &::before {
+                top: -1px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: linear-gradient(90deg, 
+                    rgba(getVar(color, brand), 0.3) 0%,
+                    transparent 100%);
+            }
+        }
+        
+        .#{$namespace}-timeline__head {
+            top: 0;
+            left: 0;
+            position: relative;
+            margin: 0 auto getVar(inset, sm);
+        }
+        
+        .#{$namespace}-timeline__content {
+            margin-left: 0;
+            margin-top: getVar(inset, lg);
+            text-align: center;
+            padding: getVar(inset, sm);
+            background: linear-gradient(135deg, 
+                rgba(getVar(color, bg), 0.9) 0%,
+                rgba(getVar(color, bg-secondary), 0.7) 100%);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(getVar(color, border), 0.3);
+        }
+        
+        .#{$namespace}-timeline__label {
+            text-align: center;
+            margin: 0 auto getVar(inset, xs);
+            display: block;
+            width: fit-content;
+        }
+        
+        &.#{$namespace}-is-dashed {
+            .#{$namespace}-timeline__tail {
+                border-top-style: dashed;
+                border-image: linear-gradient(90deg, 
+                    getVar(color, border) 0%,
+                    rgba(getVar(color, border), 0.3) 100%) 1;
+            }
+        }
+    }
+}

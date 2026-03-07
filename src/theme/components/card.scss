@@ -1,0 +1,120 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-card {
+    // 基础布局
+    @include flex(flex-start, stretch, column);
+    position: relative;
+    box-sizing: border-box;
+    
+    // 尺寸和间距
+    width: 100%;
+    padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
+    
+    // 边框和形状
+    border-radius: getVar(border-radius, container);
+    border: 1px solid getVar(color, border-glass);
+    
+    // 视觉效果 - 使用不透明背景和加深的阴影
+    background: getVar(color, bg-opacity);
+    box-shadow: getVar(color, box-shadow);
+    
+    // 交互相关
+    transition: all getVar(duration, element-interaction) getVar(transition-timing-function);
+    
+    // 悬停状态
+    &:hover {
+        transform: none;
+        box-shadow: getVar(color, box-shadow-popover);
+        border-color: getVar(color, border-active);
+    }
+
+    // 元素定义
+    &__title {
+        font-size: getVar(font-size, lg);
+        font-weight: getVar(font-weight, bold);
+        color: getVar(color, text);
+        margin-bottom: getVar(inset);
+        padding-bottom: getVar(inset, xs);
+        border-bottom: 1px solid getVar(color, border-divider);
+    }
+    
+    &__content {
+        @include flex(flex-start, stretch, column);
+        width: 100%;
+        flex: 1;
+        gap: getVar(inset, sm);
+    }
+
+    &__header {
+        @include flex(space-between, center);
+        margin-bottom: getVar(inset);
+    }
+
+    &__footer {
+        @include flex(flex-end, center);
+        margin-top: getVar(inset);
+        padding-top: getVar(inset, xs);
+        border-top: 1px solid getVar(color, border-divider);
+        gap: getVar(inset, sm);
+    }
+
+    &__actions {
+        @include flex(flex-end, center);
+        gap: getVar(inset, xs);
+    }
+
+    // 尺寸变体
+    &--compact {
+        padding: getVar(inset, sm);
+        
+        .#{$namespace}-card__title {
+            font-size: getVar(font-size);
+            margin-bottom: getVar(inset, sm);
+        }
+    }
+
+    &--spacious {
+        padding: getVar(inset, lg);
+        
+        .#{$namespace}-card__title {
+            font-size: getVar(font-size, xl);
+            margin-bottom: getVar(inset, lg);
+        }
+    }
+
+    // 样式变体
+    &--bordered {
+        border-width: 2px;
+    }
+
+    &--shadow {
+        box-shadow: getVar(box-shadow-rounded);
+        
+        &:hover {
+            box-shadow: getVar(box-shadow-popover);
+        }
+    }
+
+    &--flat {
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+        
+        &:hover {
+            background-color: getVar(color, bg-secondary);
+            box-shadow: none;
+            transform: none;
+        }
+    }
+
+    // 状态修饰符
+    &.#{$namespace}-is-loading {
+        pointer-events: none;
+        opacity: 0.7;
+        
+        &:hover {
+            transform: none;
+            box-shadow: getVar(box-shadow);
+        }
+    }
+}

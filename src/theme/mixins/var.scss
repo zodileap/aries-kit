@@ -1,0 +1,95 @@
+@use "sass:map";
+@use "sass:color";
+@use "config";
+@use "function" as *;
+@use "../mixins/function.scss" as *;
+
+// 设置 CSS 变量值
+// 这个 mixin 用于设置单个 CSS 变量的值
+// 参数:
+//   $name: 变量名（列表）
+//   $value: 变量值
+// 示例:
+//   @include set-css-var-value(('color', 'primary'), red);
+//   生成: --z-color-primary: red;
+@mixin set-css-var-value($name, $value) {
+  #{joinVarName($name)}: #{$value};
+}
+
+// 从映射中设置 CSS 变量值
+// 这个 mixin 用于从一个映射中设置特定类型的 CSS 变量
+// 参数:
+//   $name: 变量名前缀
+//   $type: 变量类型
+//   $variables: 包含变量值的映射
+// 示例:
+//   @include set-css-var-type('color', 'primary', $map);
+//   生成: --z-color-primary: #{map.get($map, 'primary')};
+@mixin set-css-var-type($name, $type, $variables) {
+  #{getVarName($name, $type)}: #{map.get($variables, $type)};
+}
+
+// 为组件设置所有 CSS 变量
+// 这个 mixin 用于从一个映射中为组件设置多个 CSS 变量
+// 参数:
+//   $name: 组件名
+//   $variables: 包含所有变量的映射
+// 示例:
+//   @include set-component-css-var('button', $buttonVariables);
+@mixin set-component-css-var($name, $variables) {
+  @each $attribute, $value in $variables {
+    #{getVarName($name, $attribute)}: #{$value};
+  }
+}
+
+// 设置颜色的 RGB 值作为 CSS 变量
+// 这个 mixin 用于将颜色拆分为 RGB 值并设置为 CSS 变量
+// 参数:
+//   $type: 颜色类型
+// 示例:
+//   @include set-css-color-rgb('primary');
+@mixin set-css-color-rgb($type) {
+  $color: map.get($colors, $type, "base");
+  @include set-css-var-value(("color", $type, "rgb"), #{color.channel($color, "red"), color.channel($color, "green"), color.channel($color, "blue")});
+}
+
+// 从全局 CSS 变量生成新的 CSS 变量
+// 这个 mixin 用于基于现有的全局 CSS 变量创建新的 CSS 变量
+// 参数:
+//   $var: 新变量名（列表）
+//   $gVar: 全局变量名（列表）
+// 示例:
+//   @include css-var-from-global(('button', 'text-color'), ('color', $type));
+//   生成: --z-button-text-color: var(--z-color-#{$type});
+@mixin css-var-from-global($var, $gVar) {
+  $varName: joinVarName($var);
+  $gVarName: joinVarName($gVar);
+  #{$varName}: var(#{$gVarName});
+}
+
+// 获取CSS变量名
+// 示例: getVarName('button', 'text-color') => '--z-button-text-color'
+@function getVarName($args...) {
+  @return joinVarName($args);
+}
+
+// 获取CSS变量
+// 示例: getVar('button', 'text-color') => var(--z-button-text-color)
+@function getVar($args...) {
+  @return var(#{joinVarName($args)});
+}
+
+// 获取带默认值的CSS变量，如果变量不存在则返回默认值
+// 示例: getVarWithDefault(('button', 'text-color'), red) => var(--z-button-text-color, red)
+@function getVarWithDefault($args, $default) {
+  @return var(#{joinVarName($args)}, #{$default});
+}
+
+// 多个映射合并
+@function multi-map-merge($maps...) {
+  $result: ();
+  @each $map in $maps {
+    $result: map.merge($result, $map);
+  }
+  @return $result;
+}

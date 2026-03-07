@@ -1,0 +1,120 @@
+@use "sass:color";
+@use "../mixins/mixins.scss" as *;
+
+// 容器中的内容居中
+@mixin flex($justify: center, $align: center, $direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+// 元素居中
+@mixin elCenter {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@function hex-to-rgb($color) {
+  @return "#{color.channel($color, "red")}, #{color.channel($color, "green")}, #{color.channel($color, "blue")}";
+}
+
+@function rgba-color($var-name, $opacity) {
+  $color-value: var(--#{$var-name});
+  @debug $color-value;
+  // 添加同名的 RGB 变量
+  $color: #{hex-to-rgb($color-value)};
+  @debug $color;
+  @return rgba($color, $opacity);
+}
+
+@mixin arrow($direction: 'top', $color: 'bg-solid', $size: 6px, $position: null) {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: $size;
+  border-color: transparent;
+  
+  @if $direction == 'top' {
+    bottom: -($size * 2);
+    @if $position == null {
+      left: 50%;
+      transform: translateX(-50%) rotate(180deg);
+    } @else {
+      #{$position}: 16px;
+      transform: rotate(180deg);
+    }
+    border-bottom-color: getVar(color, $color);
+  } @else if $direction == 'bottom' {
+    top: -($size * 2);
+    @if $position == null {
+      left: 50%;
+      transform: translateX(-50%);
+    } @else {
+      #{$position}: 16px;
+    }
+    border-top-color: getVar(color, $color);
+  } @else if $direction == 'left' {
+    right: -($size * 2);
+    @if $position == null {
+      top: 50%;
+      transform: translateY(-50%) rotate(90deg);
+    } @else {
+      #{$position}: 16px;
+      transform: rotate(90deg);
+    }
+    border-bottom-color: getVar(color, $color);
+  } @else if $direction == 'right' {
+    left: -($size * 2);
+    @if $position == null {
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+    } @else {
+      #{$position}: 16px;
+      transform: rotate(-90deg);
+    }
+    border-bottom-color: getVar(color, $color);
+  }
+}
+
+// 网格容器布局
+@mixin grid($columns, $gap: getVar(gap), $padding: null) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+  
+  @if $padding {
+    padding: $padding;
+  }
+}
+
+// 交互元素基础样式
+@mixin interactive($transition: all getVar(duration, element-interaction)) {
+  cursor: pointer;
+  transition: $transition;
+  
+  &:hover {
+    background-color: getVar(color, bg-active);
+  }
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+// 选择状态样式
+@mixin selectable {
+  &.#{$namespace}-is-selected {
+    background-color: getVar(color, brand);
+    color: getVar(color, text-on-brand);
+  }
+  
+  &.#{$namespace}-is-disabled {
+    color: getVar(color, text-disabled);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+

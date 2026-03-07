@@ -1,0 +1,272 @@
+@use "../global/index.scss" as *;
+@use "../global/animation.scss" as *;
+
+.#{$namespace}-spin {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: all getVar(duration, element-interaction);
+
+    // 容器
+    &__container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: all getVar(duration, element-interaction);
+    }
+
+    // 遮罩层
+    &__mask {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: calc(getVar(z-index, spin) - 1);
+        background-color: rgba(getVar(color, bg-mask), 0.8);
+        @include flex();
+        flex-direction: column;
+        opacity: 0;
+        transition: all getVar(duration, element-interaction);
+        pointer-events: none;
+        backdrop-filter: blur(2px);
+        border-radius: inherit;
+
+        &.#{$namespace}-is-spinning {
+            opacity: 1;
+            pointer-events: auto;
+            animation: spinMaskEnter getVar(duration, element-interaction) ease-out;
+        }
+        
+        &.#{$namespace}-is-spinning-out {
+            opacity: 0;
+            animation: spinMaskLeave getVar(duration, element-interaction) ease-in;
+        }
+    }
+
+    // 指示器容器
+    &__indicator {
+        @include flex();
+        flex-direction: column;
+        gap: getVar(inset, sm);
+        transition: all getVar(duration, element-interaction);
+        
+        &.#{$namespace}-is-spinning {
+            animation: spinIndicatorEnter getVar(duration, element-interaction) cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+    }
+
+    // 旋转图标
+    &__icon {
+        @include elementRotate(1s);
+        font-size: getVar(font-size, title);
+        color: getVar(color, brand);
+        filter: drop-shadow(0 2px 4px rgba(getVar(color, brand), 0.3));
+        
+        &.#{$namespace}-is-pulsing {
+            animation: spinIconPulse 2s ease-in-out infinite, elementRotate 1s linear infinite;
+        }
+    }
+
+    // 提示文本
+    &__tip {
+        max-width: 200px;
+        text-align: center;
+        color: getVar(color, text);
+        font-size: getVar(font-size, caption);
+        font-weight: 500;
+        line-height: 1.4;
+        word-break: break-word;
+        transition: all getVar(duration, element-interaction);
+        
+        &.#{$namespace}-is-fade-in {
+            animation: spinTipFadeIn getVar(duration, element-interaction) ease-out 0.2s;
+        }
+    }
+
+    // 全屏模式
+    &--fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: getVar(z-index, spin);
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, bg-mask), 0.9) 0%, 
+            rgba(getVar(color, bg-mask), 0.95) 100%);
+        @include flex();
+        flex-direction: column;
+        backdrop-filter: blur(8px);
+        
+        .#{$namespace}-spin__icon {
+            font-size: getVar(font-size, large-title);
+        }
+        
+        .#{$namespace}-spin__tip {
+            font-size: getVar(font-size, body);
+            max-width: 300px;
+        }
+    }
+
+    
+    // 尺寸变体 - xs 超小尺寸
+    &--xs {
+        min-width: getVar(element-size, xs);
+        min-height: getVar(element-size, xs);
+        
+        .#{$namespace}-spin__icon {
+            font-size: getVar(font-size, caption);
+        }
+        
+        .#{$namespace}-spin__tip {
+            font-size: getVar(font-size, caption);
+        }
+    }
+    
+    // 尺寸变体 - sm 小尺寸
+    &--sm {
+        min-width: getVar(element-size, sm);
+        min-height: getVar(element-size, sm);
+        
+        .#{$namespace}-spin__icon {
+            font-size: getVar(font-size, subheadline);
+        }
+        
+        .#{$namespace}-spin__tip {
+            font-size: getVar(font-size, caption);
+        }
+    }
+    
+    // 尺寸变体 - lg 大尺寸
+    &--lg {
+        min-width: getVar(element-size, lg);
+        min-height: getVar(element-size, lg);
+        
+        .#{$namespace}-spin__icon {
+            font-size: getVar(font-size, title);
+        }
+        
+        .#{$namespace}-spin__tip {
+            font-size: getVar(font-size, body);
+        }
+    }
+    
+    // 尺寸变体 - xl 超大尺寸
+    &--xl {
+        min-width: getVar(element-size, xl);
+        min-height: getVar(element-size, xl);
+        
+        .#{$namespace}-spin__icon {
+            font-size: getVar(font-size, large-title);
+        }
+        
+        .#{$namespace}-spin__tip {
+            font-size: getVar(font-size, subheadline);
+            max-width: 250px;
+        }
+    }
+    
+    // 颜色变体 - 品牌色
+    &--brand {
+        .#{$namespace}-spin__icon {
+            color: getVar(color, brand);
+            filter: drop-shadow(0 2px 4px rgba(getVar(color, brand), 0.3));
+        }
+    }
+    
+    // 颜色变体 - 成功色
+    &--success {
+        .#{$namespace}-spin__icon {
+            color: getVar(color, success);
+            filter: drop-shadow(0 2px 4px rgba(getVar(color, success), 0.3));
+        }
+    }
+    
+    // 颜色变体 - 警告色
+    &--warning {
+        .#{$namespace}-spin__icon {
+            color: getVar(color, warning);
+            filter: drop-shadow(0 2px 4px rgba(getVar(color, warning), 0.3));
+        }
+    }
+    
+    // 颜色变体 - 危险色
+    &--danger {
+        .#{$namespace}-spin__icon {
+            color: getVar(color, danger);
+            filter: drop-shadow(0 2px 4px rgba(getVar(color, danger), 0.3));
+        }
+    }
+    
+    // 延迟显示
+    &--delay {
+        .#{$namespace}-spin__mask {
+            animation-delay: 0.3s;
+        }
+        
+        .#{$namespace}-spin__indicator {
+            animation-delay: 0.4s;
+        }
+    }
+}
+
+// 动画定义
+@keyframes spinMaskEnter {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0);
+    }
+    to {
+        opacity: 1;
+        backdrop-filter: blur(2px);
+    }
+}
+
+@keyframes spinMaskLeave {
+    from {
+        opacity: 1;
+        backdrop-filter: blur(2px);
+    }
+    to {
+        opacity: 0;
+        backdrop-filter: blur(0);
+    }
+}
+
+@keyframes spinIndicatorEnter {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.05) translateY(getVar(transform, hover-translate-y));
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes spinIconPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes spinTipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

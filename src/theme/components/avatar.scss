@@ -1,0 +1,304 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-avatar {
+    @include flex();
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, getVar(color, bg-secondary) 0%, getVar(color, bg-tertiary) 100%);
+    color: getVar(color, text-on-bg);
+    font-size: getVar(font-size, button);
+    font-weight: getVar(font-weight, lg);
+    user-select: none;
+    flex-shrink: 0;
+    transition: all getVar(duration, element-interaction);
+    border: 2px solid getVar(color, border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    // 默认尺寸
+    width: getVar(element-size);
+    height: getVar(element-size);
+    border-radius: getVar(border-radius);
+
+    // 悬停效果
+    &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-color: getVar(color, brand);
+    }
+
+    // 尺寸变体
+    &--xs {
+        width: getVar(element-size, xs);
+        height: getVar(element-size, xs);
+        font-size: calc(getVar(font-size, button) * 0.75);
+        border-width: 1px;
+        
+        .#{$namespace}-avatar__image {
+            width: getVar(icon-size, xs);
+            height: getVar(icon-size, xs);
+        }
+    }
+
+    &--sm {
+        width: getVar(element-size, sm);
+        height: getVar(element-size, sm);
+        font-size: calc(getVar(font-size, button) * 0.875);
+        border-width: 1px;
+        
+        .#{$namespace}-avatar__image {
+            width: getVar(icon-size, sm);
+            height: getVar(icon-size, sm);
+        }
+    }
+
+    &--lg {
+        width: getVar(element-size, lg);
+        height: getVar(element-size, lg);
+        font-size: calc(getVar(font-size, button) * 1.125);
+        border-width: 3px;
+        
+        .#{$namespace}-avatar__image {
+            width: getVar(icon-size, lg);
+            height: getVar(icon-size, lg);
+        }
+    }
+
+    &--xl {
+        width: getVar(element-size, xl);
+        height: getVar(element-size, xl);
+        font-size: calc(getVar(font-size, button) * 1.25);
+        border-width: 3px;
+        
+        .#{$namespace}-avatar__image {
+            width: getVar(icon-size, xl);
+            height: getVar(icon-size, xl);
+        }
+    }
+
+    &--xxl {
+        width: getVar(element-size, xxl);
+        height: getVar(element-size, xxl);
+        font-size: calc(getVar(font-size, button) * 1.5);
+        border-width: 4px;
+        
+        .#{$namespace}-avatar__image {
+            width: getVar(icon-size, xxl);
+            height: getVar(icon-size, xxl);
+        }
+    }
+
+    // 形状变体
+    &--circle {
+        border-radius: 50%;
+    }
+
+    &--square {
+        border-radius: getVar(border-radius, xs);
+    }
+    
+    &--rounded {
+        @include adaptive-border-radius("", getVar(element-size));
+    }
+
+    // 颜色变体
+    &--brand {
+        background: linear-gradient(135deg, getVar(color, brand) 0%, getVar(color, brand-active) 100%);
+        color: getVar(color, text-on-brand);
+        border-color: getVar(color, brand);
+    }
+
+    &--success {
+        background: linear-gradient(135deg, getVar(color, success) 0%, getVar(color, success-active) 100%);
+        color: getVar(color, text-on-brand);
+        border-color: getVar(color, success);
+    }
+
+    &--warning {
+        background: linear-gradient(135deg, getVar(color, warning) 0%, getVar(color, warning-active) 100%);
+        color: getVar(color, text-on-brand);
+        border-color: getVar(color, warning);
+    }
+
+    &--danger {
+        background: linear-gradient(135deg, getVar(color, danger) 0%, getVar(color, danger-active) 100%);
+        color: getVar(color, text-on-brand);
+        border-color: getVar(color, danger);
+    }
+
+    &--info {
+        background: linear-gradient(135deg, getVar(color, info) 0%, getVar(color, info-active) 100%);
+        color: getVar(color, text-on-brand);
+        border-color: getVar(color, info);
+    }
+    
+    // 可点击状态
+    &.#{$namespace}-is-clickable {
+        cursor: pointer;
+        
+        &:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        &:active {
+            transform: scale(1.02);
+        }
+    }
+    
+    // 加载状态
+    &.#{$namespace}-is-loading {
+        .#{$namespace}-avatar__icon,
+        .#{$namespace}-avatar__text {
+            opacity: 0.5;
+        }
+        
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: avatarSpin 1s linear infinite;
+        }
+    }
+
+    // 子元素样式
+    &__image {
+        width: getVar(icon-size);
+        height: getVar(icon-size);
+        object-fit: cover;
+        display: block;
+        transition: all getVar(duration, element-interaction);
+        border-radius: inherit;
+        
+        &:hover {
+            transform: scale(1.1) !important;
+        }
+    }
+
+    &__icon {
+        @include flex();
+        font-size: inherit;
+        color: inherit;
+        transition: all getVar(duration, element-interaction);
+        
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+
+    &__text {
+        @include flex();
+        text-align: center;
+        white-space: nowrap;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: inherit;
+        opacity: 0.8;
+        transition: all getVar(duration, element-interaction);
+        z-index: -1;
+    }
+
+    &__status {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 20%;
+        height: 20%;
+        min-width: 8px;
+        min-height: 8px;
+        border-radius: 50%;
+        border: 2px solid getVar(color, bg-solid);
+        background-color: getVar(color, success);
+        z-index: 1;
+        transition: all getVar(duration, element-interaction);
+        
+        &.#{$namespace}-is-offline {
+            background-color: getVar(color, text-tertiary);
+        }
+        
+        &.#{$namespace}-is-busy {
+            background-color: getVar(color, danger);
+        }
+        
+        &.#{$namespace}-is-away {
+            background-color: getVar(color, warning);
+        }
+    }
+}
+
+// 头像组
+.#{$namespace}-avatar-group {
+    @include flex(flex-start, center);
+    flex-wrap: wrap;
+    
+    .#{$namespace}-avatar {
+        margin-right: calc(getVar(inset, sm) * -1);
+        border: 3px solid getVar(color, bg-solid);
+        position: relative;
+        z-index: 1;
+        
+        &:hover {
+            z-index: 2;
+            transform: scale(1.1);
+        }
+        
+        &:first-child {
+            margin-right: calc(getVar(inset, sm) * -1);
+        }
+        
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+    
+    // 紧凑模式
+    &--compact {
+        .#{$namespace}-avatar {
+            margin-right: calc(getVar(inset, xs) * -1);
+            border-width: 2px;
+        }
+    }
+
+    // 更多指示器
+    &__more {
+        @include flex();
+        background-color: getVar(color, bg-tertiary);
+        color: getVar(color, text-secondary);
+        font-size: getVar(font-size, caption);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all getVar(duration, element-interaction);
+        
+        &:hover {
+            background-color: getVar(color, brand);
+            color: getVar(color, text-on-brand);
+            transform: scale(1.05);
+        }
+    }
+}
+
+// 动画定义
+@keyframes avatarSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

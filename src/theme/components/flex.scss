@@ -1,0 +1,146 @@
+@use "../global/index.scss" as *;
+@use "sass:math";
+
+$align-values: (
+  "flex-start": flex-start,
+  "center": center,
+  "flex-end": flex-end,
+  "stretch": stretch,
+  "baseline": baseline
+);
+
+$justify-values: (
+  "flex-start": flex-start,
+  "center": center,
+  "flex-end": flex-end,
+  "space-between": space-between,
+  "space-around": space-around,
+  "space-evenly": space-evenly
+);
+
+.#{$namespace}-flex {
+  display: flex;
+  gap: var(--space-gap);
+  transition: all getVar(duration, element-interaction);
+  box-sizing: border-box;
+  padding: 0;
+
+  // 布局状态
+  &.#{$namespace}-is-vertical {
+    flex-direction: column;
+  }
+
+  &.#{$namespace}-is-wrap {
+    flex-wrap: wrap;
+  }
+
+  &.#{$namespace}-is-fill {
+    width: 100%;
+    height: 100%;
+  }
+
+  // 垂直对齐方式变体
+  @each $key, $value in $align-values {
+    &--align-#{$key} {
+      align-items: $value;
+      transition: all getVar(duration, element-interaction);
+    }
+  }
+
+  // 水平对齐方式变体
+  @each $key, $value in $justify-values {
+    &--justify-#{$key} {
+      justify-content: $value;
+      transition: all getVar(duration, element-interaction);
+    }
+  }
+
+  // Flex项目元素
+  &__item {
+    position: relative;
+    transition: all getVar(duration, element-interaction);
+    box-sizing: border-box;
+
+    // 垂直布局下的处理
+    .#{$namespace}-is-vertical > & {
+      width: 100%;
+      
+      &:not(:last-child) {
+        margin-right: 0;
+      }
+    }
+
+    // 唯一子元素的处理
+    > *:only-child {
+      margin: 0;
+    }
+
+    // Flex项目状态
+    &.#{$namespace}-is-flex {
+      flex: 1;
+      min-height: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    &.#{$namespace}-is-auto {
+      flex: 0 0 auto;
+    }
+
+    &.#{$namespace}-is-none {
+      flex: none;
+    }
+
+    // 增强交互效果
+    &.#{$namespace}-is-hoverable {
+      cursor: pointer;
+      border-radius: getVar(border-radius, container);
+
+      &:hover {
+        background-color: getVar(color, bg-active);
+        transform: translateY(getVar(transform, hover-translate-y));
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    &.#{$namespace}-is-clickable {
+      cursor: pointer;
+      border-radius: getVar(border-radius, container);
+      transition: all getVar(duration, element-interaction);
+
+      &:hover {
+        background-color: getVar(color, bg-active);
+      }
+
+      &:active {
+        transform: scale(0.98);
+        background-color: getVar(color, bg-brand);
+      }
+    }
+  }
+
+  // 间距变体
+  &--gap-none {
+    gap: 0;
+  }
+
+  &--gap-xs {
+    gap: getVar(inset, xs);
+  }
+
+  &--gap-sm {
+    gap: getVar(inset, sm);
+  }
+
+  &--gap-md {
+    gap: getVar(inset);
+  }
+
+  &--gap-lg {
+    gap: getVar(inset, lg);
+  }
+
+  &--gap-xl {
+    gap: getVar(inset, xl);
+  }
+}

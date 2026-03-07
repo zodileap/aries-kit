@@ -1,0 +1,344 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-link {
+    @include flex(flex-start, center);
+    box-sizing: border-box;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    font-size: getVar(font-size, body);
+    font-weight: getVar(font-weight, lg);
+    border-radius: getVar(border-radius, xs);
+    transition: all getVar(duration, element-interaction);
+    color: getVar(color, brand);
+    padding: getVar(inset, xs);
+    
+    // 默认悬停效果
+    &:hover {
+        color: getVar(color, brand-active);
+        transform: translateY(getVar(transform, hover-translate-y));
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+    
+    // 文本和图标元素
+    &__text {
+        font-size: inherit;
+        font-weight: inherit;
+        transition: inherit;
+    }
+        
+    
+    &__icon {
+        @include flex();
+        font-size: getVar(font-size, subheadline);
+        transition: inherit;
+        
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+    
+    // 图标位置
+    &.#{$namespace}-is-with-icon:not(.#{$namespace}-is-icon-right) {
+        .#{$namespace}-link__icon {
+            margin-right: getVar(inset, xs);
+        }
+    }
+    
+    &.#{$namespace}-is-icon-right {
+        .#{$namespace}-link__icon {
+            margin-left: getVar(inset, xs);
+            order: 1;
+        }
+    }
+    
+    // 下划线样式变体
+    &.#{$namespace}-is-underline {
+        text-decoration: underline;
+        text-decoration-color: currentColor;
+        text-underline-offset: 3px;
+        text-decoration-thickness: 2px;
+    }
+    
+    &.#{$namespace}-is-hover-underline {
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background-color: currentColor;
+                transition: width getVar(duration, element-interaction);
+            }
+            
+        &:hover {
+            &::after {
+                width: 100%;
+            }
+        }
+    }
+    
+    &.#{$namespace}-is-animated-underline {
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: linear-gradient(90deg, transparent 0%, currentColor 50%, transparent 100%);
+                background-size: 200% 100%;
+                background-position: 100% 0;
+                transition: background-position getVar(duration, element-interaction);
+            }
+            
+        &:hover {
+            &::after {
+                background-position: 0% 0;
+            }
+        }
+    }
+    
+    // 布局变体
+    &.#{$namespace}-is-block {
+        display: flex;
+        width: 100%;
+        padding: getVar(inset, xs) getVar(inset, sm);
+        
+        &:hover {
+            background-color: getVar(color, bg-active);
+        }
+    }
+    
+    &.#{$namespace}-is-inline {
+        display: inline-flex;
+        padding: getVar(inset, xs);
+    }
+    
+    // 禁用状态
+    &.#{$namespace}-is-disabled {
+        cursor: not-allowed;
+        color: getVar(color, text-tertiary);
+        opacity: getVar(opacity, disabled);
+        pointer-events: none;
+        
+        &:hover {
+            transform: none;
+            color: getVar(color, text-tertiary);
+        }
+    }
+
+    // 颜色变体
+    &--brand {
+        color: getVar(color, brand);
+        
+        &:hover {
+            color: getVar(color, brand-active);
+        }
+    }
+        
+    
+    &--success {
+        color: getVar(color, success);
+        
+        &:hover {
+            color: getVar(color, success-active);
+        }
+    }
+        
+    
+    &--warning {
+        color: getVar(color, warning);
+        
+        &:hover {
+            color: getVar(color, warning-active);
+        }
+    }
+        
+    
+    &--danger {
+        color: getVar(color, danger);
+        
+        &:hover {
+            color: getVar(color, danger-active);
+        }
+    }
+        
+    
+    &--info {
+        color: getVar(color, info);
+        
+        &:hover {
+            color: getVar(color, info-active);
+        }
+    }
+        
+    
+    &--muted {
+        color: getVar(color, text-secondary);
+        
+        &:hover {
+            color: getVar(color, text);
+        }
+    }
+    
+    // 尺寸变体
+    &--small {
+        font-size: getVar(font-size, footnote);
+        padding: getVar(inset, xs);
+        
+        .#{$namespace}-link__text {
+            font-size: getVar(font-size, footnote);
+        }
+        
+        .#{$namespace}-link__icon {
+            font-size: getVar(font-size, caption);
+        }
+    }
+        
+    
+    &--large {
+        font-size: getVar(font-size, title-3);
+        padding: getVar(inset, sm);
+        
+        .#{$namespace}-link__text {
+            font-size: getVar(font-size, title-3);
+        }
+        
+        .#{$namespace}-link__icon {
+            font-size: getVar(font-size, title-2);
+        }
+    }
+        
+    
+    &--extra-large {
+        font-size: getVar(font-size, title-1);
+        padding: getVar(inset);
+        
+        .#{$namespace}-link__text {
+            font-size: getVar(font-size, title-1);
+        }
+        
+        .#{$namespace}-link__icon {
+            font-size: getVar(font-size, large-title);
+        }
+    }
+    
+    // 样式变体
+    &--filled {
+        background-color: getVar(color, brand);
+        color: getVar(color, text-on-brand);
+        padding: getVar(inset, xs) getVar(inset, sm);
+        border-radius: getVar(border-radius, sm);
+        
+        &:hover {
+            background-color: getVar(color, brand-active);
+            transform: translateY(getVar(transform, hover-translate-y));
+            box-shadow: 0 4px 8px rgba(getVar(color, brand), 0.3);
+        }
+    }
+        
+    
+    &--outlined {
+        border: 1px solid getVar(color, brand);
+        color: getVar(color, brand);
+        padding: getVar(inset, xs) getVar(inset, sm);
+        border-radius: getVar(border-radius, sm);
+        
+        &:hover {
+            background-color: getVar(color, brand);
+            color: getVar(color, text-on-brand);
+            transform: translateY(getVar(transform, hover-translate-y));
+        }
+    }
+        
+    
+    &--ghost {
+        color: getVar(color, brand);
+        padding: getVar(inset, xs) getVar(inset, sm);
+        border-radius: getVar(border-radius, sm);
+        
+        &:hover {
+            background-color: getVar(color, brand-secondary);
+            transform: translateY(getVar(transform, hover-translate-y));
+        }
+    }
+    
+    // 加载状态
+    &.#{$namespace}-is-loading {
+        cursor: wait;
+        
+        .#{$namespace}-link__icon {
+            animation: linkSpin 1s linear infinite;
+        }
+        
+        .#{$namespace}-link__text {
+            opacity: 0.7;
+        }
+    }
+    
+    // 外部链接指示器
+    &.#{$namespace}-is-external {
+        &::after {
+            content: '↗';
+            margin-left: getVar(inset, xs);
+            font-size: 0.8em;
+            opacity: 0.7;
+            transition: all getVar(duration, element-interaction);
+        }
+        
+        &:hover {
+            &::after {
+                opacity: 1;
+                transform: translate(2px, -2px);
+            }
+        }
+    }
+    
+    // 访问过的链接
+    &.#{$namespace}-is-visited {
+        color: getVar(color, info);
+        
+        &:hover {
+            color: getVar(color, info-active);
+        }
+    }
+}
+
+// 链接组
+.#{$namespace}-link-group {
+    @include flex(flex-start, center);
+    gap: getVar(inset, sm);
+    
+    // 垂直排列
+    &--vertical {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    // 分隔符
+    &--separated {
+        .#{$namespace}-link {
+            &:not(:last-child)::after {
+                content: '|';
+                margin-left: getVar(inset, sm);
+                color: getVar(color, border);
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+// 动画定义
+@keyframes linkSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

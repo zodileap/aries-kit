@@ -1,0 +1,297 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-divider {
+    @include flex();
+    color: getVar(color, text);
+    margin: getVar(inset) 0;
+    position: relative;
+    width: 100%;
+    align-items: center;
+    transition: all getVar(duration, element-interaction);
+
+    // 默认水平分割线
+    &::before,
+    &::after {
+        content: "";
+        flex: 1;
+        height: 0;
+        border-bottom: 1px solid getVar(color, border-divider);
+        transition: all getVar(duration, element-interaction);
+    }
+    
+    // 无内容时的处理
+    &:not(.#{$namespace}-is-has-content) {
+        &::before {
+            margin-right: 0;
+        }
+        &::after {
+            display: none;
+        }
+    }
+
+    // 线条样式变体
+    &--solid {
+        &::before,
+        &::after {
+            border-bottom-style: solid;
+        }
+    }
+
+    &--dashed {
+        &::before,
+        &::after {
+            border-bottom-style: dashed;
+            border-bottom-width: 2px;
+        }
+    }
+
+    &--dotted {
+        &::before,
+        &::after {
+            border-bottom-style: dotted;
+            border-bottom-width: 2px;
+        }
+    }
+
+    &--double {
+        &::before,
+        &::after {
+            border-bottom-style: double;
+            border-bottom-width: 4px;
+        }
+    }
+    
+    &--gradient {
+        &::before,
+        &::after {
+            border-bottom: none;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                getVar(color, border-divider) 20%, 
+                getVar(color, brand) 50%, 
+                getVar(color, border-divider) 80%, 
+                transparent 100%);
+        }
+    }
+
+    // 有内容时的间距
+    &.#{$namespace}-is-has-content {
+        &::before {
+            margin-right: getVar(inset, sm);
+        }
+
+        &::after {
+            margin-left: getVar(inset, sm);
+        }
+    }
+
+    // 文本位置变体
+    &--left {
+        &::before {
+            flex: 0 1 10%;
+        }
+        &::after {
+            flex: 1;
+        }
+    }
+
+    &--center {
+        &::before,
+        &::after {
+            flex: 1;
+        }
+    }
+
+    &--right {
+        &::before {
+            flex: 1;
+        }
+        &::after {
+            flex: 0 1 10%;
+        }
+    }
+
+    // 垂直分割线
+    &.#{$namespace}-is-vertical {
+        display: inline-flex;
+        flex-direction: column;
+        margin: 0 getVar(inset);
+        height: 100%;
+        min-height: 1.5em;
+        width: auto;
+
+        &::before,
+        &::after {
+            border-bottom: none;
+            border-left: 1px solid getVar(color, border-divider);
+            height: 100%;
+            width: 0;
+        }
+
+        // 垂直模式下的样式变体
+        &.#{$namespace}-divider--dashed {
+            &::before,
+            &::after {
+                border-left-style: dashed;
+                border-left-width: 2px;
+            }
+        }
+
+        &.#{$namespace}-divider--dotted {
+            &::before,
+            &::after {
+                border-left-style: dotted;
+                border-left-width: 2px;
+            }
+        }
+
+        &.#{$namespace}-divider--double {
+            &::before,
+            &::after {
+                border-left-style: double;
+                border-left-width: 4px;
+            }
+        }
+        
+        &.#{$namespace}-divider--gradient {
+            &::before,
+            &::after {
+                border-left: none;
+                width: 2px;
+                background: linear-gradient(180deg, 
+                    transparent 0%, 
+                    getVar(color, border-divider) 20%, 
+                    getVar(color, brand) 50%, 
+                    getVar(color, border-divider) 80%, 
+                    transparent 100%);
+            }
+        }
+
+        &.#{$namespace}-is-has-content {
+            &::before {
+                margin-right: 0;
+                margin-bottom: getVar(inset, sm);
+            }
+
+            &::after {
+                margin-left: 0;
+                margin-top: getVar(inset, sm);
+            }
+        }
+    }
+
+    // 标签内容样式
+    &__content-tag {
+        // AriTag已经提供了完整的样式，这里只需要基本定位
+    }
+
+    // 简洁内容样式
+    &__content-plain {
+        padding: 0 getVar(inset, xs);
+        white-space: nowrap;
+        @include flex();
+        background-color: getVar(color, bg);
+        font-size: getVar(font-size, caption);
+        font-weight: getVar(font-weight, medium);
+        color: getVar(color, text-secondary);
+        border-radius: getVar(border-radius, container);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    // 颜色变体 - 只影响分割线颜色，标签颜色由AriTag处理
+    &--primary {
+        &::before,
+        &::after {
+            border-color: getVar(color, primary);
+        }
+    }
+
+    &--success {
+        &::before,
+        &::after {
+            border-color: getVar(color, success);
+        }
+    }
+
+    &--warning {
+        &::before,
+        &::after {
+            border-color: getVar(color, warning);
+        }
+    }
+
+    &--danger {
+        &::before,
+        &::after {
+            border-color: getVar(color, danger);
+        }
+    }
+
+    &--info {
+        &::before,
+        &::after {
+            border-color: getVar(color, info);
+        }
+    }
+
+    // 尺寸变体
+    &--small {
+        margin: getVar(inset, xs) 0;
+        
+        &::before,
+        &::after {
+            border-bottom-width: 1px;
+        }
+        
+        .#{$namespace}-divider__content-plain {
+            font-size: getVar(font-size, caption);
+            padding: 0 getVar(inset, xs);
+        }
+    }
+
+    &--large {
+        margin: getVar(inset, lg) 0;
+        
+        &::before,
+        &::after {
+            border-bottom-width: 2px;
+        }
+        
+        .#{$namespace}-divider__content-plain {
+            font-size: getVar(font-size, body);
+            padding: 0 getVar(inset);
+        }
+    }
+
+    // 动画效果
+    &--animated {
+        &::before,
+        &::after {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        &::before::after,
+        &::after::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(getVar(color, brand), 0.6) 50%, transparent 100%);
+            animation: dividerShimmer 2s ease-in-out infinite;
+        }
+    }
+}
+
+// 动画定义
+@keyframes dividerShimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}

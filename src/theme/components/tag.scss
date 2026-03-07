@@ -1,0 +1,660 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-tag {
+    // 基础布局
+    @include flex(center, center);
+    position: relative;
+    box-sizing: border-box;
+    
+    // 尺寸和间距
+    height: getVar(element-size);
+    min-width: calc(getVar(element-size) / getVar(ui-aspect-ratios, button));
+    padding: getVar(inset, xs) getVar(inset, sm);
+    
+    // 边框和形状 - 使用更圆润的边角，区别于按钮
+    border-radius: calc(getVar(element-size) * 0.5);
+    
+    // 排版 - 使用更小的字体，区别于按钮
+    font-size: getVar(font-size, caption);
+    font-weight: getVar(font-weight, medium);
+    line-height: 1.2;
+    white-space: nowrap;
+    user-select: none;
+    letter-spacing: 0.02em;
+    
+    // 视觉效果 - 使用更柔和的背景色和边框
+    background-color: getVar(color, bg-secondary);
+    color: getVar(color, text);
+    border: 1px solid getVar(color, border-light);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    
+    // 交互相关
+    cursor: default;
+    transition: all getVar(duration, element-interaction) ease-in-out;
+    
+    // 悬停状态 - 字体加粗和放大效果
+    &:hover {
+        font-weight: getVar(font-weight, bold);
+        transform: scale(1.05);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    // 元素定义
+    &__icon {
+        @include flex(center, center);
+        margin-right: calc(getVar(icon-size, xs) * 0.5);
+        font-size: getVar(icon-size, xs);
+    }
+
+    &__content {
+        text-align: center;
+        padding: 0 calc(getVar(icon-size, xs) * 0.5);
+        flex: 1;
+    }
+
+    &__close-icon {
+        cursor: pointer;
+        color: getVar(color, text);
+        opacity: 0.7;
+        transition: opacity getVar(duration, element-interaction) getVar(transition-timing-function);
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    // 状态修饰符
+    &.#{$namespace}-is-active {
+        background-color: getVar(color, bg-active);
+        
+        &:hover {
+            font-weight: getVar(font-weight, bold);
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+    }
+
+    // 尺寸变体
+    &--xs {
+        height: getVar(element-size, xs);
+        min-width: calc(getVar(element-size, xs) / getVar(ui-aspect-ratios, button));
+        padding: calc(getVar(inset, xxs)) getVar(inset, xs);
+        font-size: calc(getVar(font-size, caption) * 0.85);
+        border-radius: calc(getVar(element-size, xs) * 0.5);
+        
+        .#{$namespace}-tag__icon {
+            margin-right: calc(getVar(icon-size, xs) * 0.3);
+            font-size: calc(getVar(icon-size, xs) * 0.8);
+        }
+        
+        .#{$namespace}-tag__content {
+            padding: 0 calc(getVar(icon-size, xs) * 0.3);
+        }
+    }
+    
+    // 小尺寸 sm
+    &--sm {
+        height: getVar(element-size, sm);
+        min-width: calc(getVar(element-size, sm) / getVar(ui-aspect-ratios, button));
+        padding: getVar(inset, xxs) getVar(inset, xs);
+        font-size: getVar(font-size, footnote);
+        border-radius: calc(getVar(element-size, sm) * 0.5);
+        
+        .#{$namespace}-tag__icon {
+            margin-right: calc(getVar(icon-size, xs) * 0.4);
+            font-size: calc(getVar(icon-size, xs) * 0.9);
+        }
+        
+        .#{$namespace}-tag__content {
+            padding: 0 calc(getVar(icon-size, xs) * 0.4);
+        }
+    }
+    
+    // 大尺寸 lg
+    &--lg {
+        height: getVar(element-size, lg);
+        min-width: calc(getVar(element-size, lg) / getVar(ui-aspect-ratios, button));
+        padding: getVar(inset, xs) getVar(inset);
+        font-size: getVar(font-size, body);
+        border-radius: calc(getVar(element-size, lg) * 0.5);
+        
+        .#{$namespace}-tag__icon {
+            margin-right: calc(getVar(icon-size) * 0.6);
+            font-size: getVar(icon-size);
+        }
+        
+        .#{$namespace}-tag__content {
+            padding: 0 calc(getVar(icon-size) * 0.6);
+        }
+    }
+    
+    // 超大尺寸 xl
+    &--xl {
+        height: getVar(element-size, xl);
+        min-width: calc(getVar(element-size, xl) / getVar(ui-aspect-ratios, button));
+        padding: getVar(inset, sm) getVar(inset, lg);
+        font-size: getVar(font-size, subheadline);
+        border-radius: calc(getVar(element-size, xl) * 0.5);
+        
+        .#{$namespace}-tag__icon {
+            margin-right: calc(getVar(icon-size, lg) * 0.6);
+            font-size: getVar(icon-size, lg);
+        }
+        
+        .#{$namespace}-tag__content {
+            padding: 0 calc(getVar(icon-size, lg) * 0.6);
+        }
+    }
+    
+    // 超超大尺寸 xxl
+    &--xxl {
+        height: getVar(element-size, xxl);
+        min-width: calc(getVar(element-size, xxl) / getVar(ui-aspect-ratios, button));
+        padding: getVar(inset, sm) getVar(inset, xl);
+        font-size: getVar(font-size, callout);
+        border-radius: calc(getVar(element-size, xxl) * 0.5);
+        
+        .#{$namespace}-tag__icon {
+            margin-right: getVar(icon-size, lg);
+            font-size: getVar(icon-size, xl);
+        }
+        
+        .#{$namespace}-tag__content {
+            padding: 0 getVar(icon-size);
+        }
+    }
+
+    
+    // 预定义颜色变体
+    &--primary {
+        background-color: getVar(color, primary);
+        color: getVar(color, text-on-primary);
+        
+        &:hover {
+            font-weight: getVar(font-weight, bold);
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        &.#{$namespace}-is-active {
+            background-color: getVar(color, primary-active);
+            
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+        }
+    }
+    
+    &--success {
+        background-color: getVar(color, success);
+        color: getVar(color, text-on-success);
+        
+        &:hover {
+            font-weight: getVar(font-weight, bold);
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        &.#{$namespace}-is-active {
+            background-color: getVar(color, success-active);
+            
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+        }
+    }
+    
+    &--warning {
+        background-color: getVar(color, warning);
+        color: getVar(color, text-on-warning);
+        
+        &:hover {
+            font-weight: getVar(font-weight, bold);
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        &.#{$namespace}-is-active {
+            background-color: getVar(color, warning-active);
+            
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+        }
+    }
+    
+    &--danger {
+        background-color: getVar(color, danger);
+        color: getVar(color, text-on-danger);
+        
+        &:hover {
+            font-weight: getVar(font-weight, bold);
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        &.#{$namespace}-is-active {
+            background-color: getVar(color, danger-active);
+            
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+        }
+    }
+    
+    &--info {
+        background-color: getVar(color, info);
+        color: getVar(color, text-on-info);
+        
+        &:hover {
+            font-weight: getVar(font-weight, bold);
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        &.#{$namespace}-is-active {
+            background-color: getVar(color, info-active);
+            
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+        }
+    }
+    
+    // 基础颜色变体 - 字体加粗和放大效果
+    &--blue,
+    &--green,
+    &--grey,
+    &--orange,
+    &--persimmon,
+    &--pink,
+    &--purple,
+    &--red,
+    &--teal,
+    &--violet,
+    &--yellow {
+        &:hover {
+            font-weight: getVar(font-weight, bold);
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+    }
+    
+    &--blue {
+        background-color: getVar(color, tag-blue);
+        color: getVar(color, tag-blue-text);
+    }
+    
+    &--green {
+        background-color: getVar(color, tag-green);
+        color: getVar(color, tag-green-text);
+    }
+    
+    &--grey {
+        background-color: getVar(color, tag-grey);
+        color: getVar(color, tag-grey-text);
+    }
+    
+    &--orange {
+        background-color: getVar(color, tag-orange);
+        color: getVar(color, tag-orange-text);
+    }
+    
+    &--persimmon {
+        background-color: getVar(color, tag-persimmon);
+        color: getVar(color, tag-persimmon-text);
+    }
+    
+    &--pink {
+        background-color: getVar(color, tag-pink);
+        color: getVar(color, tag-pink-text);
+    }
+    
+    &--purple {
+        background-color: getVar(color, tag-purple);
+        color: getVar(color, tag-purple-text);
+    }
+    
+    &--red {
+        background-color: getVar(color, tag-red);
+        color: getVar(color, tag-red-text);
+    }
+    
+    &--teal {
+        background-color: getVar(color, tag-teal);
+        color: getVar(color, tag-teal-text);
+    }
+    
+    &--violet {
+        background-color: getVar(color, tag-violet);
+        color: getVar(color, tag-violet-text);
+    }
+    
+    &--yellow {
+        background-color: getVar(color, tag-yellow);
+        color: getVar(color, tag-yellow-text);
+    }
+    
+    // 淡色系列变体 - 字体加粗和放大效果
+    &--pale-blue, 
+    &--pale-green, 
+    &--pale-persimmon, 
+    &--pale-pink, 
+    &--pale-purple, 
+    &--pale-red, 
+    &--pale-violet, 
+    &--pale-yellow {
+        &:hover {
+            font-weight: getVar(font-weight, bold);
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+    }
+    
+    &--pale-blue {
+        background-color: getVar(color, tag-pale-blue);
+        color: getVar(color, tag-pale-blue-text);
+    }
+    
+    &--pale-green {
+        background-color: getVar(color, tag-pale-green);
+        color: getVar(color, tag-pale-green-text);
+    }
+    
+    &--pale-persimmon {
+        background-color: getVar(color, tag-pale-persimmon);
+        color: getVar(color, tag-pale-persimmon-text);
+    }
+    
+    &--pale-pink {
+        background-color: getVar(color, tag-pale-pink);
+        color: getVar(color, tag-pale-pink-text);
+    }
+    
+    &--pale-purple {
+        background-color: getVar(color, tag-pale-purple);
+        color: getVar(color, tag-pale-purple-text);
+    }
+    
+    &--pale-red {
+        background-color: getVar(color, tag-pale-red);
+        color: getVar(color, tag-pale-red-text);
+    }
+    
+    &--pale-violet {
+        background-color: getVar(color, tag-pale-violet);
+        color: getVar(color, tag-pale-violet-text);
+    }
+    
+    &--pale-yellow {
+        background-color: getVar(color, tag-pale-yellow);
+        color: getVar(color, tag-pale-yellow-text);
+    }
+    
+    // 带边框样式
+    &--bordered {
+        background-color: transparent;
+        border: 1px solid getVar(color, border);
+        
+        &:hover {
+            font-weight: getVar(font-weight, bold);
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        &.#{$namespace}-is-active {
+            background-color: getVar(color, bg-active);
+            
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+        }
+        
+        // 预定义颜色的边框样式
+        &.#{$namespace}-is-primary {
+            border-color: getVar(color, border-primary);
+            color: getVar(color, primary);
+            
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+            
+            &.#{$namespace}-is-active {
+                background-color: getVar(color, primary-tertiary);
+                
+                &:hover {
+                    font-weight: getVar(font-weight, bold);
+                    transform: scale(1.05);
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+                }
+            }
+        }
+        
+        &.#{$namespace}-is-success {
+            border-color: getVar(color, border-success);
+            color: getVar(color, success);
+            
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+            
+            &.#{$namespace}-is-active {
+                background-color: getVar(color, success-tertiary);
+                
+                &:hover {
+                    font-weight: getVar(font-weight, bold);
+                    transform: scale(1.05);
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+                }
+            }
+        }
+        
+        &.#{$namespace}-is-warning {
+            border-color: getVar(color, border-warning);
+            color: getVar(color, warning);
+            
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+            
+            &.#{$namespace}-is-active {
+                background-color: getVar(color, warning-tertiary);
+                
+                &:hover {
+                    font-weight: getVar(font-weight, bold);
+                    transform: scale(1.05);
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+                }
+            }
+        }
+        
+        &.#{$namespace}-is-danger {
+            border-color: getVar(color, border-danger);
+            color: getVar(color, danger);
+            
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+            
+            &.#{$namespace}-is-active {
+                background-color: getVar(color, danger-tertiary);
+                
+                &:hover {
+                    font-weight: getVar(font-weight, bold);
+                    transform: scale(1.05);
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+                }
+            }
+        }
+        
+        &.#{$namespace}-is-info {
+            border-color: getVar(color, border-info);
+            color: getVar(color, info);
+            
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+            
+            &.#{$namespace}-is-active {
+                background-color: getVar(color, info-tertiary);
+                
+                &:hover {
+                    font-weight: getVar(font-weight, bold);
+                    transform: scale(1.05);
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+                }
+            }
+        }
+        
+        // 基础颜色的边框样式 - 使用新BEM语法
+        &.#{$namespace}-is-blue {
+            border-color: getVar(color, tag-blue-border);
+            color: getVar(color, tag-blue);
+        }
+        
+        &.#{$namespace}-is-green,
+        &.#{$namespace}-is-grey,
+        &.#{$namespace}-is-orange,
+        &.#{$namespace}-is-persimmon,
+        &.#{$namespace}-is-pink,
+        &.#{$namespace}-is-purple,
+        &.#{$namespace}-is-red,
+        &.#{$namespace}-is-teal,
+        &.#{$namespace}-is-violet,
+        &.#{$namespace}-is-yellow {
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+        }
+        
+        &.#{$namespace}-is-green {
+            border-color: getVar(color, tag-green-border);
+            color: getVar(color, tag-green);
+        }
+        
+        &.#{$namespace}-is-grey {
+            border-color: getVar(color, tag-grey-border);
+            color: getVar(color, tag-grey);
+        }
+        
+        &.#{$namespace}-is-orange {
+            border-color: getVar(color, tag-orange-border);
+            color: getVar(color, tag-orange);
+        }
+        
+        &.#{$namespace}-is-persimmon {
+            border-color: getVar(color, tag-persimmon-border);
+            color: getVar(color, tag-persimmon);
+        }
+        
+        &.#{$namespace}-is-pink {
+            border-color: getVar(color, tag-pink-border);
+            color: getVar(color, tag-pink);
+        }
+        
+        &.#{$namespace}-is-purple {
+            border-color: getVar(color, tag-purple-border);
+            color: getVar(color, tag-purple);
+        }
+        
+        &.#{$namespace}-is-red {
+            border-color: getVar(color, tag-red-border);
+            color: getVar(color, tag-red);
+        }
+        
+        &.#{$namespace}-is-teal {
+            border-color: getVar(color, tag-teal-border);
+            color: getVar(color, tag-teal);
+        }
+        
+        &.#{$namespace}-is-violet {
+            border-color: getVar(color, tag-violet-border);
+            color: getVar(color, tag-violet);
+        }
+        
+        &.#{$namespace}-is-yellow {
+            border-color: getVar(color, tag-yellow-border);
+            color: getVar(color, tag-yellow);
+        }
+        
+        // 淡色系列的边框样式
+        &.#{$namespace}-is-pale-blue,
+        &.#{$namespace}-is-pale-green,
+        &.#{$namespace}-is-pale-persimmon,
+        &.#{$namespace}-is-pale-pink,
+        &.#{$namespace}-is-pale-purple,
+        &.#{$namespace}-is-pale-red,
+        &.#{$namespace}-is-pale-violet,
+        &.#{$namespace}-is-pale-yellow {
+            &:hover {
+                font-weight: getVar(font-weight, bold);
+                transform: scale(1.05);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+        }
+        
+        &.#{$namespace}-is-pale-blue {
+            border-color: getVar(color, tag-pale-blue-border);
+            color: getVar(color, tag-pale-blue);
+        }
+        
+        &.#{$namespace}-is-pale-green {
+            border-color: getVar(color, tag-pale-green-border);
+            color: getVar(color, tag-pale-green);
+        }
+        
+        &.#{$namespace}-is-pale-persimmon {
+            border-color: getVar(color, tag-pale-persimmon-border);
+            color: getVar(color, tag-pale-persimmon);
+        }
+        
+        &.#{$namespace}-is-pale-pink {
+            border-color: getVar(color, tag-pale-pink-border);
+            color: getVar(color, tag-pale-pink);
+        }
+        
+        &.#{$namespace}-is-pale-purple {
+            border-color: getVar(color, tag-pale-purple-border);
+            color: getVar(color, tag-pale-purple);
+        }
+        
+        &.#{$namespace}-is-pale-red {
+            border-color: getVar(color, tag-pale-red-border);
+            color: getVar(color, tag-pale-red);
+        }
+        
+        &.#{$namespace}-is-pale-violet {
+            border-color: getVar(color, tag-pale-violet-border);
+            color: getVar(color, tag-pale-violet);
+        }
+        
+        &.#{$namespace}-is-pale-yellow {
+            border-color: getVar(color, tag-pale-yellow-border);
+            color: getVar(color, tag-pale-yellow);
+        }
+    }
+}

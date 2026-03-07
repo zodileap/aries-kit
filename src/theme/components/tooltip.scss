@@ -1,0 +1,82 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-tooltip {
+  position: fixed;
+  z-index: getVar(z-index, tooltip);
+  box-sizing: border-box;
+  max-width: 320px;
+  min-width: 60px;
+  border-radius: getVar(border-radius, container);
+  font-size: getVar(font-size, caption);
+  line-height: 1.5;
+  word-wrap: break-word;
+  
+  background-color: var(--z-color-bg);
+  color: getVar(color, text);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid getVar(color, border);
+  
+  // 简化动画 - 只有在可见且已定位时才显示过渡效果
+  opacity: 0;
+  transform: scale(0.9);
+  transition: none; // 默认不显示过渡
+  
+  &.#{$namespace}-is-visible {
+    transition: opacity getVar(duration, element-interaction), 
+                transform getVar(duration, element-interaction);
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  // Tooltip 主要元素
+  &__content {
+    padding: getVar(inset, xs) getVar(inset, sm);
+    font-weight: getVar(font-weight, regular);
+  }
+  
+  &__arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px;
+    border-color: transparent;
+    
+    // 箭头方向变体
+    &--top {
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: var(--z-color-bg);
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    &--bottom {
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: var(--z-color-bg);
+      filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    &--left {
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left-color: var(--z-color-bg);
+      filter: drop-shadow(2px 0 4px rgba(0, 0, 0, 0.1));
+    }
+
+    &--right {
+      left: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-right-color: var(--z-color-bg);
+      filter: drop-shadow(-2px 0 4px rgba(0, 0, 0, 0.1));
+    }
+  }
+  
+  &__trigger {
+    display: inline-block;
+  }
+}

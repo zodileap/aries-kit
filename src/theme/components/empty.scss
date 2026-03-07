@@ -1,0 +1,286 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-empty {
+    @include flex(center, center, column);
+    padding: getVar(inset, lg);
+    color: getVar(color, text);
+    gap: getVar(inset);
+    min-height: 200px;
+    position: relative;
+    transition: all getVar(duration, element-interaction);
+    border-radius: getVar(border-radius);
+    
+    // 背景装饰
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at center, rgba(getVar(color, brand), 0.03) 0%, transparent 70%);
+        border-radius: inherit;
+        z-index: -1;
+    }
+
+    &__icon {
+        font-size: getVar(font-size, large-title);
+        color: getVar(color, text-tertiary);
+        @include flex();
+        transition: all getVar(duration, element-interaction);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        
+        &:hover {
+            transform: scale(1.05);
+            color: getVar(color, brand);
+        }
+    }
+
+    &__image {
+        max-width: 120px;
+        max-height: 120px;
+        opacity: 0.8;
+        transition: all getVar(duration, element-interaction);
+        border-radius: getVar(border-radius);
+        
+        &:hover {
+            opacity: 1;
+            transform: scale(1.02);
+        }
+    }
+
+    // 移除empty组件下z-image的box-shadow
+    .#{$namespace}-image {
+        box-shadow: none !important;
+        
+        &:hover {
+            box-shadow: none !important;
+        }
+    }
+
+    &__title {
+        font-size: getVar(font-size, subheadline);
+        font-weight: getVar(font-weight, semibold);
+        color: getVar(color, text);
+        margin: 0;
+        text-align: center;
+        transition: all getVar(duration, element-interaction);
+        cursor: default;
+    }
+
+    &__description {
+        font-size: getVar(font-size, body);
+        color: getVar(color, text-secondary);
+        margin: 0;
+        text-align: center;
+        line-height: 1.5;
+        max-width: 300px;
+        transition: all getVar(duration, element-interaction);
+        cursor: default;
+        
+        &.#{$namespace}-is-multiline {
+            white-space: pre-line;
+        }
+    }
+
+    &__actions {
+        @include flex(center, center);
+        gap: getVar(inset, sm);
+        margin-top: getVar(inset, sm);
+        flex-wrap: wrap;
+    }
+
+    // 尺寸变体
+    &--small {
+        padding: getVar(inset);
+        min-height: 120px;
+        gap: getVar(inset, sm);
+        
+        .#{$namespace}-empty__icon {
+            font-size: getVar(font-size, title);
+        }
+        
+        .#{$namespace}-empty__image {
+            max-width: 80px;
+            max-height: 80px;
+        }
+        
+        .#{$namespace}-empty__title {
+            font-size: getVar(font-size, body);
+        }
+        
+        .#{$namespace}-empty__description {
+            font-size: getVar(font-size, button);
+        }
+    }
+
+    &--large {
+        padding: getVar(inset, xl);
+        min-height: 300px;
+        gap: getVar(inset, lg);
+        
+        .#{$namespace}-empty__icon {
+            font-size: 80px;
+        }
+        
+        .#{$namespace}-empty__image {
+            max-width: 160px;
+            max-height: 160px;
+        }
+        
+        .#{$namespace}-empty__title {
+            font-size: getVar(font-size, title);
+        }
+        
+        .#{$namespace}-empty__description {
+            font-size: getVar(font-size, subheadline);
+            max-width: 400px;
+        }
+    }
+    
+    &--extra-large {
+        padding: getVar(inset, xxl);
+        min-height: 400px;
+        gap: getVar(inset, xl);
+        
+        .#{$namespace}-empty__icon {
+            font-size: 100px;
+        }
+        
+        .#{$namespace}-empty__image {
+            max-width: 200px;
+            max-height: 200px;
+        }
+        
+        .#{$namespace}-empty__title {
+            font-size: getVar(font-size, large-title);
+        }
+        
+        .#{$namespace}-empty__description {
+            font-size: getVar(font-size, title);
+            max-width: 500px;
+        }
+    }
+
+    // 状态变体
+    &--no-data {
+        .#{$namespace}-empty__icon {
+            color: getVar(color, text-tertiary);
+        }
+    }
+
+    &--error {
+        .#{$namespace}-empty__icon {
+            color: getVar(color, danger);
+        }
+        
+        .#{$namespace}-empty__title {
+            color: getVar(color, danger);
+        }
+    }
+
+    &--network-error {
+        .#{$namespace}-empty__icon {
+            color: getVar(color, warning);
+        }
+        
+        .#{$namespace}-empty__title {
+            color: getVar(color, warning);
+        }
+    }
+
+    &--loading {
+        .#{$namespace}-empty__icon {
+            color: getVar(color, brand);
+            animation: emptyPulse 2s ease-in-out infinite;
+        }
+    }
+
+    // 交互变体
+    &--interactive {
+        cursor: pointer;
+        transition: all getVar(duration, element-interaction);
+        
+        &:hover {
+            background-color: getVar(color, bg-active);
+            transform: translateY(getVar(transform, hover-translate-y));
+            
+            &::before {
+                background: radial-gradient(circle at center, rgba(getVar(color, brand), 0.08) 0%, transparent 70%);
+            }
+        }
+        
+        &:active {
+            transform: translateY(0);
+        }
+    }
+
+    // 带边框变体
+    &--bordered {
+        border: 2px dashed getVar(color, border);
+        background-color: getVar(color, bg);
+        
+        &:hover {
+            border-color: getVar(color, brand);
+            border-style: solid;
+        }
+    }
+
+    // 紧凑模式
+    &--compact {
+        padding: getVar(inset, sm);
+        min-height: auto;
+        gap: getVar(inset, xs);
+        
+        .#{$namespace}-empty__icon {
+            font-size: getVar(font-size, subheadline);
+        }
+        
+        .#{$namespace}-empty__image {
+            max-width: 40px;
+            max-height: 40px;
+        }
+        
+        .#{$namespace}-empty__title,
+        .#{$namespace}-empty__description {
+            font-size: getVar(font-size, caption);
+        }
+    }
+
+    // 水平布局
+    &--horizontal {
+        flex-direction: row;
+        text-align: left;
+        
+        .#{$namespace}-empty__content {
+            @include flex(flex-start, flex-start, column);
+            gap: getVar(inset, xs);
+            margin-left: getVar(inset);
+        }
+        
+        .#{$namespace}-empty__title,
+        .#{$namespace}-empty__description {
+            text-align: left;
+        }
+    }
+
+    // 无图标/图片模式
+    &--text-only {
+        .#{$namespace}-empty__icon,
+        .#{$namespace}-empty__image {
+            display: none;
+        }
+    }
+}
+
+// 动画定义
+@keyframes emptyPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+}

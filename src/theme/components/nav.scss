@@ -1,0 +1,265 @@
+// src/theme/components/nav.scss
+
+@use "../global/index.scss" as *;
+@use "sass:color";
+
+html {
+    @include set-component-css-var(
+        "nav",
+        (
+            // 导航栏高度
+            "height": getVar(element-size, lg),
+            // 子菜单高度
+            "submenu-min-height": 100px,
+            // 过渡动画持续时间
+            "transition-duration": getVar(duration, page),
+            // hover延迟时间
+            "hover-delay": getVar(duration, element-interaction),
+            // 最大宽度
+            "max-width": 100%
+        )
+    );
+}
+
+.#{$namespace}-nav {
+    position: relative;
+    width: 100%;
+    z-index: getVar(z-index, nav);
+    height: getVar(nav, height);
+    background: linear-gradient(135deg, 
+        rgba(getVar(color, bg), 0.95) 0%,
+        rgba(getVar(color, bg-secondary), 0.9) 100%);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(getVar(color, border), 0.3);
+    transition: all getVar(duration, element-interaction);
+
+    &.#{$namespace}-is-sticky {
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        &.#{$namespace}-is-stuck {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            background: linear-gradient(135deg, 
+                rgba(getVar(color, bg), 0.98) 0%,
+                rgba(getVar(color, bg-secondary), 0.95) 100%);
+        }
+    }
+
+    &:hover {
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, bg-active), 0.95) 0%,
+            rgba(getVar(color, bg-secondary), 0.9) 100%);
+    }
+
+    // 导航容器和结构元素
+    &__container {
+        @include flex(flex-start, center);
+        height: 100%;
+        max-width: getVar(nav, max-width);
+        padding: 0 getVar(windows-inset, left) 0 getVar(windows-inset, right);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__logo {
+        cursor: pointer;
+        height: 100%;
+        @include flex();
+        padding: 0 getVar(inset, element);
+        border-radius: getVar(border-radius, sm);
+        transition: all getVar(duration, element-interaction);
+
+        &:hover {
+            background-color: rgba(getVar(color, brand), 0.1);
+            transform: scale(1.05);
+        }
+
+        .z-icon {
+            width: getVar(icon-size);
+            height: getVar(icon-size);
+            transition: all getVar(duration, element-interaction);
+        }
+    }
+
+    &__items {
+        height: 100%;
+        @include flex(flex-start, center);
+        gap: getVar(inset, xl);
+        flex: 1;
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__item {
+        @include flex();
+        position: relative;
+        height: 100%;
+        padding: 0 getVar(inset, sm);
+        margin: 0;
+        cursor: pointer;
+        border-radius: getVar(border-radius, sm);
+        font-size: getVar(font-size, button);
+        font-weight: 500;
+        transition: all getVar(nav, transition-duration);
+
+        &:hover {
+            color: getVar(color, brand);
+            background: linear-gradient(135deg, 
+                rgba(getVar(color, brand), 0.1) 0%,
+                rgba(getVar(color, brand), 0.05) 100%);
+            transform: translateY(getVar(transform, hover-translate-y));
+            
+            &::after {
+                transform: scaleX(1);
+                opacity: 1;
+            }
+        }
+
+        // 底部指示器
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                getVar(color, brand) 0%,
+                getVar(color, brand-active) 100%);
+            transform: scaleX(0);
+            opacity: 0;
+            border-radius: getVar(border-radius, sm) getVar(border-radius, sm) 0 0;
+            transition: all getVar(nav, transition-duration);
+            z-index: 1;
+        }
+
+        &.#{$namespace}-is-active {
+            color: getVar(color, brand);
+            background: linear-gradient(135deg, 
+                rgba(getVar(color, brand), 0.15) 0%,
+                rgba(getVar(color, brand), 0.1) 100%);
+
+            &::after {
+                transform: scaleX(1);
+                opacity: 1;
+            }
+        }
+    }
+
+    &__suffixed {
+        @include flex();
+        gap: getVar(inset, xl);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    // 子菜单和相关元素
+    &__submenu {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        min-height: getVar(nav, submenu-min-height);
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, bg), 0.95) 0%,
+            rgba(getVar(color, bg-secondary), 0.9) 100%);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(getVar(color, border), 0.3);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition:
+            opacity getVar(nav, transition-duration),
+            transform getVar(nav, transition-duration);
+        z-index: getVar(z-index, nav);
+
+        &.#{$namespace}-is-open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        &.#{$namespace}-is-sticky {
+            position: absolute;
+            top: 100%;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+    }
+
+    &__submenu-content {
+        display: flex;
+        max-width: getVar(nav, max-width);
+        margin: 0 auto;
+        height: 100%;
+        padding: getVar(inset) getVar(windows-inset, left) getVar(inset) getVar(windows-inset, right);
+        gap: getVar(inset, container);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__submenu-group {
+        display: flex;
+        flex-direction: column;
+        min-width: 150px;
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__group-title {
+        margin-bottom: getVar(inset);
+        padding: 0 getVar(inset, element);
+        font-weight: getVar(font-weight, bold);
+        color: getVar(color, text);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__group-items {
+        display: flex;
+        flex-direction: column;
+        gap: getVar(inset, sm);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__group-item {
+        margin: 0;
+        padding: getVar(inset, sm) getVar(inset);
+        border-radius: getVar(border-radius);
+        cursor: pointer;
+        font-size: getVar(font-size, button);
+        font-weight: 500;
+        transition: all getVar(duration, element-interaction);
+        background-color: transparent;
+
+        &:hover {
+            color: getVar(color, brand);
+            background: linear-gradient(135deg, 
+                rgba(getVar(color, brand), 0.1) 0%,
+                rgba(getVar(color, brand), 0.05) 100%);
+            transform: translateX(getVar(inset, xs));
+        }
+
+        &:active {
+            transform: translateX(getVar(inset, xs)) scale(0.98);
+        }
+    }
+
+    // 高斯模糊遮罩层
+    &__mask {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 200vh; // 确保覆盖足够的高度
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, bg-mask), 0.3) 0%,
+            rgba(getVar(color, bg-mask), 0.5) 100%);
+        backdrop-filter: blur(12px);
+        opacity: 0;
+        pointer-events: none;
+        transition: all getVar(nav, transition-duration);
+        z-index: calc(getVar(z-index, nav) - 2);
+        will-change: opacity, backdrop-filter;
+
+        &.#{$namespace}-is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
+}

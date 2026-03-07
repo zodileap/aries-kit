@@ -1,0 +1,476 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-table {
+  width: 100%;
+  box-sizing: border-box;
+  background: getVar(color, bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: getVar(border-radius, lg);
+  overflow: hidden;
+  box-shadow: getVar(color, box-shadow);
+  border: none;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+      rgba(getVar(color, brand), 0.1) 0%,
+      getVar(color, bg-secondary) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &:hover {
+    box-shadow: getVar(color, box-shadow-popover);
+    transform: translateY(getVar(transform, hover-translate-y));
+    border-color: getVar(color, brand);
+  }
+
+  // 超小尺寸变体
+  &--xs {
+    font-size: getVar(font-size, callout);
+  }
+
+  // 默认尺寸变体
+  &--default {
+    font-size: getVar(font-size, body);
+  }
+
+  // 超大尺寸变体
+  &--xl {
+    font-size: getVar(font-size, headline);
+  }
+
+  &__title {
+    font-size: getVar(font-size, title-3);
+    margin-bottom: getVar(inset);
+    font-weight: 600;
+    color: getVar(color, text);
+  }
+
+  &__container {
+    width: 100%;
+    position: relative;
+    box-sizing: border-box;
+
+    &.#{$namespace}-is-bordered {
+      border: none;
+      border-radius: getVar(border-radius);
+    }
+
+    &.#{$namespace}-is-striped {
+      .is-even {
+        background-color: getVar(color, bg-active);
+        
+        &:hover {
+          background-color: getVar(color, bg-tertiary);
+        }
+      }
+    }
+
+    &.#{$namespace}-is-sticky-enabled {
+      .#{$namespace}-table__scroll-container {
+        position: relative;
+        overflow-x: auto;
+        
+        // 自定义滚动条
+        &::-webkit-scrollbar {
+          height: 8px;
+        }
+        
+        &::-webkit-scrollbar-track {
+          background: getVar(color, bg-secondary);
+          border-radius: getVar(border-radius, sm);
+        }
+        
+        &::-webkit-scrollbar-thumb {
+          background: getVar(color, text-secondary);
+          border-radius: getVar(border-radius, sm);
+          
+          &:hover {
+            background: getVar(color, text-secondary);
+          }
+        }
+      }
+    }
+
+    &--has-fixed-columns {
+      .#{$namespace}-table__scroll-container {
+        overflow-y: auto;
+      }
+    }
+
+    &.#{$namespace}-is-sticky-active {
+      .#{$namespace}-table__header {
+        box-shadow: getVar(color, box-shadow-popover);
+      }
+    }
+
+    // 表格尺寸变体 - 超小尺寸
+    &--xs {
+      .#{$namespace}-table__header-cell,
+      .#{$namespace}-table__cell {
+        padding: getVar(inset, xs) getVar(inset, sm);
+      }
+    }
+
+    // 表格尺寸变体 - 默认尺寸
+    &--default {
+      .#{$namespace}-table__header-cell,
+      .#{$namespace}-table__cell {
+        padding: getVar(inset, sm) getVar(inset);
+      }
+    }
+
+    // 表格尺寸变体 - 超大尺寸
+    &--xl {
+      .#{$namespace}-table__header-cell,
+      .#{$namespace}-table__cell {
+        padding: getVar(inset) getVar(inset, lg);
+      }
+    }
+  }
+
+  &__scroll-container {
+    width: 100%;
+    position: relative;
+    overflow-x: auto;
+  }
+
+  &__content {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    box-sizing: border-box;
+  }
+
+  &__header {
+    width: 100%;
+    color: getVar(color, text);
+
+    &.#{$namespace}-is-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      backdrop-filter: blur(32px) saturate(180%);
+      -webkit-backdrop-filter: blur(8px) saturate(180%);
+      background-color: getVar(color, bg-opacity-blur);
+      border-bottom: 1px solid rgba(getVar(color, border), 0.8);
+    }
+  }
+
+  &__body {
+    width: 100%;
+  }
+
+  &__header-row {
+    border-bottom: 2px solid getVar(color, border);
+    transition: all getVar(duration, element-interaction);
+    
+    &:hover {
+      background-color: getVar(color, bg-active);
+    }
+  }
+
+  &__header-cell {
+    font-size: getVar(font-size, table-header);
+    font-weight: 600;
+    text-align: left;
+    position: relative;
+    transition: all getVar(duration, element-interaction);
+    color: getVar(color, text);
+
+    &.#{$namespace}-is-sticky {
+      box-shadow: none;
+    }
+
+    // 对齐方式
+    &--align-left {
+      text-align: left;
+    }
+
+    &--align-center {
+      text-align: center;
+    }
+
+    &--align-right {
+      text-align: right;
+    }
+
+    // 固定列样式
+    &--fixed-left {
+      position: sticky;
+      z-index: 2;
+      background-color: getVar(color, bg-solid);
+      backdrop-filter: blur(16px);
+      border-right: 1px solid getVar(color, border);
+      left: 0;
+    }
+
+    &--fixed-right {
+      position: sticky;
+      z-index: 2;
+      background-color: getVar(color, bg-solid);
+      backdrop-filter: blur(16px);
+      right: 0;
+      border-left: 1px solid getVar(color, border);
+    }
+
+    &--last-fixed-left {
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -1px;
+        height: 100%;
+        width: 10px;
+        pointer-events: none;
+        box-shadow: getVar(color, box-shadow);
+      }
+    }
+
+    &--first-fixed-right {
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -1px;
+        height: 100%;
+        width: 10px;
+        pointer-events: none;
+        box-shadow: getVar(color, box-shadow);
+      }
+    }
+  }
+
+  &__row {
+    border-bottom: 1px solid rgba(getVar(color, border), 0.3);
+    color: getVar(color, text);
+    transition: all getVar(duration, element-interaction);
+    transform: translateY(0);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.#{$namespace}-is-selectable {
+      cursor: pointer;
+      
+      &:hover {
+        box-shadow: getVar(color, box-shadow);
+      }
+    }
+
+    &.#{$namespace}-is-hovered {
+      cursor: pointer;
+      background-color: getVar(color, bg-active);
+      box-shadow: getVar(color, box-shadow);
+    }
+
+    &.#{$namespace}-is-selected {
+      background-color: getVar(color, bg-selected) !important;
+      box-shadow: getVar(color, box-shadow-input);
+      
+      &:hover {
+        background-color: getVar(color, brand-tertiary) !important;
+        box-shadow: getVar(color, box-shadow);
+      }
+    }
+
+    &.#{$namespace}-is-even {
+      background-color: getVar(color, bg-active);
+    }
+  }
+
+  &__cell {
+    position: relative;
+    box-sizing: border-box;
+    transition: all getVar(duration, element-interaction);
+
+    // 对齐方式
+    &--align-left {
+      text-align: left;
+    }
+
+    &--align-center {
+      text-align: center;
+    }
+
+    &--align-right {
+      text-align: right;
+    }
+
+    // 固定列样式
+    &--fixed-left {
+      position: sticky;
+      z-index: 2;
+      background-color: inherit;
+      backdrop-filter: blur(16px);
+      left: 0;
+      border-right: 1px solid getVar(color, border);
+    }
+
+    &--fixed-right {
+      position: sticky;
+      z-index: 2;
+      background-color: inherit;
+      backdrop-filter: blur(16px);
+      right: 0;
+      border-left: 1px solid getVar(color, border);
+    }
+
+    &.#{$namespace}-is-even {
+      background-color: getVar(color, bg-active);
+    }
+
+    &.#{$namespace}-is-hovered {
+      background-color: getVar(color, bg-active);
+    }
+
+    &.#{$namespace}-is-selected {
+      background-color: getVar(color, bg-selected);
+    }
+
+    &--last-fixed-left {
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -1px;
+        height: 100%;
+        width: 10px;
+        pointer-events: none;
+        box-shadow: getVar(color, box-shadow);
+      }
+    }
+
+    &--first-fixed-right {
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -1px;
+        height: 100%;
+        width: 10px;
+        pointer-events: none;
+        box-shadow: getVar(color, box-shadow);
+      }
+    }
+  }
+
+  &__checkbox {
+    @include flex();
+    transition: all getVar(duration, element-interaction);
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      transition: all getVar(duration, element-interaction);
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  // 分页器容器样式
+  &__pagination-wrapper {
+    height: 65px; // 固定高度
+    border-top: 1px solid getVar(color, border);
+    padding: 0 getVar(inset);
+    
+    &--top {
+      border-bottom: 1px solid rgba(getVar(color, border), 0.3);
+      border-top: none;
+    }
+    
+    
+    // 响应式布局
+    @include res(sm) {
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: getVar(inset, sm);
+    }
+  }
+  
+  // 加载状态
+  &.#{$namespace}-is-loading {
+    opacity: 0.7;
+    pointer-events: none;
+    
+    .#{$namespace}-table__row {
+      animation: tableRowLoading 1.5s ease-in-out infinite;
+    }
+  }
+  
+  // 空状态
+  &__empty {
+    @include flex();
+    padding: getVar(inset, xl);
+    color: getVar(color, text-secondary);
+    font-size: getVar(font-size, body);
+    min-height: 200px;
+    
+    &__icon {
+      font-size: getVar(font-size, title);
+      margin-bottom: getVar(inset);
+      opacity: 0.5;
+    }
+    
+    &__message {
+      text-align: center;
+    }
+  }
+  
+  // 紧凑模式
+  &--compact {
+    .#{$namespace}-table__header-cell,
+    .#{$namespace}-table__cell {
+      padding: getVar(inset, xs);
+    }
+    
+    .#{$namespace}-table__row {
+      &:nth-child(even) {
+        background-color: transparent;
+      }
+    }
+  }
+  
+  // 无边框模式
+  &--borderless {
+    border: none;
+    box-shadow: none;
+    
+    .#{$namespace}-table__container {
+      border: none;
+    }
+    
+    .#{$namespace}-table__header-row,
+    .#{$namespace}-table__row {
+      border-bottom: none;
+    }
+    
+    .#{$namespace}-table__header-cell,
+    .#{$namespace}-table__cell {
+      border-right: none;
+    }
+  }
+}
+
+// 加载动画
+@keyframes tableRowLoading {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,68 @@
+// @/theme/components/particle.scss
+@use "../global/index.scss" as *;
+
+.#{$namespace}-particle {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: getVar(border-radius);
+  background: #000000;
+  transition: all getVar(duration, element-interaction);
+
+  &:hover {
+    transform: translateY(getVar(transform, hover-translate-y));
+  }
+  
+  // 粒子系统画布
+  &__canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    border-radius: getVar(border-radius);
+    background: transparent;
+  }
+  
+  &__content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    @include flex();
+    flex-direction: column;
+    padding: getVar(inset);
+    border-radius: getVar(border-radius);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    color: #ffffff;
+  }
+
+  // 交互状态
+  &.#{$namespace}-is-interactive {
+    cursor: pointer;
+
+    &:active {
+      transform: translateY(getVar(transform, hover-translate-y)) scale(0.98);
+    }
+  }
+
+  // 响应式适配
+  @include res(sm) {
+    min-height: 300px;
+    
+    .#{$namespace}-particle__content {
+      padding: getVar(inset, sm);
+    }
+  }
+
+  @include res(md) {
+    min-height: 400px;
+  }
+
+  @include res(lg) {
+    min-height: 500px;
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "jsx": "react-jsx",
+    "declaration": true, // 是否生成声明文件
+    "declarationDir": "./dist/types", // 声明文件的输出目录
+    "outDir": "./dist",
+    "emitDeclarationOnly": true, // 是否只输出声明文件
+    "baseUrl": ".",
+    "paths": {
+      "@ari/*": [
+        "src/*"
+      ],
+      "@aries-kit/react": [
+        "src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "preview/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

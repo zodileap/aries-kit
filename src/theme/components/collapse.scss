@@ -1,0 +1,298 @@
+@use "../global/index.scss" as *;
+@use "../global/animation.scss" as *;
+
+.#{$namespace}-collapse {
+  width: 100%;
+  background-color: getVar(color, bg-solid);
+  border: 1px solid getVar(color, border);
+  border-radius: getVar(border-radius, container);
+  overflow: hidden;
+  box-shadow: getVar(color, box-shadow);
+  transition: all getVar(duration, element-interaction);
+
+  &:hover {
+    box-shadow: getVar(color, box-shadow-popover);
+    transform: translateY(getVar(transform, hover-translate-y));
+  }
+
+  &__item {
+    border-bottom: 1px solid getVar(color, border);
+    transition: all getVar(duration, element-interaction);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    &.#{$namespace}-is-active {
+      border-color: getVar(color, brand);
+      box-shadow: inset 3px 0 0 getVar(color, brand);
+    }
+  }
+
+  &__header {
+    @include flex(space-between, center);
+    width: 100%;
+    padding: getVar(inset, sm) getVar(inset);
+    cursor: pointer;
+    user-select: none;
+    background-color: getVar(color, bg-solid);
+    transition: all getVar(duration, element-interaction);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: getVar(color, brand);
+      opacity: 0;
+      transition: all getVar(duration, element-interaction);
+      z-index: -1;
+    }
+
+    &:hover {
+      background-color: getVar(color, bg-active);
+      
+      &::before {
+        opacity: 0.05;
+      }
+    }
+    
+    &:active {
+      transform: scale(0.99);
+    }
+  }
+
+  &__title {
+    @include flex(flex-start, center);
+    gap: getVar(inset, sm);
+    font-weight: getVar(font-weight, semibold);
+    color: getVar(color, text);
+    font-size: getVar(font-size, body);
+    margin: 0;
+    transition: all getVar(duration, element-interaction);
+  }
+  
+  &__content {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  &__collapse-section {
+    padding: 0; // 重置继承的container padding
+    overflow: hidden;
+    transition: height getVar(duration, element-interaction) ease-out;
+  }
+
+  &__collapse-content {
+    height: 100%;
+  }
+
+  &__body {
+    padding: getVar(inset, sm) getVar(inset);
+    color: getVar(color, text);
+    line-height: 1.6;
+    
+    > *:first-child {
+      margin-top: 0;
+    }
+    
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &.#{$namespace}-is-collapsing {
+    .#{$namespace}-collapse__body {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  &__content {
+    &[style*="height: 0"] {
+      .#{$namespace}-collapse__body {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  &__icon {
+    @include flex();
+    font-size: getVar(font-size, subheadline);
+    color: getVar(color, text-secondary);
+    margin-right: getVar(inset, xs);
+    transition: all getVar(duration, element-interaction);
+  }
+  
+  &__arrow {
+    @include flex();
+    font-size: getVar(font-size, body);
+    color: getVar(color, text-secondary);
+    transition: all getVar(duration, element-interaction);
+    transform-origin: center;
+    
+    &.#{$namespace}-is-expanded {
+      transform: rotate(180deg);
+      color: getVar(color, brand);
+    }
+  }
+
+  &.#{$namespace}-is-expanded {
+    .#{$namespace}-collapse__header {
+      background-color: getVar(color, bg-active);
+    }
+    
+    .#{$namespace}-collapse__title {
+      color: getVar(color, brand);
+    }
+    
+    .#{$namespace}-collapse__icon {
+      color: getVar(color, brand);
+      transform: scale(1.1);
+    }
+  }
+
+  &.#{$namespace}-is-expanding {
+    .#{$namespace}-collapse__collapse-section {
+      @include expandCollapseAnim();
+    }
+  }
+
+  &.#{$namespace}-is-collapsing {
+    .#{$namespace}-collapse__collapse-section {
+      animation: collapseClose getVar(duration, element-interaction) ease-out;
+    }
+  }
+
+  &.#{$namespace}-is-disabled {
+    opacity: getVar(color, opacity-disabled);
+    
+    .#{$namespace}-collapse__header {
+      cursor: not-allowed;
+      
+      &:hover {
+        background-color: getVar(color, bg-solid);
+        
+        &::before {
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  &--small {
+    .#{$namespace}-collapse__header {
+      padding: getVar(inset, xs) getVar(inset, sm);
+    }
+    
+    .#{$namespace}-collapse__title {
+      font-size: getVar(font-size, button);
+    }
+    
+    .#{$namespace}-collapse__body {
+      padding: getVar(inset, xs) getVar(inset, sm);
+    }
+    
+    .#{$namespace}-collapse__icon,
+    .#{$namespace}-collapse__arrow {
+      font-size: getVar(font-size, body);
+    }
+  }
+  
+  &--large {
+    .#{$namespace}-collapse__header {
+      padding: getVar(inset) getVar(inset, lg);
+    }
+    
+    .#{$namespace}-collapse__title {
+      font-size: getVar(font-size, subheadline);
+    }
+    
+    .#{$namespace}-collapse__body {
+      padding: getVar(inset) getVar(inset, lg);
+    }
+    
+    .#{$namespace}-collapse__icon,
+    .#{$namespace}-collapse__arrow {
+      font-size: getVar(font-size, title);
+    }
+  }
+
+  &--ghost {
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    
+    .#{$namespace}-collapse__item {
+      border-bottom: 1px solid getVar(color, border);
+      
+      &.#{$namespace}-is-active {
+        border-left: 3px solid getVar(color, brand);
+        background-color: getVar(color, bg);
+      }
+    }
+    
+    .#{$namespace}-collapse__header {
+      background-color: transparent;
+      
+      &:hover {
+        background-color: getVar(color, bg-active);
+      }
+    }
+    
+    .#{$namespace}-collapse__content {
+      background-color: transparent;
+    }
+  }
+
+  &--accordion {
+    .#{$namespace}-collapse__item {
+      &.#{$namespace}-is-active {
+        .#{$namespace}-collapse__content {
+          border-top-color: getVar(color, brand);
+        }
+      }
+    }
+  }
+
+  &--shadow-default {
+    // 默认模式：始终显示阴影（当前默认行为）
+  }
+
+  &--shadow-active {
+    // 仅悬浮时显示阴影模式
+    box-shadow: none;
+    
+    &:hover {
+      box-shadow: getVar(color, box-shadow-popover);
+      transform: translateY(getVar(transform, hover-translate-y));
+    }
+  }
+
+  &--shadow-none {
+    // 无阴影模式
+    box-shadow: none;
+    
+    &:hover {
+      box-shadow: none;
+      transform: translateY(getVar(transform, hover-translate-y));
+    }
+  }
+}
+
+// 动画定义
+@keyframes collapseClose {
+  from {
+    max-height: 1000px;
+    opacity: 1;
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+  }
+}

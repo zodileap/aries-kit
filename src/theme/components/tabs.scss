@@ -1,0 +1,132 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-tabs {
+  width: 100%;
+  position: relative;
+
+  &__nav {
+    @include flex(flex-start, center);
+    gap: getVar(inset, xs);
+    padding: getVar(inset, xs);
+    background-color: getVar(color, bg-secondary);
+    border-radius: getVar(border-radius, lg);
+    overflow-y: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+    position: relative;
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__slider {
+    position: absolute;
+    top: getVar(inset, xs);
+    left: 0;
+    height: calc(100% - #{getVar(inset, xs)} * 2);
+    background-color: getVar(color, bg-selected);
+    border-radius: getVar(border-radius);
+    transition: transform getVar(duration, page), width getVar(duration, page);
+    pointer-events: none;
+    z-index: 1;
+    box-shadow: getVar(color, box-shadow);
+    will-change: transform, width;
+    transform-origin: left center;
+  }
+
+  &__nav-item {
+    @include flex(center, center);
+    gap: getVar(inset, xs);
+    padding: getVar(inset, sm) getVar(inset);
+    cursor: pointer;
+    color: getVar(color, text);
+    font-size: getVar(font-size, button);
+    font-weight: 500;
+    position: relative;
+    border-radius: getVar(border-radius);
+    transition: all getVar(duration, element-interaction);
+    background-color: transparent;
+    white-space: nowrap;
+    min-width: fit-content;
+    z-index: 2;
+
+    &:hover {
+      color: getVar(color, brand);
+      background-color: rgba(getVar(color, brand), 0.05);
+    }
+
+    &.#{$namespace}-is-active {
+      color: getVar(color, brand-active);
+      background-color: transparent;
+      font-weight: 600;
+      
+      &:hover {
+        color: getVar(color, brand-active);
+        background-color: rgba(getVar(color, brand-active), 0.05);
+      }
+    }
+
+    &.#{$namespace}-is-disabled {
+      color: getVar(color, text-disabled);
+      cursor: not-allowed;
+      opacity: getVar(opacity, disabled);
+      
+      &:hover {
+        color: getVar(color, text-disabled);
+        background-color: transparent;
+      }
+    }
+  }
+
+  &__content {
+    padding: getVar(inset, lg) 0;
+    margin-top: getVar(inset);
+    transition: all getVar(duration, element-interaction);
+    
+    &.#{$namespace}-is-entering {
+      animation: tabContentEnter getVar(duration, element-interaction) ease-out;
+    }
+  }
+  
+  // 垂直标签页样式
+  &--vertical {
+    @include flex(flex-start, stretch);
+    
+    .#{$namespace}-tabs__nav {
+      @include flex(flex-start, stretch, column);
+      min-width: 160px;
+      margin-right: getVar(inset);
+    }
+    
+    .#{$namespace}-tabs__slider {
+      top: 0;
+      left: getVar(inset, xs);
+      width: calc(100% - #{getVar(inset, xs)} * 2);
+      height: auto;
+      transition: transform getVar(duration, page), height getVar(duration, page);
+      will-change: transform, height;
+      transform-origin: center top;
+    }
+    
+    .#{$namespace}-tabs__content {
+      flex: 1;
+      margin-top: 0;
+      padding: 0;
+    }
+  }
+  
+  // 卡片样式 (已合并到默认样式中)
+  &--card {
+    // 卡片样式现在是默认样式，保留此类以兼容
+  }
+}
+
+// 动画定义
+@keyframes tabContentEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

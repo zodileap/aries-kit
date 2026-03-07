@@ -1,0 +1,111 @@
+@use "sass:math";
+@use "../mixins/mixins.scss" as *;
+
+// 波浪动画
+@mixin rippleAnim($color: getVar("color", "brand", "active"), $bgColor: getVar("color", "bg", 'solid')) {
+  position: relative;
+  overflow: hidden;
+  background-color: $bgColor;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: $color;
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &::before {
+    animation: ripple 800ms ease-in-out;
+  }
+}
+
+// 菜单和树形组件的展开/收起动画
+@mixin expandCollapseAnim($direction: "right", $staggerItems: true) {
+  // 获取 CSS 变量
+  $duration: getVar(duration, collapse);
+  $collapseNum: var(--z-collapse-num, 0);
+  $layoutDuration: var(--z-collapse-layout-duration, 0);
+  $staggerDelay: 50ms; // 与React Hook中的animationStaggerDelay保持一致
+
+  // 收起状态的默认设置
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+
+  // 高度变化由React Hook通过setTimeout控制，CSS只处理平滑过渡
+  transition:
+    height getVar(duration, element-interaction) ease-out,
+    visibility 0ms linear getVar(duration, element-interaction);
+
+  transform-origin: top center;
+  will-change: height, opacity, visibility;
+
+  // 修改为只选择直接子元素的透明度和位移动画
+  & [data-z-collapse-node] {
+    opacity: 0;
+    transform: translateX(if($direction == "right", -20px, 20px));
+    transition:
+      opacity getVar(duration, element-interaction) ease-out,
+      transform getVar(duration, element-interaction) ease-out;
+
+    @if $staggerItems {
+      // 收起时的延迟（反向顺序）
+      transition-delay: calc(($collapseNum - 1 - var(--z-collapse-index, 0)) * #{$staggerDelay});
+    }
+  }
+
+  // 展开状态 - 只修复高度计算
+  &.is-expanded,
+  .is-expanded > & {
+    height: var(--z-collapse-height, auto);
+    visibility: visible;
+    
+    // 如果没有设置高度变量，使用更大的默认值
+    min-height: var(--z-collapse-height, 2000px);
+
+    // 展开时高度过渡由React控制
+    transition:
+      height getVar(duration, element-interaction) ease-out,
+      visibility 0ms linear 0ms;
+
+    & [data-z-collapse-node].z-is-parent-expanded {
+      opacity: 1;
+      transform: translateX(0);
+
+      @if $staggerItems {
+        // 展开时的延迟（正向顺序）
+        transition-delay: calc(var(--z-collapse-index, 0) * #{$staggerDelay});
+      }
+    }
+  }
+}
+
+@keyframes ripple {
+  from {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@mixin elementRotate($duration: 1s) {
+  animation: rotate $duration linear infinite;
+}

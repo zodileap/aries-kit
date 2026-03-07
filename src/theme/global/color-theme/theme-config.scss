@@ -1,0 +1,360 @@
+@use "sass:map";
+@use "../color.scss" as *;
+@use "../../mixins/mixins.scss" as *;
+
+// 主题配置混入 - 统一管理所有主题变量结构
+@mixin theme-config(
+  // 品牌色
+  $brand, $brand-active, $brand-secondary, $brand-tertiary,
+  
+  // 活跃色
+  $active, $active-active, $active-secondary, $active-tertiary,
+  
+  // 主色
+  $primary, $primary-active, $primary-secondary, $primary-tertiary,
+  
+  // 成功色
+  $success, $success-active, $success-secondary, $success-tertiary,
+  
+  // 警告色
+  $warning, $warning-active, $warning-secondary, $warning-tertiary,
+  
+  // 危险色
+  $danger, $danger-active, $danger-secondary, $danger-tertiary,
+  
+  // 信息色
+  $info, $info-active, $info-secondary, $info-tertiary,
+  
+  // 背景色
+  $bg, $bg-secondary, $bg-tertiary, $bg-opacity, $bg-opacity-blur, 
+  $bg-solid, $bg-active, $bg-selected, $bg-inverse, $bg-app-layout, $bg-glass,
+  
+  // 边框色
+  $border, $border-strong, $border-active, $border-brand, $border-primary,
+  $border-success, $border-warning, $border-danger, $border-info, $border-divider,
+  $border-glass,
+  
+  // 文本色
+  $text, $text-secondary, $text-tertiary, $text-active, $text-danger,
+  $text-success, $text-warning, $text-info, $text-brand, $text-disabled,
+  
+  // 文本在背景上的颜色
+  $text-on-bg, $text-on-bg-active, $text-on-bg-secondary, $text-on-bg-tertiary, 
+  $text-on-bg-brand, $text-on-brand, $text-on-active, $text-on-primary, 
+  $text-on-success, $text-on-warning, $text-on-danger, $text-on-info,
+  
+  // Callout组件内容文字颜色
+  $text-callout, $text-callout-success, $text-callout-warning, $text-callout-danger, $text-callout-info,
+  
+  // 标签颜色 - 基础色系
+  $tag-blue, $tag-blue-text, $tag-blue-hover, $tag-blue-border, $tag-blue-bg-hover,
+  $tag-green, $tag-green-text, $tag-green-hover, $tag-green-border, $tag-green-bg-hover,
+  $tag-grey, $tag-grey-text, $tag-grey-hover, $tag-grey-border, $tag-grey-bg-hover,
+  $tag-orange, $tag-orange-text, $tag-orange-hover, $tag-orange-border, $tag-orange-bg-hover,
+  $tag-persimmon, $tag-persimmon-text, $tag-persimmon-hover, $tag-persimmon-border, $tag-persimmon-bg-hover,
+  $tag-pink, $tag-pink-text, $tag-pink-hover, $tag-pink-border, $tag-pink-bg-hover,
+  $tag-purple, $tag-purple-text, $tag-purple-hover, $tag-purple-border, $tag-purple-bg-hover,
+  $tag-red, $tag-red-text, $tag-red-hover, $tag-red-border, $tag-red-bg-hover,
+  $tag-teal, $tag-teal-text, $tag-teal-hover, $tag-teal-border, $tag-teal-bg-hover,
+  $tag-violet, $tag-violet-text, $tag-violet-hover, $tag-violet-border, $tag-violet-bg-hover,
+  $tag-yellow, $tag-yellow-text, $tag-yellow-hover, $tag-yellow-border, $tag-yellow-bg-hover,
+  
+  // 标签颜色 - 淡色系
+  $tag-pale-blue, $tag-pale-blue-text, $tag-pale-blue-hover, $tag-pale-blue-border, $tag-pale-blue-bg-hover,
+  $tag-pale-green, $tag-pale-green-text, $tag-pale-green-hover, $tag-pale-green-border, $tag-pale-green-bg-hover,
+  $tag-pale-persimmon, $tag-pale-persimmon-text, $tag-pale-persimmon-hover, $tag-pale-persimmon-border, $tag-pale-persimmon-bg-hover,
+  $tag-pale-pink, $tag-pale-pink-text, $tag-pale-pink-hover, $tag-pale-pink-border, $tag-pale-pink-bg-hover,
+  $tag-pale-purple, $tag-pale-purple-text, $tag-pale-purple-hover, $tag-pale-purple-border, $tag-pale-purple-bg-hover,
+  $tag-pale-red, $tag-pale-red-text, $tag-pale-red-hover, $tag-pale-red-border, $tag-pale-red-bg-hover,
+  $tag-pale-violet, $tag-pale-violet-text, $tag-pale-violet-hover, $tag-pale-violet-border, $tag-pale-violet-bg-hover,
+  $tag-pale-yellow, $tag-pale-yellow-text, $tag-pale-yellow-hover, $tag-pale-yellow-border, $tag-pale-yellow-bg-hover,
+  
+  // Switch组件专用颜色
+  $switch-unchecked, $switch-unchecked-hover, $switch-checked, $switch-checked-hover,
+  
+  // 阴影
+  $box-shadow, $box-shadow-popover, $box-shadow-rounded,
+  
+  // 透明度
+  $opacity-disabled: 0.5, $opacity-hover: 0.8, $opacity-active: 0.9
+) {
+  
+  // 构建变量映射
+  $brand-colors: (
+    "brand": $brand,
+    "brand-active": $brand-active,
+    "brand-secondary": $brand-secondary,
+    "brand-tertiary": $brand-tertiary
+  );
+
+  $active-colors: (
+    "active": $active,
+    "active-active": $active-active,
+    "active-secondary": $active-secondary,
+    "active-tertiary": $active-tertiary
+  );
+
+  $primary-colors: (
+    "primary": $primary,
+    "primary-active": $primary-active,
+    "primary-secondary": $primary-secondary,
+    "primary-tertiary": $primary-tertiary
+  );
+
+  $success-colors: (
+    "success": $success,
+    "success-active": $success-active,
+    "success-secondary": $success-secondary,
+    "success-tertiary": $success-tertiary
+  );
+
+  $warning-colors: (
+    "warning": $warning,
+    "warning-active": $warning-active,
+    "warning-secondary": $warning-secondary,
+    "warning-tertiary": $warning-tertiary
+  );
+
+  $danger-colors: (
+    "danger": $danger,
+    "danger-active": $danger-active,
+    "danger-secondary": $danger-secondary,
+    "danger-tertiary": $danger-tertiary
+  );
+
+  $info-colors: (
+    "info": $info,
+    "info-active": $info-active,
+    "info-secondary": $info-secondary,
+    "info-tertiary": $info-tertiary
+  );
+
+  $tag-colors: (
+    // 基础颜色标签
+    "tag-blue": $tag-blue,
+    "tag-blue-text": $tag-blue-text,
+    "tag-blue-hover": $tag-blue-hover,
+    "tag-blue-border": $tag-blue-border,
+    "tag-blue-bg-hover": $tag-blue-bg-hover,
+    
+    "tag-green": $tag-green,
+    "tag-green-text": $tag-green-text,
+    "tag-green-hover": $tag-green-hover,
+    "tag-green-border": $tag-green-border,
+    "tag-green-bg-hover": $tag-green-bg-hover,
+    
+    "tag-grey": $tag-grey,
+    "tag-grey-text": $tag-grey-text,
+    "tag-grey-hover": $tag-grey-hover,
+    "tag-grey-border": $tag-grey-border,
+    "tag-grey-bg-hover": $tag-grey-bg-hover,
+    
+    "tag-orange": $tag-orange,
+    "tag-orange-text": $tag-orange-text,
+    "tag-orange-hover": $tag-orange-hover,
+    "tag-orange-border": $tag-orange-border,
+    "tag-orange-bg-hover": $tag-orange-bg-hover,
+    
+    "tag-persimmon": $tag-persimmon,
+    "tag-persimmon-text": $tag-persimmon-text,
+    "tag-persimmon-hover": $tag-persimmon-hover,
+    "tag-persimmon-border": $tag-persimmon-border,
+    "tag-persimmon-bg-hover": $tag-persimmon-bg-hover,
+    
+    "tag-pink": $tag-pink,
+    "tag-pink-text": $tag-pink-text,
+    "tag-pink-hover": $tag-pink-hover,
+    "tag-pink-border": $tag-pink-border,
+    "tag-pink-bg-hover": $tag-pink-bg-hover,
+    
+    "tag-purple": $tag-purple,
+    "tag-purple-text": $tag-purple-text,
+    "tag-purple-hover": $tag-purple-hover,
+    "tag-purple-border": $tag-purple-border,
+    "tag-purple-bg-hover": $tag-purple-bg-hover,
+    
+    "tag-red": $tag-red,
+    "tag-red-text": $tag-red-text,
+    "tag-red-hover": $tag-red-hover,
+    "tag-red-border": $tag-red-border,
+    "tag-red-bg-hover": $tag-red-bg-hover,
+    
+    "tag-teal": $tag-teal,
+    "tag-teal-text": $tag-teal-text,
+    "tag-teal-hover": $tag-teal-hover,
+    "tag-teal-border": $tag-teal-border,
+    "tag-teal-bg-hover": $tag-teal-bg-hover,
+    
+    "tag-violet": $tag-violet,
+    "tag-violet-text": $tag-violet-text,
+    "tag-violet-hover": $tag-violet-hover,
+    "tag-violet-border": $tag-violet-border,
+    "tag-violet-bg-hover": $tag-violet-bg-hover,
+    
+    "tag-yellow": $tag-yellow,
+    "tag-yellow-text": $tag-yellow-text,
+    "tag-yellow-hover": $tag-yellow-hover,
+    "tag-yellow-border": $tag-yellow-border,
+    "tag-yellow-bg-hover": $tag-yellow-bg-hover,
+    
+    // 淡色系列标签
+    "tag-pale-blue": $tag-pale-blue,
+    "tag-pale-blue-text": $tag-pale-blue-text,
+    "tag-pale-blue-hover": $tag-pale-blue-hover,
+    "tag-pale-blue-border": $tag-pale-blue-border,
+    "tag-pale-blue-bg-hover": $tag-pale-blue-bg-hover,
+    
+    "tag-pale-green": $tag-pale-green,
+    "tag-pale-green-text": $tag-pale-green-text,
+    "tag-pale-green-hover": $tag-pale-green-hover,
+    "tag-pale-green-border": $tag-pale-green-border,
+    "tag-pale-green-bg-hover": $tag-pale-green-bg-hover,
+    
+    "tag-pale-persimmon": $tag-pale-persimmon,
+    "tag-pale-persimmon-text": $tag-pale-persimmon-text,
+    "tag-pale-persimmon-hover": $tag-pale-persimmon-hover,
+    "tag-pale-persimmon-border": $tag-pale-persimmon-border,
+    "tag-pale-persimmon-bg-hover": $tag-pale-persimmon-bg-hover,
+    
+    "tag-pale-pink": $tag-pale-pink,
+    "tag-pale-pink-text": $tag-pale-pink-text,
+    "tag-pale-pink-hover": $tag-pale-pink-hover,
+    "tag-pale-pink-border": $tag-pale-pink-border,
+    "tag-pale-pink-bg-hover": $tag-pale-pink-bg-hover,
+    
+    "tag-pale-purple": $tag-pale-purple,
+    "tag-pale-purple-text": $tag-pale-purple-text,
+    "tag-pale-purple-hover": $tag-pale-purple-hover,
+    "tag-pale-purple-border": $tag-pale-purple-border,
+    "tag-pale-purple-bg-hover": $tag-pale-purple-bg-hover,
+    
+    "tag-pale-red": $tag-pale-red,
+    "tag-pale-red-text": $tag-pale-red-text,
+    "tag-pale-red-hover": $tag-pale-red-hover,
+    "tag-pale-red-border": $tag-pale-red-border,
+    "tag-pale-red-bg-hover": $tag-pale-red-bg-hover,
+    
+    "tag-pale-violet": $tag-pale-violet,
+    "tag-pale-violet-text": $tag-pale-violet-text,
+    "tag-pale-violet-hover": $tag-pale-violet-hover,
+    "tag-pale-violet-border": $tag-pale-violet-border,
+    "tag-pale-violet-bg-hover": $tag-pale-violet-bg-hover,
+    
+    "tag-pale-yellow": $tag-pale-yellow,
+    "tag-pale-yellow-text": $tag-pale-yellow-text,
+    "tag-pale-yellow-hover": $tag-pale-yellow-hover,
+    "tag-pale-yellow-border": $tag-pale-yellow-border,
+    "tag-pale-yellow-bg-hover": $tag-pale-yellow-bg-hover
+  );
+
+  // 动态构建背景色映射
+  $bg-colors: (
+    // 说明：
+    //
+    //   - use-bg 是“语义占位背景色”，默认设置为 transparent。
+    //   - 组件使用 --z-color-use-bg 时会透出父级容器背景，用于在不同卡片/面板/页面中保持可复用。
+    //   - 若需要固定背景色，应优先使用 bg、bg-secondary、bg-tertiary 等显式背景变量。
+    "use-bg": transparent,
+    "bg": $bg,
+    "bg-secondary": $bg-secondary,
+    "bg-tertiary": $bg-tertiary,
+    "bg-opacity": $bg-opacity,
+    "bg-opacity-blur": $bg-opacity-blur,
+    "bg-solid": $bg-solid,
+    "bg-active": $bg-active,
+    "bg-selected": $bg-selected,
+    "bg-mask": rgba($z-ramp-black-1000, getVar(opacity, drawer-mask)),
+    "bg-inverse": $bg-inverse,
+    "bg-app-layout": $bg-app-layout,
+    "bg-glass": $bg-glass
+  );
+
+  // 动态构建边框色映射
+  $border-colors: (
+    "border": $border,
+    "border-strong": $border-strong,
+    "border-active": $border-active,
+    "border-brand": $border-brand,
+    "border-primary": $border-primary,
+    "border-success": $border-success,
+    "border-warning": $border-warning,
+    "border-danger": $border-danger,
+    "border-info": $border-info,
+    "border-divider": $border-divider,
+    "border-glass": $border-glass
+  );
+
+  // 动态构建文本色映射
+  $text-colors: (
+    "text": $text,
+    "text-secondary": $text-secondary,
+    "text-tertiary": $text-tertiary,
+    "text-active": $text-active,
+    "text-danger": $text-danger,
+    "text-success": $text-success,
+    "text-warning": $text-warning,
+    "text-info": $text-info,
+    "text-brand": $text-brand,
+    "text-disabled": $text-disabled,
+    "text-on-bg": $text-on-bg,
+    "text-on-bg-active": $text-on-bg-active,
+    "text-on-bg-secondary": $text-on-bg-secondary,
+    "text-on-bg-tertiary": $text-on-bg-tertiary,
+    "text-on-bg-brand": $text-on-bg-brand,
+    "text-on-brand": $text-on-brand,
+    "text-on-active": $text-on-active,
+    "text-on-primary": $text-on-primary,
+    "text-on-success": $text-on-success,
+    "text-on-warning": $text-on-warning,
+    "text-on-danger": $text-on-danger,
+    "text-on-info": $text-on-info,
+    "text-callout": $text-callout,
+    "text-callout-success": $text-callout-success,
+    "text-callout-warning": $text-callout-warning,
+    "text-callout-danger": $text-callout-danger,
+    "text-callout-info": $text-callout-info
+  );
+
+  $switch-colors: (
+    "switch-unchecked": $switch-unchecked,
+    "switch-unchecked-hover": $switch-unchecked-hover,
+    "switch-checked": $switch-checked,
+    "switch-checked-hover": $switch-checked-hover
+  );
+
+  $box-shadow-colors: (
+    "box-shadow": $box-shadow,
+    "box-shadow-popover": $box-shadow-popover,
+    "box-shadow-rounded": $box-shadow-rounded
+  );
+
+  $opacity-colors: (
+    "opacity-disabled": $opacity-disabled,
+    "opacity-hover": $opacity-hover,
+    "opacity-active": $opacity-active
+  );
+
+  // 合并所有颜色映射
+  $colors: () !default;
+  $all-colors: multi-map-merge(
+    $brand-colors,
+    $bg-colors,
+    $border-colors,
+    $text-colors,
+    $active-colors,
+    $primary-colors,
+    $success-colors,
+    $warning-colors,
+    $danger-colors,
+    $info-colors,
+    $tag-colors,
+    $switch-colors,
+    $box-shadow-colors,
+    $opacity-colors
+  );
+
+  $colors: map.deep-merge($all-colors, $colors);
+
+  // 应用CSS变量
+  @include set-component-css-var("color", $colors);
+}

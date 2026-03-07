@@ -1,0 +1,250 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-form {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    transition: all getVar(duration, element-interaction);
+    border-radius: getVar(border-radius);
+    box-sizing: border-box;
+
+    // 布局变体
+    &--horizontal {
+        flex-direction: column;
+    }
+
+    &--vertical {
+        flex-direction: column;
+    }
+
+    &--inline {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: getVar(inset, sm);
+    }
+
+    // 表单状态
+    &.#{$namespace}-is-disabled {
+        opacity: getVar(opacity, disabled);
+        pointer-events: none;
+    }
+
+    &.#{$namespace}-is-loading {
+        position: relative;
+        pointer-events: none;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(getVar(color, bg), 0.8);
+            backdrop-filter: blur(2px);
+            border-radius: getVar(border-radius);
+            z-index: 10;
+        }
+    }
+}
+
+.#{$namespace}-form-item {
+    display: flex;
+    margin-bottom: getVar(inset, sm);
+    width: 100%;
+    position: relative;
+    height: getVar(element-size, lg);
+    transition: all getVar(duration, element-interaction);
+    box-sizing: border-box;
+
+    &:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    &__label {
+        line-height: getVar(element-size, lg);
+        font-size: getVar(font-size, input);
+        color: getVar(color, text);
+        padding-right: getVar(inset, sm);
+        @include flex();
+        display: inline-flex;
+        gap: getVar(inset, xs);
+        transition: all getVar(duration, element-interaction);
+        font-weight: getVar(font-weight, lg);
+
+        &--right {
+            align-items: flex-end;
+            text-align: right;
+            justify-content: flex-end;
+        }
+
+        &--left {
+            align-items: flex-start;
+            text-align: left;
+            justify-content: flex-start;
+        }
+    }
+
+    &__content {
+        flex: 1;
+        min-width: 0;
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__control {
+        position: relative;
+        @include flex(flex-start, center);
+        flex: auto;
+        max-width: 100%;
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__required {
+        color: getVar(color, danger);
+        font-size: getVar(font-size, body);
+        margin-left: getVar(inset, xs);
+    }
+
+    &__error {
+        color: getVar(color, danger);
+        padding: getVar(inset, container-vertical-min) getVar(inset, container-horizontal-min);
+        border-radius: getVar(border-radius, sm);
+        margin-top: getVar(inset, xs);
+        overflow: hidden;
+        @include flex(flex-start, center);
+        line-height: getVar(element-size, sm);
+        background-color: rgba(getVar(color, danger), 0.1);
+        border-left: 3px solid getVar(color, danger);
+        font-size: getVar(font-size, caption);
+
+        // 动画状态
+        height: 0;
+        opacity: 0;
+        transition:
+            height getVar(duration) getVar(transition-timing-function),
+            opacity getVar(duration) getVar(transition-timing-function),
+            transform getVar(duration) getVar(transition-timing-function);
+
+        &.#{$namespace}-is-visible {
+            height: getVar(element-size, sm);
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    &__help {
+        color: getVar(color, text-secondary);
+        font-size: getVar(font-size, footnote);
+        line-height: 1.5;
+        display: inline-flex;
+    }
+
+    &__colon {
+        margin-left: getVar(inset, xs);
+    }
+
+    // 布局变体
+    &--horizontal {
+        flex-direction: row;
+    }
+
+    &--vertical {
+        flex-direction: column;
+        height: unset;
+
+        .#{$namespace}-form-item__label {
+            justify-content: flex-start;
+            text-align: left;
+            margin-bottom: getVar(inset, sm);
+            padding-right: 0;
+        }
+    }
+
+    &--inline {
+        flex-wrap: nowrap;
+        margin-bottom: 0;
+        margin-right: getVar(inset);
+
+        .#{$namespace}-form-item__label {
+            flex-shrink: 0;
+        }
+
+        .#{$namespace}-form-item__content {
+            flex-grow: 1;
+        }
+    }
+
+    // 密度变体
+    &--density-compact {
+        margin-bottom: getVar(inset, xs) !important;
+        
+        .#{$namespace}-form-item__error {
+            margin-top: getVar(inset, xxs);
+        }
+        
+        &.#{$namespace}-form-item--vertical {
+            .#{$namespace}-form-item__label {
+                margin-bottom: getVar(inset, xs);
+            }
+        }
+    }
+
+    &--density-default {
+        // 默认样式
+    }
+
+    &--density-loose {
+        margin-bottom: getVar(inset) !important;
+        
+        .#{$namespace}-form-item__error {
+            margin-top: getVar(inset, sm);
+        }
+        
+        &.#{$namespace}-form-item--vertical {
+            .#{$namespace}-form-item__label {
+                margin-bottom: getVar(inset);
+            }
+        }
+    }
+
+    // 表单项状态
+    &.#{$namespace}-is-error {
+        .#{$namespace}-form-item__label {
+            color: getVar(color, danger);
+        }
+
+        .#{$namespace}-form-item__control {
+            border-color: getVar(color, danger);
+        }
+    }
+
+    &.#{$namespace}-is-success {
+        .#{$namespace}-form-item__label {
+            color: getVar(color, success);
+        }
+
+        .#{$namespace}-form-item__control {
+            border-color: getVar(color, success);
+        }
+    }
+
+    &.#{$namespace}-is-warning {
+        .#{$namespace}-form-item__label {
+            color: getVar(color, warning);
+        }
+
+        .#{$namespace}-form-item__control {
+            border-color: getVar(color, warning);
+        }
+    }
+
+    &.#{$namespace}-is-disabled {
+        opacity: getVar(opacity, disabled);
+        pointer-events: none;
+
+        .#{$namespace}-form-item__label {
+            color: getVar(color, text-disabled);
+        }
+    }
+}

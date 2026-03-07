@@ -1,0 +1,290 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-statistic {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    color: getVar(color, text);
+    font-size: getVar(font-size, body);
+    line-height: 1.5;
+    padding: getVar(inset);
+    background: linear-gradient(135deg, 
+        getVar(color, bg) 0%, 
+        getVar(color, bg-secondary) 100%);
+    border-radius: getVar(border-radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all getVar(duration, element-interaction);
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(getVar(transform, hover-translate-y));
+    }
+
+    // 统计数据元素
+    &__title {
+        margin-bottom: getVar(inset, xs);
+        color: getVar(color, text-secondary);
+        font-size: getVar(font-size, footnote);
+        font-weight: getVar(font-weight, regular);
+        line-height: 1.5;
+        transition: all getVar(duration, element-interaction);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    &__value {
+        display: flex;
+        align-items: baseline;
+        font-size: getVar(font-size, title2);
+        font-weight: getVar(font-weight, medium);
+        line-height: 1.2;
+        color: getVar(color, text);
+        transition: all getVar(duration, element-interaction);
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                getVar(color, brand) 0%,
+                getVar(color, brand-active) 100%);
+            transform: scaleX(0);
+            opacity: 0;
+            border-radius: getVar(border-radius, sm) getVar(border-radius, sm) 0 0;
+            transition: all getVar(duration, element-interaction);
+        }
+
+        &:hover {
+            &::after {
+                transform: scaleX(1);
+                opacity: 1;
+            }
+        }
+    }
+
+    &__value-content {
+        display: inline-flex;
+        align-items: baseline;
+        gap: getVar(gap, xs);
+        transition: all getVar(duration, element-interaction);
+    }
+
+    &__value-text {
+        font-variant-numeric: tabular-nums;
+        transition: all getVar(duration, element-interaction);
+        position: relative;
+    }
+
+    &__prefix {
+        color: getVar(color, text-secondary);
+        font-size: getVar(font-size, callout);
+        font-weight: getVar(font-weight, regular);
+        transition: all getVar(duration, element-interaction);
+        padding: getVar(inset, xs);
+        border-radius: getVar(border-radius, sm);
+        background-color: rgba(getVar(color, bg-tertiary), 0.5);
+    }
+
+    &__suffix {
+        color: getVar(color, text-secondary);
+        font-size: getVar(font-size, callout);
+        font-weight: getVar(font-weight, regular);
+        transition: all getVar(duration, element-interaction);
+        padding: getVar(inset, xs);
+        border-radius: getVar(border-radius, sm);
+        background-color: rgba(getVar(color, bg-tertiary), 0.5);
+    }
+
+    // 加载状态
+    &.#{$namespace}-is-loading {
+        .#{$namespace}-statistic__value {
+            justify-content: flex-start;
+            align-items: center;
+            height: getVar(element-size);
+            
+            &::before {
+                content: '';
+                width: 20px;
+                height: 20px;
+                border: 2px solid getVar(color, border);
+                border-top-color: getVar(color, brand);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin-right: getVar(inset, sm);
+            }
+        }
+    }
+
+    // 尺寸变体 - 小尺寸
+    &--small {
+        padding: getVar(inset, sm);
+
+        .#{$namespace}-statistic__title {
+            font-size: getVar(font-size, caption);
+            margin-bottom: getVar(inset, xxs);
+        }
+
+        .#{$namespace}-statistic__value {
+            font-size: getVar(font-size, headline);
+        }
+
+        .#{$namespace}-statistic__prefix,
+        .#{$namespace}-statistic__suffix {
+            font-size: getVar(font-size, footnote);
+            padding: getVar(inset, xxs);
+        }
+    }
+
+    // 尺寸变体 - 大尺寸
+    &--large {
+        padding: getVar(inset, lg);
+
+        .#{$namespace}-statistic__title {
+            font-size: getVar(font-size, callout);
+            margin-bottom: getVar(inset, sm);
+        }
+
+        .#{$namespace}-statistic__value {
+            font-size: getVar(font-size, title1);
+        }
+
+        .#{$namespace}-statistic__prefix,
+        .#{$namespace}-statistic__suffix {
+            font-size: getVar(font-size, headline);
+            padding: getVar(inset, sm);
+        }
+    }
+
+    // 颜色变体 - 主色
+    &--primary {
+        border: 1px solid rgba(getVar(color, brand), 0.2);
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, brand), 0.05) 0%, 
+            getVar(color, bg) 100%);
+
+        .#{$namespace}-statistic__value {
+            color: getVar(color, brand);
+
+            &::after {
+                background: linear-gradient(90deg, 
+                    getVar(color, brand) 0%,
+                    getVar(color, brand-active) 100%);
+            }
+        }
+    }
+
+    // 颜色变体 - 成功
+    &--success {
+        border: 1px solid rgba(getVar(color, success), 0.2);
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, success), 0.05) 0%, 
+            getVar(color, bg) 100%);
+
+        .#{$namespace}-statistic__value {
+            color: getVar(color, success);
+
+            &::after {
+                background: linear-gradient(90deg, 
+                    getVar(color, success) 0%,
+                    getVar(color, success-active) 100%);
+            }
+        }
+    }
+
+    // 颜色变体 - 警告
+    &--warning {
+        border: 1px solid rgba(getVar(color, warning), 0.2);
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, warning), 0.05) 0%, 
+            getVar(color, bg) 100%);
+
+        .#{$namespace}-statistic__value {
+            color: getVar(color, warning);
+
+            &::after {
+                background: linear-gradient(90deg, 
+                    getVar(color, warning) 0%,
+                    getVar(color, warning-active) 100%);
+            }
+        }
+    }
+
+    // 颜色变体 - 危险
+    &--danger {
+        border: 1px solid rgba(getVar(color, danger), 0.2);
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, danger), 0.05) 0%, 
+            getVar(color, bg) 100%);
+
+        .#{$namespace}-statistic__value {
+            color: getVar(color, danger);
+
+            &::after {
+                background: linear-gradient(90deg, 
+                    getVar(color, danger) 0%,
+                    getVar(color, danger-active) 100%);
+            }
+        }
+    }
+
+    // 颜色变体 - 信息
+    &--info {
+        border: 1px solid rgba(getVar(color, info), 0.2);
+        background: linear-gradient(135deg, 
+            rgba(getVar(color, info), 0.05) 0%, 
+            getVar(color, bg) 100%);
+
+        .#{$namespace}-statistic__value {
+            color: getVar(color, info);
+
+            &::after {
+                background: linear-gradient(90deg, 
+                    getVar(color, info) 0%,
+                    getVar(color, info-active) 100%);
+            }
+        }
+    }
+
+    // 布局变体 - 内联
+    &--inline {
+        flex-direction: row;
+        align-items: baseline;
+        gap: getVar(gap, sm);
+
+        .#{$namespace}-statistic__title {
+            margin-bottom: 0;
+        }
+    }
+
+    // 布局变体 - 居中
+    &--center {
+        align-items: center;
+        text-align: center;
+
+        .#{$namespace}-statistic__value {
+            justify-content: center;
+        }
+    }
+
+    // 布局变体 - 右对齐
+    &--right {
+        align-items: flex-end;
+        text-align: right;
+
+        .#{$namespace}-statistic__value {
+            justify-content: flex-end;
+        }
+    }
+}
+
+// 动画定义
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

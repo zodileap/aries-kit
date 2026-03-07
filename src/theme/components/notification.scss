@@ -1,0 +1,421 @@
+@use "../global/index.scss" as *;
+@use "sass:map";
+
+// 通知组件样式
+.#{$namespace}-notification {
+  position: fixed;
+  width: 380px;
+  max-width: 95vw;
+  box-sizing: border-box;
+  background: getVar(color, bg-opacity);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  @include adaptive-border-radius("", getVar(element-size));
+  padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
+  overflow: hidden;
+  transition: all getVar(duration, element-appearance);
+  transform: translateX(0);
+  opacity: 0;
+  cursor: default;
+  z-index: getVar(z-index, notification);
+  border: 1px solid getVar(color, border-glass);
+
+  // 通知位置
+  &--top-right {
+    top: getVar(inset, xl);
+    left: calc(100vw - 380px - getVar(inset, xl));
+    transform: translateX(100%);
+    animation: notificationSlideInRight getVar(duration, element-appearance) cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &--top-left {
+    top: getVar(inset, xl);
+    left: getVar(inset, xl);
+    transform: translateX(-100%);
+    animation: notificationSlideInLeft getVar(duration, element-appearance) cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &--bottom-right {
+    top: calc(100vh - 100px - getVar(inset, xl));
+    left: calc(100vw - 380px - getVar(inset, xl));
+    transform: translateX(100%);
+    animation: notificationSlideInRight getVar(duration, element-appearance) cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &--bottom-left {
+    top: calc(100vh - 100px - getVar(inset, xl));
+    left: getVar(inset, xl);
+    transform: translateX(-100%);
+    animation: notificationSlideInLeft getVar(duration, element-appearance) cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &--top-center {
+    top: getVar(inset, xl);
+    left: 50%;
+    transform: translate(-50%, -100%);
+    animation: notificationSlideInTop getVar(duration, element-appearance) cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &--bottom-center {
+    top: calc(100vh - 100px - getVar(inset, xl));
+    left: 50%;
+    transform: translate(-50%, 100%);
+    animation: notificationSlideInBottom getVar(duration, element-appearance) cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  // 通知类型
+  &--info {
+    border-left: 4px solid;
+    position: relative;
+    border-left-color: getVar(color, info);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.05;
+      border-radius: inherit;
+      background-color: getVar(color, info);
+    }
+  }
+
+  &--success {
+    border-left: 4px solid;
+    position: relative;
+    border-left-color: getVar(color, success);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.05;
+      border-radius: inherit;
+      background-color: getVar(color, success);
+    }
+  }
+
+  &--warning {
+    border-left: 4px solid;
+    position: relative;
+    border-left-color: getVar(color, warning);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.05;
+      border-radius: inherit;
+      background-color: getVar(color, warning);
+    }
+  }
+
+  &--error {
+    border-left: 4px solid;
+    position: relative;
+    border-left-color: getVar(color, danger);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.05;
+      border-radius: inherit;
+      background-color: getVar(color, danger);
+    }
+  }
+
+  // 通知内容布局
+  &__header {
+    @include flex(space-between, flex-start);
+    margin-bottom: getVar(inset, sm);
+    gap: getVar(inset, sm);
+  }
+
+  &__title {
+    font-weight: 600;
+    @include flex(flex-start, center);
+    gap: getVar(inset, xs);
+    font-size: getVar(font-size, subheadline);
+    color: getVar(color, text);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  &__icon {
+    font-size: getVar(font-size, title);
+    transition: all getVar(duration, element-interaction);
+    @include flex();
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &.#{$namespace}-is-info {
+      color: getVar(color, info);
+    }
+
+    &.#{$namespace}-is-success {
+      color: getVar(color, success);
+    }
+
+    &.#{$namespace}-is-warning {
+      color: getVar(color, warning);
+    }
+
+    &.#{$namespace}-is-error {
+      color: getVar(color, danger);
+    }
+  }
+
+  &__close {
+    cursor: pointer;
+    color: getVar(color, text-secondary);
+    transition: all getVar(duration, element-interaction);
+    @include flex();
+    padding: getVar(inset, xs);
+    border-radius: getVar(border-radius, xs);
+    transform: scale(1);
+    flex-shrink: 0;
+
+    &:hover {
+      color: getVar(color, text);
+      background-color: getVar(color, bg-active);
+      transform: scale(1.1);
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &__content {
+    line-height: 1.5;
+    margin: 0;
+    color: getVar(color, text);
+    word-break: break-word;
+    font-size: getVar(font-size, button);
+  }
+  
+  &__actions {
+    @include flex(flex-end);
+    gap: getVar(inset, sm);
+    margin-top: getVar(inset, sm);
+    padding-top: getVar(inset, sm);
+    border-top: 1px solid getVar(color, border);
+  }
+
+  // 动画状态
+  &.#{$namespace}-is-enter {
+    opacity: 1;
+
+    // 左右位置保持默认transform
+    &.#{$namespace}-notification--top-right,
+    &.#{$namespace}-notification--bottom-right,
+    &.#{$namespace}-notification--top-left,
+    &.#{$namespace}-notification--bottom-left {
+      transform: translateX(0);
+    }
+
+    // 中心位置需要特殊处理
+    &.#{$namespace}-notification--top-center,
+    &.#{$namespace}-notification--bottom-center {
+      transform: translate(-50%, 0);
+    }
+  }
+
+  &.#{$namespace}-is-leave,
+  &.#{$namespace}-is-leaving {
+    opacity: 0;
+    animation: notificationLeave getVar(duration, element-appearance) ease-in;
+  }
+  
+  &.#{$namespace}-is-entering {
+    animation: notificationEnter getVar(duration, element-appearance) cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  // 可操作通知
+  &--interactive {
+    cursor: pointer;
+    transition: all getVar(duration, element-interaction);
+    
+    &:hover {
+      transform: translateY(getVar(transform, hover-translate-y));
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  // 紧凑模式
+  &--compact {
+    padding: getVar(inset, container-vertical-min) getVar(inset, container-horizontal-min);
+    width: 320px;
+    
+    .#{$namespace}-notification__title {
+      font-size: getVar(font-size, button);
+    }
+    
+    .#{$namespace}-notification__content {
+      font-size: getVar(font-size, caption);
+    }
+    
+    .#{$namespace}-notification__icon {
+      font-size: getVar(font-size, subheadline);
+    }
+  }
+  
+  // 持久通知（无自动关闭）
+  &--persistent {
+    border: 2px solid getVar(color, border-active);
+    
+    .#{$namespace}-notification__close {
+      color: getVar(color, brand);
+    }
+  }
+}
+
+// 通知容器
+.ari-notification-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: getVar(z-index, notification);
+
+  // 让每个通知本身可以交互
+  & > * {
+    pointer-events: auto;
+    
+    // 通知堆叠间距
+    &:not(:first-child) {
+      margin-top: getVar(inset, sm);
+    }
+  }
+  
+  // 不同位置的容器样式
+  &.top-right,
+  &.bottom-right {
+    .#{$namespace}-notification {
+      margin-left: auto;
+    }
+  }
+  
+  &.top-left,
+  &.bottom-left {
+    .#{$namespace}-notification {
+      margin-right: auto;
+    }
+  }
+  
+  &.top-center,
+  &.bottom-center {
+    .#{$namespace}-notification {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
+
+// 动画定义
+@keyframes notificationEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes notificationLeave {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes notificationSlideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes notificationSlideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes notificationSlideInTop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -100%);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes notificationSlideInBottom {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 100%);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}

@@ -1,0 +1,342 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-upload {
+  @include flex(flex-start, stretch, column);
+  width: 100%;
+  gap: getVar(gap);
+  transition: all getVar(duration, element-interaction);
+
+  // 隐藏的文件输入
+  &__file-input {
+    display: none;
+  }
+
+  // 上传区域
+  &__upload-area {
+    @include flex();
+    position: relative;
+    border: 2px dashed getVar(color, border);
+    border-radius: getVar(border-radius, lg);
+    background: getVar(color, bg-secondary);
+    transition: all getVar(duration, element-interaction);
+    cursor: pointer;
+    overflow: hidden;
+
+    &:hover {
+      border-color: getVar(color, brand);
+      background: getVar(color, bg-brand-light);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(getVar(color, brand), 0.1);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(getVar(color, brand), 0.15);
+    }
+  }
+
+  // 上传区域内容
+  &__upload-content {
+    @include flex(center, center, column);
+    padding: getVar(inset, lg);
+    gap: getVar(gap, sm);
+    text-align: center;
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__upload-icon {
+    font-size: calc(getVar(font-size) * 2.5);
+    color: getVar(color, text-secondary);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__upload-text {
+    color: getVar(color, text);
+    font-weight: getVar(font-weight, medium);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__upload-description {
+    color: getVar(color, text-tertiary);
+    margin-top: getVar(inset, xs);
+  }
+
+  // 文件列表区域
+  &__file-list {
+    @include flex(flex-start, stretch, column);
+    width: 100%;
+    transition: all getVar(duration, element-interaction);
+  }
+
+  &__drag-list {
+    width: 100%;
+  }
+
+  // 文件项
+  &__file-item {
+    // @include flex(flex-start, center);
+    padding: getVar(inset, sm);
+    border: 1px solid getVar(color, border);
+    border-radius: getVar(border-radius);
+    background: getVar(color, bg);
+    transition: all getVar(duration, element-interaction);
+
+    &:hover {
+      background: getVar(color, bg-secondary);
+      border-color: getVar(color, brand);
+      box-shadow: 0 2px 8px rgba(getVar(color, brand), 0.1);
+    }
+  }
+
+  // 主要内容区域
+  &__file-main {
+    @include flex(flex-start, flex-start, column);
+    flex: 1;
+    min-width: 0;
+    gap: getVar(gap, xs);
+    transition: all getVar(duration, element-interaction);
+  }
+
+  // 第一行：图标 + 文件名 + 文件大小
+  &__file-header {
+    @include flex(flex-start, center);
+    width: 100%;
+    gap: getVar(gap, sm);
+  }
+
+  // 文件图标
+  &__file-icon {
+    @include flex();
+    width: getVar(element-size, xs);
+    height: getVar(element-size, xs);
+    border-radius: getVar(border-radius, xs);
+    background: getVar(color, bg-tertiary);
+    color: getVar(color, text-secondary);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  &__file-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: getVar(border-radius, xs);
+  }
+
+  // 文件名（可截断）
+  &__file-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .#{$namespace}-typography {
+      font-weight: getVar(font-weight, medium);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  // 文件大小
+  &__file-size {
+    color: getVar(color, text-tertiary);
+    flex-shrink: 0;
+    font-size: getVar(font-size, caption);
+  }
+
+  // 删除按钮容器
+  &__remove-button-container {
+    @include flex();
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  // 删除按钮
+  &__remove-button {
+    width: 100%;
+    height: 100%;
+    // opacity: 0.7;
+    transition: all getVar(duration, element-interaction);
+
+    // &:hover {
+    //   opacity: 1;
+    // }
+  }
+
+  &__file-progress {
+    width: 100%;
+  }
+
+  &__file-error {
+    color: getVar(color, text-danger);
+  }
+
+  // 文件状态
+  &__file-status {
+    @include flex();
+    width: getVar(element-size, xs);
+    height: getVar(element-size, xs);
+    flex-shrink: 0;
+    color: getVar(color, text-secondary);
+    transition: all getVar(duration, element-interaction);
+
+    // 状态颜色
+    .#{$namespace}-icon[data-name="check_circle"] {
+      color: getVar(color, text-success);
+    }
+
+    .#{$namespace}-icon[data-name="error"] {
+      color: getVar(color, text-danger);
+    }
+
+    .#{$namespace}-icon[data-name="upload"] {
+      color: getVar(color, text-brand);
+      @include elementRotate();
+    }
+  }
+
+  // 文件操作按钮
+  &__file-actions {
+    flex-shrink: 0;
+    opacity: 0;
+    transition: all getVar(duration, element-interaction);
+  }
+
+  // 拖拽激活状态
+  &.#{$namespace}-is-drag-active {
+    .#{$namespace}-upload__upload-area {
+      border-color: getVar(color, brand);
+      background: getVar(color, bg-brand-light);
+      transform: scale(1.02);
+      box-shadow: 0 8px 24px rgba(getVar(color, brand), 0.2);
+    }
+
+    .#{$namespace}-upload__upload-icon {
+      color: getVar(color, brand);
+      transform: scale(1.1);
+    }
+
+    .#{$namespace}-upload__upload-text {
+      color: getVar(color, text-brand);
+    }
+  }
+
+  // 禁用状态
+  &.#{$namespace}-is-disabled {
+    opacity: getVar(opacity, disabled);
+    pointer-events: none;
+
+    .#{$namespace}-upload__upload-area {
+      cursor: not-allowed;
+      background: getVar(color, bg-disabled);
+      border-color: getVar(color, border-disabled);
+
+      &:hover {
+        background: getVar(color, bg-disabled);
+        border-color: getVar(color, border-disabled);
+        transform: none;
+        box-shadow: none;
+      }
+    }
+
+    .#{$namespace}-upload__file-item {
+      background: getVar(color, bg-disabled);
+      
+      &:hover {
+        background: getVar(color, bg-disabled);
+        border-color: getVar(color, border);
+        box-shadow: none;
+      }
+    }
+  }
+
+  // 悬停时显示操作按钮
+  &__file-item:hover {
+    .#{$namespace}-upload__file-actions {
+      opacity: 1;
+    }
+  }
+
+  // 响应式设计
+  @include res(sm) {
+    &__upload-content {
+      padding: getVar(inset);
+    }
+
+    &__upload-icon {
+      font-size: calc(getVar(font-size) * 2);
+    }
+
+    &__file-item {
+      padding: getVar(inset, xs);
+      gap: getVar(gap, xs);
+    }
+
+    &__file-icon {
+      width: getVar(element-size, xs);
+      height: getVar(element-size, xs);
+    }
+  }
+
+  // 动画增强
+  &__upload-area {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(getVar(color, brand), 0.05),
+        transparent
+      );
+      transform: translateX(-100%) translateY(-100%) rotate(45deg);
+      transition: transform getVar(duration, slow);
+    }
+
+    &:hover::before {
+      transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+  }
+
+  // 文件项进入动画
+  &__file-item {
+    opacity: 0;
+    transform: translateY(getVar(inset, sm));
+    animation: fileItemEnter getVar(duration, element-interaction) ease-out forwards;
+  }
+
+  @keyframes fileItemEnter {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // 成功状态特殊样式
+  &__file-item {
+    &[data-status="success"] {
+      border-color: getVar(color, border-success);
+      background: getVar(color, bg-success-light);
+    }
+
+    &[data-status="error"] {
+      border-color: getVar(color, border-danger);
+      background: getVar(color, bg-danger-light);
+    }
+
+    &[data-status="uploading"] {
+      border-color: getVar(color, border-brand);
+      background: getVar(color, bg-brand-light);
+    }
+  }
+}
