@@ -59,8 +59,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "preview:code": "node -r esbuild-register scripts/generateSourceMap.ts",
-    "dev:preview": "node -r esbuild-register scripts/getIconName.ts && node -r esbuild-register scripts/generateSourceMap.ts && vite --config vite.preview.ts",
-    "build:preview": "node -r esbuild-register scripts/getIconName.ts && node -r esbuild-register scripts/generateSourceMap.ts && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json && vite build --config vite.preview.ts",
+    "dev:preview": "node -r esbuild-register scripts/getIconName.ts && node -r esbuild-register scripts/generateSourceMap.ts && vite --config vite.preview.mts",
+    "build:preview": "node -r esbuild-register scripts/getIconName.ts && node -r esbuild-register scripts/generateSourceMap.ts && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json && vite build --config vite.preview.mts",
     "deploy": "bash preview/deploy.sh"
   },
   "dependencies": {
