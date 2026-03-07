@@ -9,9 +9,11 @@ export const BasicCheckbox: React.FC = () => {
             <AriCheckbox
                 checked={checked}
                 onChange={setChecked}
+                className="preview-checkbox-outline"
             >
                 点击选择
             </AriCheckbox>
+            <AriCheckbox defaultChecked>默认选中</AriCheckbox>
             <AriButton label="选择" onClick={() => setChecked(!checked)} />
         </AriFlex>
     );

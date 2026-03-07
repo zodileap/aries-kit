@@ -16,8 +16,6 @@ const AllIconsDemo: React.FC = () => {
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadTriggerRef = useRef<HTMLDivElement>(null);
     const iconSectionRef = useRef<HTMLDivElement>(null);
-    const headerRef = useRef<HTMLDivElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
     const headerTopObserverRef = useRef<IntersectionObserver | null>(null);
 
     // 监听图标区域是否在视口中
@@ -142,48 +140,23 @@ const AllIconsDemo: React.FC = () => {
     const IconItem = ({ name }: { name: string }) => {
         if (errorIcons.has(name)) {
             return (
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        padding: '16px',
-                        border: '1px solid #f0f0f0',
-                        borderRadius: '4px',
-                        backgroundColor: '#fff1f0',
-                    }}
-                >
-                    <div style={{ width: 16, height: 16, marginBottom: '8px' }}>❌</div>
-                    <span style={{ fontSize: '12px', color: '#ff4d4f' }}>{name}</span>
+                <div className="icon-collection__item icon-collection__item--error">
+                    <div className="icon-collection__item-icon">❌</div>
+                    <span className="icon-collection__item-name">{name}</span>
                 </div>
             );
         }
         return (
             <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    padding: '16px',
-                    border: '1px solid #f0f0f0',
-                    borderRadius: '4px',
-                    transition: 'all 0.3s',
-                    cursor: 'pointer',
-                }}
+                className="icon-collection__item"
                 onClick={() => copyToClipboard(name)}
-                onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#f5f5f5';
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                }}
             >
                 <AriIcon
                     name={name}
-                    style={{ marginBottom: '8px' }}
+                    className="icon-collection__item-icon"
                     onError={() => handleIconError(name)}
                 />
-                <span style={{ fontSize: '12px', color: '#666' }}>{name}</span>
+                <span className="icon-collection__item-name">{name}</span>
             </div>
         );
     };
@@ -201,20 +174,9 @@ const AllIconsDemo: React.FC = () => {
     ];
 
     return (
-        <div ref={iconSectionRef} style={{ width: '100%', position: 'relative' }}>
+        <div ref={iconSectionRef} className="icon-collection">
             <div
-                ref={headerRef}
-                style={{
-                    position: isHeaderSticky ? 'sticky' : 'static',
-                    top: 0,
-                    zIndex: 10,
-                    backgroundColor: 'white',
-                    padding: '16px 0',
-                    boxShadow: isHeaderSticky ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none',
-                    transition: 'box-shadow 0.3s ease',
-                    marginBottom: '20px',
-                    width: "100%"
-                }}
+                className={`icon-collection__header${isHeaderSticky ? ' icon-collection__header--sticky' : ''}`}
             >
                 <AriFlex 
                     vertical 
@@ -228,7 +190,7 @@ const AllIconsDemo: React.FC = () => {
                         onSearch={handleSearch}
                         style={{ width: 300 }}
                     />
-                    <div style={{ width: '100%', overflowX: 'scroll', }}>
+                    <div className="icon-collection__tabs">
                         <AriTabs
                             items={categoryTabs}
                             activeKey={activeCategory}
@@ -237,10 +199,10 @@ const AllIconsDemo: React.FC = () => {
                             style={{ marginBottom: 0 }}
                         />
                     </div>
-                    <div style={{ width: "100%" }}>
+                    <div className="icon-collection__status">
                         总共 {filteredIcons.length} 个图标，当前显示 {Math.min(visibleIconsCount, filteredIcons.length)} 个
                         {visibleIconsCount < filteredIcons.length && (
-                            <span style={{ marginLeft: '10px', color: '#1890ff' }}>
+                            <span className="icon-collection__progress">
                                 ({loadingProgress}% 已加载)
                             </span>
                         )}
@@ -249,12 +211,7 @@ const AllIconsDemo: React.FC = () => {
             </div>
 
             <div
-                ref={contentRef}
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-                    gap: '16px',
-                }}
+                className="icon-collection__grid"
             >
                 {filteredIcons.slice(0, visibleIconsCount).map(name => (
                     <IconItem key={name} name={name} />

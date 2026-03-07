@@ -11,7 +11,8 @@ import {
     DiffCodeDemo,
     ClosableLanguageTagDemo,
     FontSizeDemo,
-    CustomLineNumbersDemo
+    CustomLineNumbersDemo,
+    CodeEditorOptionsDemo
 } from './codes/code';
 import { sourceMap } from './codes/source-map';
 
@@ -95,6 +96,15 @@ export const codeExamples: Record<string, DocExample> = {
         description: 'fontSize 支持 sm、default、lg 三档，便于适配不同阅读场景。',
         demos: [{
             component: FontSizeDemo
+        }]
+    },
+    editorOptions: {
+        title: '编辑器细节',
+        key: 'editor-options',
+        description: '展示占位符、复制按钮、语言标签、工具栏与缩进空格设置。',
+        demos: [{
+            component: CodeEditorOptionsDemo,
+            sourceCode: sourceMap['code']['CodeEditorOptionsDemo']
         }]
     }
 };

@@ -335,3 +335,89 @@ export const FrontendOnlyExample: React.FC = () => {
     </AriFlex>
   );
 };
+
+export const UploadListControlExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([
+    {
+      id: 'demo-image',
+      name: '封面图.png',
+      size: 512 * 1024,
+      type: 'image/png',
+      status: 'uploading',
+      progress: 64,
+      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+    },
+    {
+      id: 'demo-doc',
+      name: '需求说明.pdf',
+      size: 1024 * 1024,
+      type: 'application/pdf',
+      status: 'success',
+      progress: 100
+    }
+  ]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        onRemove={(file, index) => {
+          AriMessage.info(`删除文件: ${file.name}（索引 ${index}）`);
+        }}
+        onReorder={(nextFileList, fromIndex, toIndex) => {
+          setFileList(nextFileList);
+          AriMessage.info(`文件从 ${fromIndex + 1} 移动到 ${toIndex + 1}`);
+        }}
+        onPreview={(file) => {
+          AriMessage.success(`预览文件: ${file.name}`);
+        }}
+        listGap="lg"
+        showProgress
+        showFileSize
+        showRemoveButton
+        showPreviewButton
+        uploadText="拖动文件排序，观察列表间距"
+        uploadDescription="当前示例显式覆盖文件列表控制相关 props"
+      />
+
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        multiple={false}
+        dragUpload={false}
+        showFileList={false}
+        uploadIcon="file_upload"
+        uploadText="单文件上传，且关闭拖拽与文件列表"
+        uploadDescription="这里只保留点击选择文件，不显示下方列表"
+      />
+    </AriFlex>
+  );
+};
+
+export const UploadValidationAndEmptyExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        beforeUpload={(file) => {
+          const isAllowed = file.name.endsWith('.md') || file.name.endsWith('.txt');
+          if (!isAllowed) {
+            AriMessage.error('仅允许上传 .md 或 .txt 文件');
+          }
+          return isAllowed;
+        }}
+        renderEmpty={() => (
+          <div style={{ color: '#888', padding: '12px 0' }}>
+            当前没有文件，renderEmpty 正在生效。
+          </div>
+        )}
+        uploadText="上传文档文件"
+        uploadDescription="beforeUpload 会阻止非 .md / .txt 文件"
+      />
+    </AriFlex>
+  );
+};

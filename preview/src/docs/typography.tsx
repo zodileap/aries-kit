@@ -1,7 +1,15 @@
 import React from 'react';
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import { BasicTypography, ColorTypography, StyleTypography, AlignmentTypography, OtherPropsTypography, EventTypography } from './codes/typography';
+import {
+    AlignmentTypography,
+    BasicTypography,
+    ColorTypography,
+    ContentTypography,
+    EventTypography,
+    OtherPropsTypography,
+    StyleTypography,
+} from './codes/typography';
 import { sourceMap } from './codes/source-map';
 
 export const typographyExamples: Record<string, DocExample> = {
@@ -57,6 +65,15 @@ export const typographyExamples: Record<string, DocExample> = {
         demos: [{
             component: EventTypography,
             sourceCode: sourceMap['typography']['EventTypography']
+        }]
+    },
+    content: {
+        title: '内容来源与裁切',
+        key: 'content',
+        description: '展示 value、children、自定义类名以及文本裁切行为。',
+        demos: [{
+            component: ContentTypography,
+            sourceCode: sourceMap['typography']['ContentTypography']
         }]
     }
 };

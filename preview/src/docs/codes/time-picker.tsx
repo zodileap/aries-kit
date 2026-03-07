@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AriTimePicker, AriFlex, AriButton } from '@aries-kit/react';
+import { AriTimePicker, AriFlex, AriButton, AriTypography } from '@aries-kit/react';
 
 export const BasicTimePicker: React.FC = () => {
     const [time, setTime] = useState<Date | undefined>(new Date());
@@ -49,5 +49,32 @@ export const TimePickerMinMax: React.FC = () => {
 
     return (
         <AriTimePicker minTime={minTime} maxTime={maxTime} />
+    );
+};
+
+export const TimePickerDisplayDemo: React.FC = () => {
+    return (
+        <>
+            <style>{`
+                .preview-time-picker-outline {
+                    outline: 2px dashed var(--z-color-info);
+                    outline-offset: 4px;
+                    border-radius: 14px;
+                }
+            `}</style>
+            <AriFlex vertical space={16} height={320}>
+                <AriTypography variant='body' value='这个示例覆盖 format、placeholder、size、placement、prefixIcon、readonly、className 与 style。' />
+                <AriTimePicker
+                    placeholder='顶部结束位置弹出'
+                    size='large'
+                    placement='top-end'
+                    prefixIcon='alarm'
+                    readonly={false}
+                    className='preview-time-picker-outline'
+                    style={{ width: 320 }}
+                    format={(time) => `${time.getHours()} 点 ${time.getMinutes()} 分`}
+                />
+            </AriFlex>
+        </>
     );
 };

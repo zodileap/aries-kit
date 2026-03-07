@@ -1,7 +1,15 @@
 import React from 'react';
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import { BasicTooltip, PositionedTooltip, TriggerTooltip, ControlledTooltip, NoArrowTooltip, RichContentTooltip } from './codes/tooltip';
+import {
+    BasicTooltip,
+    ControlledTooltip,
+    NoArrowTooltip,
+    PositionedTooltip,
+    RichContentTooltip,
+    TooltipBehaviorDemo,
+    TriggerTooltip,
+} from './codes/tooltip';
 import { sourceMap } from './codes/source-map';
 
 export const tooltipExamples: Record<string, DocExample> = {
@@ -57,6 +65,15 @@ export const tooltipExamples: Record<string, DocExample> = {
         demos: [{
             component: RichContentTooltip,
             sourceCode: sourceMap['tooltip']['RichContentTooltip']
+        }]
+    },
+    behavior: {
+        title: '延迟与禁用',
+        key: 'behavior',
+        description: '展示显示/隐藏延迟、最小宽度、禁用状态和显隐回调。',
+        demos: [{
+            component: TooltipBehaviorDemo,
+            sourceCode: sourceMap['tooltip']['TooltipBehaviorDemo']
         }]
     }
 };

@@ -3,13 +3,14 @@ import { useMemo, useState } from 'react';
 
 export const BasicMenu: React.FC = () => {
     const items = [
-        { key: '1', label: '菜单项1', icon: 'home' },
-        { key: '2', label: '菜单项2', icon: 'person' },
+        { key: '1', label: '菜单项1', icon: 'home', textPosition: 'top' as const },
+        { key: '2', label: '菜单项2', icon: 'person', disabled: true },
         { key: '3', label: '菜单项3', icon: 'settings' }
     ];
 
     return (
         <AriMenu
+            className="preview-basic-menu"
             items={items}
             defaultSelectedKey="1"
             onSelect={(key, item) => console.log('selected:', key, item)}
@@ -18,6 +19,7 @@ export const BasicMenu: React.FC = () => {
 };
 
 export const SubMenu: React.FC = () => {
+    const [expandedKeys, setExpandedKeys] = useState<string[]>(['1']);
     const items = [
         {
             key: '1',
@@ -42,7 +44,8 @@ export const SubMenu: React.FC = () => {
     return (
         <AriMenu
             items={items}
-            defaultExpandedKeys={['1']}
+            expandedKeys={expandedKeys}
+            onExpand={setExpandedKeys}
             mode="vertical"
         />
     );

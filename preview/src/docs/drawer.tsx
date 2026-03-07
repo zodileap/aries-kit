@@ -1,7 +1,14 @@
 import React from 'react';
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import { BasicDrawer, PlacementDrawer, CustomContentDrawer, ContainerDrawer } from './codes/drawer';
+import {
+    BasicDrawer,
+    ContainerDrawer,
+    CustomContentDrawer,
+    DrawerBehaviorDrawer,
+    DrawerStyleDrawer,
+    PlacementDrawer,
+} from './codes/drawer';
 import { sourceMap } from './codes/source-map'; // 假设 sourceMap 会自动更新
 
 export const drawerExamples: Record<string, DocExample> = {
@@ -39,6 +46,24 @@ export const drawerExamples: Record<string, DocExample> = {
         demos: [{
             component: ContainerDrawer,
             sourceCode: sourceMap['drawer']['ContainerDrawer']
+        }]
+    },
+    style: {
+        title: '样式与层级',
+        key: 'style',
+        description: '展示宽度、层级、关闭按钮开关和各区域样式控制。',
+        demos: [{
+            component: DrawerStyleDrawer,
+            sourceCode: sourceMap['drawer']['DrawerStyleDrawer']
+        }]
+    },
+    behavior: {
+        title: '关闭行为',
+        key: 'behavior',
+        description: '展示无遮罩、遮罩点击策略与关闭后销毁内容。',
+        demos: [{
+            component: DrawerBehaviorDrawer,
+            sourceCode: sourceMap['drawer']['DrawerBehaviorDrawer']
         }]
     }
 };

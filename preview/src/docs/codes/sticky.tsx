@@ -8,7 +8,7 @@ export const BasicSticky: React.FC = () => (
             <AriTypography value="向下滚动查看效果" />
         </AriContainer>
         
-        <AriSticky>
+        <AriSticky zIndex={200}>
             <AriContainer 
                 bgColor="#1677ff" 
                 style={{ padding: '10px 20px', color: 'white' }}

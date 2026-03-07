@@ -15,6 +15,7 @@ export const BasicTabs: React.FC = () => {
             activeKey={activeKey}
             items={items}
             onChange={setActiveKey}
+            className="preview-basic-tabs"
         />
     );
 };

@@ -12,6 +12,7 @@ export const BasicStatistic: React.FC = () => {
             <AriStatistic
                 title="活跃用户"
                 value={112893}
+                valueStyle={{ color: 'var(--z-color-primary)' }}
             />
             <AriStatistic
                 title="反馈数"

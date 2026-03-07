@@ -1,4 +1,4 @@
-import { AriSelect } from '@aries-kit/react';
+import { AriFlex, AriSelect, AriTypography } from '@aries-kit/react';
 import React, { useState } from 'react';
 
 
@@ -114,5 +114,45 @@ export const CustomArrowDemo: React.FC = () => {
             arrowIcon="chevron_right"
             style={{ width: '220px' }}
         />
+    );
+};
+
+export const MultiSelectDemo: React.FC = () => {
+    const options = [
+        { value: 'design', label: '设计' },
+        { value: 'frontend', label: '前端' },
+        { value: 'backend', label: '后端' },
+        { value: 'qa', label: '测试' },
+        { value: 'product', label: '产品' }
+    ];
+
+    return (
+        <>
+            <style>{`
+                .preview-select-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 4px;
+                    border-radius: 10px;
+                }
+            `}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 defaultValue、multiple、searchable、sortable、maxItems、minItems 和 className。' />
+                <AriSelect
+                    options={options}
+                    defaultValue={['design', 'frontend']}
+                    multiple
+                    searchable
+                    sortable
+                    maxItems={4}
+                    minItems={1}
+                    className='preview-select-outline'
+                    placeholder='多选并支持搜索排序'
+                    onSortChange={(nextValues) => {
+                        console.log('sort changed:', nextValues);
+                    }}
+                    style={{ width: '320px' }}
+                />
+            </AriFlex>
+        </>
     );
 };

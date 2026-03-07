@@ -13,10 +13,19 @@ export default defineConfig({
   base: '/',
   root: 'preview',
   publicDir: 'public', // 修改为 preview 目录下的 public 文件夹
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
   build: {
     outDir: '../preview-dist', // 修改输出目录为上一级
     emptyOutDir: true,
-    assetsInclude: ['**/*.wasm']
+    assetsInclude: ['**/*.wasm'],
+    // Preview 站点会内置所有文档、源码映射和 Monaco worker，默认 500k 告警阈值过低。
+    chunkSizeWarningLimit: 9000,
   },
   resolve: {
     alias: {

@@ -119,8 +119,10 @@ export const LoadingList: React.FC = () => {
                 {loading ? '停止加载' : '开始加载'}
             </AriButton>
             <AriList
+                className="preview-loading-list"
                 bordered
                 loading={loading}
+                loadingMessage={<span>正在同步列表数据...</span>}
                 dataSource={data}
                 renderItem={(item) => <div>{item}</div>}
             />
@@ -132,8 +134,9 @@ export const ListItemDemo: React.FC = () => {
     const data = [1, 2, 3];
 
     return (
-        <AriList bordered>
-            {data.map((item, index) => (
+        <AriList
+            bordered
+            children={data.map((item, index) => (
                 <AriListItem 
                     key={item}
                     split={index < data.length - 1}
@@ -147,9 +150,9 @@ export const ListItemDemo: React.FC = () => {
                         <AriAvatar>{item}</AriAvatar>
                         <div>列表项 {item} 的内容</div>
                     </AriFlex>
-                </AriListItem>
+                    </AriListItem>
             ))}
-        </AriList>
+        />
     );
 };
 

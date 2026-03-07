@@ -14,6 +14,7 @@ const cellStyle: React.CSSProperties = {
 export const BasicGrid: React.FC = () => (
     <AriContainer style={{ height: '400px',overflowY: 'auto' }}>
         <AriFixedSizeGrid
+            className="preview-fixed-size-grid"
             columnCount={4}
             columnWidth={100}
             rowHeight={100}

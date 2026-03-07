@@ -14,6 +14,8 @@ export const BasicImage: React.FC = () => (
     <AriImage
         fileName="example.png"
         usage="image"
+        alt="基础示例图片"
+        className="preview-image-outline"
         style={{ width: '200px' }}
     />
 );

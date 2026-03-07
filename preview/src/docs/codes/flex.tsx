@@ -1,7 +1,7 @@
 import { AriFlex, AriButton } from '@aries-kit/react';
 
 export const BasicFlex: React.FC = () => (
-    <AriFlex>
+    <AriFlex fill className="preview-flex-outline">
         <AriButton label="按钮1" />
         <AriButton label="按钮2" />
         <AriButton label="按钮3" />

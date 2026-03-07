@@ -213,3 +213,44 @@ export const CustomModal: React.FC = () => {
     </AriFlex>
   );
 };
+
+export const ModalLifecycle: React.FC = () => {
+  const [visible, setVisible] = useState(false);
+  const [status, setStatus] = useState('尚未打开');
+
+  return (
+    <>
+      <style>{`
+        .preview-modal-outline {
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+        }
+      `}</style>
+      <AriFlex vertical space={16}>
+        <AriTypography variant='body' value={`生命周期状态: ${status}`} />
+        <AriButton color="primary" onClick={() => setVisible(true)}>
+          打开生命周期对话框
+        </AriButton>
+
+        <AriModal
+          visible={visible}
+          title="生命周期与外观"
+          closable={false}
+          mask={false}
+          maskStyle={{ background: 'rgba(0, 0, 0, 0.55)' }}
+          className="preview-modal-outline"
+          forceRender
+          afterOpen={() => setStatus('已打开')}
+          afterClose={() => setStatus('已关闭')}
+          onClose={() => setVisible(false)}
+          children={(
+            <AriFlex vertical space={12}>
+              <AriTypography variant='body' value='这个示例显式覆盖 children、closable、className、mask、maskStyle、forceRender、afterOpen 和 afterClose。' />
+              <AriInput placeholder='forceRender 让内容在初始阶段也会挂载' />
+              <AriButton onClick={() => setVisible(false)}>关闭</AriButton>
+            </AriFlex>
+          )}
+        />
+      </AriFlex>
+    </>
+  );
+};

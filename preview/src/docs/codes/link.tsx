@@ -46,7 +46,7 @@ export const IconLink: React.FC = () => (
     <AriFlex space={16} vertical>
         <AriLink href="https://aries-react.dev/docs" icon="link">带左侧图标的链接</AriLink>
         <AriLink href="https://aries-react.dev/docs" icon="link" iconPosition="right">带右侧图标的链接</AriLink>
-        <AriLink href="https://aries-react.dev/docs" type="brand" icon="external-link" target="_blank">外部链接</AriLink>
+        <AriLink href="https://aries-react.dev/docs" type="brand" icon="external-link" target="_blank" rel="noreferrer noopener">外部链接</AriLink>
         <AriLink href="https://aries-react.dev/docs" type="success" icon="download">下载链接</AriLink>
     </AriFlex>
 );
@@ -57,6 +57,16 @@ export const BlockLink: React.FC = () => (
             <AriTypography variant='h4' value="块级链接示例" />
             <AriLink href="https://aries-react.dev/docs" block>默认块级链接</AriLink>
             <AriLink href="https://aries-react.dev/docs" type="brand" block icon="link">带图标的块级链接</AriLink>
+            <AriLink
+                href="#"
+                className="preview-link-outline"
+                onClick={(event) => {
+                    event.preventDefault();
+                    console.log('link clicked');
+                }}
+            >
+                带 className 与点击事件的链接
+            </AriLink>
         </AriFlex>
     </AriContainer>
 );

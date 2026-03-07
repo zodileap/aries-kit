@@ -53,12 +53,6 @@ export const collapseAPI: DocAPI = {
             desc: '阴影显示模式',
             type: 'Ari.Widget.ShadowMode',
             default: '-'
-        },
-        {
-            param: 'position',
-            desc: '内容对齐方式',
-            type: 'Ari.Widget.Position',
-            default: 'left'
         }
     ],
     events: [

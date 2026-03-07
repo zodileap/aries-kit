@@ -83,3 +83,32 @@ export const EventTypography: React.FC = () => (
     </AriTypography>
   </AriFlex>
 );
+
+export const ContentTypography: React.FC = () => (
+  <>
+    <style>{`
+      .preview-typography-outline {
+        outline: 2px dashed var(--z-color-primary);
+        outline-offset: 4px;
+      }
+    `}</style>
+    <AriFlex vertical space={12}>
+      <AriTypography
+        value="通过 value 直接传入文本内容"
+        className="preview-typography-outline"
+      />
+      <div style={{ width: 220, border: '1px solid #ccc', padding: '8px' }}>
+        <AriTypography
+          whiteSpace="nowrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          value="whiteSpace + overflow + textOverflow 组合后，超出的文本会显示省略号。"
+        />
+      </div>
+      <AriTypography>
+        <span>通过 children 传入 </span>
+        <strong>富文本节点</strong>
+      </AriTypography>
+    </AriFlex>
+  </>
+);

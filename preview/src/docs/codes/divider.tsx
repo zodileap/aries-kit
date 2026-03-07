@@ -2,6 +2,12 @@ import { AriDivider, AriFlex } from '@aries-kit/react';
 
 export const BasicDivider: React.FC = () => (
     <>
+        <style>{`
+            .preview-divider-outline {
+                outline: 2px dashed var(--z-color-primary);
+                outline-offset: 4px;
+            }
+        `}</style>
         <div>上方内容</div>
         <AriDivider />
         <div>下方内容</div>
@@ -11,7 +17,7 @@ export const BasicDivider: React.FC = () => (
 export const LabelDivider: React.FC = () => (
     <>
         <div>登录账号</div>
-        <AriDivider>或者</AriDivider>
+        <AriDivider children="或者" />
         <div>扫码登录</div>
     </>
 );
@@ -44,7 +50,7 @@ export const PlainDivider: React.FC = () => (
         <div>内容区域</div>
         <AriDivider plain>简洁样式</AriDivider>
         <div>内容区域</div>
-        <AriDivider>默认样式</AriDivider>
+        <AriDivider label="备用 label 文本" className="preview-divider-outline" style={{ color: 'var(--z-color-primary)' }} />
         <div>内容区域</div>
     </>
 );

@@ -14,6 +14,9 @@ import { AriCustomSidebar } from './custom';
 export const AriTreeView: React.FC<AriTreeViewProps> = ({
     tree,
     onNodeSelect,
+    selectedKey: controlledSelectedKey,
+    expandedKeys: controlledExpandedKeys,
+    onExpandedKeysChange,
     ...sidebarProps
 }) => {
     const cs = useCss('sidebar');
@@ -29,10 +32,23 @@ export const AriTreeView: React.FC<AriTreeViewProps> = ({
         return keys;
     }
 
+    const [internalExpandedKeys, setInternalExpandedKeys] = useState<string[]>(getExpendKeys(tree));
+    const [internalSelectedKey, setInternalSelectedKey] = useState<string | null>(null);
+    const expandedKeys = controlledExpandedKeys ?? internalExpandedKeys;
+    const selectedKey = controlledSelectedKey ?? internalSelectedKey;
 
-    const [expandedKeys, setExpandedKeys] = useState<string[]>(getExpendKeys(tree));
-    // 新增selectedKey状态，用于跟踪当前选中的节点
-    const [selectedKey, setSelectedKey] = useState<string | null>(null);
+    useEffect(() => {
+        if (controlledExpandedKeys === undefined) {
+            setInternalExpandedKeys(getExpendKeys(tree));
+        }
+    }, [tree, controlledExpandedKeys]);
+
+    const updateExpandedKeys = (nextExpandedKeys: string[]) => {
+        if (controlledExpandedKeys === undefined) {
+            setInternalExpandedKeys(nextExpandedKeys);
+        }
+        onExpandedKeysChange?.(nextExpandedKeys);
+    };
 
     const handleNodeSelect = (node: AriTreeNode) => {
         // 处理展开/折叠逻辑
@@ -40,12 +56,12 @@ export const AriTreeView: React.FC<AriTreeViewProps> = ({
             const newExpandedKeys = expandedKeys.includes(node.key)
                 ? expandedKeys.filter(key => key !== node.key)
                 : [...expandedKeys, node.key];
-            setExpandedKeys(newExpandedKeys);
+            updateExpandedKeys(newExpandedKeys);
         }
 
-        // 设置选中节点（仅当节点没有子节点或允许选择父节点时）
-        if (!node.children || node.children.length === 0) {
-            setSelectedKey(node.key);
+        // 点击任意节点都进入选中态，保证文件夹和根节点也有可见反馈
+        if (controlledSelectedKey === undefined) {
+            setInternalSelectedKey(node.key);
         }
 
         onNodeSelect?.(node);
@@ -61,7 +77,7 @@ export const AriTreeView: React.FC<AriTreeViewProps> = ({
                         node={node}
                         expandedKeys={expandedKeys}
                         onNodeSelect={handleNodeSelect}
-                        selectedKey={selectedKey} // 传递当前选中节点的key
+                        selectedKey={selectedKey}
                         isRoot
                         parentExpanded
                     />
@@ -111,14 +127,15 @@ export const AriTreeNodeComponent: React.FC<AriExtendedTreeNodeProps> = ({
 
     const handleClick = (e: React.MouseEvent) => {
         e.stopPropagation();
+        const nextExpanded = !!(node.children && node.children.length > 0) && !isExpanded;
 
         // 如果有子节点，处理展开/折叠
         if (node.children && node.children.length > 0) {
-            setIsExpanded(!isExpanded);
+            setIsExpanded(nextExpanded);
         }
 
         // 通知父组件处理选中逻辑
-        onNodeSelect?.({ ...node, expanded: isExpanded });
+        onNodeSelect?.({ ...node, expanded: nextExpanded });
     };
 
     useEffect(() => {

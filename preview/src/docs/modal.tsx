@@ -1,7 +1,14 @@
 import React from 'react';
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import { BasicModal, SizeModal, PositionModal, FullscreenModal, CustomModal } from './codes/modal';
+import {
+    BasicModal,
+    CustomModal,
+    FullscreenModal,
+    ModalLifecycle,
+    PositionModal,
+    SizeModal,
+} from './codes/modal';
 import { sourceMap } from './codes/source-map';
 
 export const modalExamples: Record<string, DocExample> = {
@@ -48,6 +55,15 @@ export const modalExamples: Record<string, DocExample> = {
         demos: [{
             component: CustomModal,
             sourceCode: sourceMap['modal']['CustomModal']
+        }]
+    },
+    lifecycle: {
+        title: '生命周期与遮罩',
+        key: 'lifecycle',
+        description: '展示关闭按钮开关、遮罩、强制挂载以及打开关闭回调。',
+        demos: [{
+            component: ModalLifecycle,
+            sourceCode: sourceMap['modal']['ModalLifecycle']
         }]
     }
 };

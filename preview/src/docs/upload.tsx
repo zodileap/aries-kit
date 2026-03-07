@@ -3,13 +3,15 @@ import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
 import { 
   BasicExample, 
+  FrontendOnlyExample,
   FileTypesExample, 
   LimitExample, 
   CustomRenderExample, 
   DisabledExample, 
   CustomUploadAreaExample,
   ManualUploadExample,
-  FrontendOnlyExample
+  UploadListControlExample,
+  UploadValidationAndEmptyExample
 } from './codes/upload';
 import { sourceMap } from './codes/source-map';
 
@@ -84,6 +86,24 @@ export const uploadExamples: Record<string, DocExample> = {
     demos: [{
       component: FrontendOnlyExample,
       sourceCode: sourceMap['upload']['FrontendOnlyExample']
+    }]
+  },
+  listControls: {
+    title: '文件列表控制',
+    key: 'list-controls',
+    description: '展示文件删除、重排、预览以及列表展示开关、图标和间距控制。',
+    demos: [{
+      component: UploadListControlExample,
+      sourceCode: sourceMap['upload']['UploadListControlExample']
+    }]
+  },
+  validationAndEmpty: {
+    title: '上传前校验与空状态',
+    key: 'validation-empty',
+    description: '通过 beforeUpload 与 renderEmpty 控制校验逻辑和空列表内容。',
+    demos: [{
+      component: UploadValidationAndEmptyExample,
+      sourceCode: sourceMap['upload']['UploadValidationAndEmptyExample']
     }]
   }
 };

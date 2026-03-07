@@ -3,9 +3,11 @@ import { AriFlex, AriCallout, AriButton, AriCard } from '@aries-kit/react';
 
 export const BasicExample: React.FC = () => (
   <AriFlex vertical space={16}>
-    <AriCallout type="note">
-      这是一个基础的注意告示框，用于显示一般性的重要信息。
-    </AriCallout>
+    <AriCallout
+      type="note"
+      className="preview-callout-outline"
+      children="这是一个基础的注意告示框，用于显示一般性的重要信息。"
+    />
     
     <AriCallout type="tip">
       这是一个提示告示框，用于分享有用的建议和最佳实践。

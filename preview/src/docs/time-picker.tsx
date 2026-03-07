@@ -1,7 +1,13 @@
 import React from 'react';
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import { BasicTimePicker, ControlledTimePicker, TimePickerStep, TimePickerMinMax } from './codes/time-picker';
+import {
+    BasicTimePicker,
+    ControlledTimePicker,
+    TimePickerDisplayDemo,
+    TimePickerMinMax,
+    TimePickerStep,
+} from './codes/time-picker';
 import { sourceMap } from './codes/source-map';
 
 export const timePickerExamples: Record<string, DocExample> = {
@@ -39,6 +45,15 @@ export const timePickerExamples: Record<string, DocExample> = {
         demos: [{
             component: TimePickerMinMax,
             sourceCode: sourceMap['time-picker']['TimePickerMinMax']
+        }]
+    },
+    display: {
+        title: '显示与外观',
+        key: 'display',
+        description: '展示格式化、尺寸、弹出位置、前缀图标和输入行为配置。',
+        demos: [{
+            component: TimePickerDisplayDemo,
+            sourceCode: sourceMap['time-picker']['TimePickerDisplayDemo']
         }]
     }
 };

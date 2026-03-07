@@ -19,6 +19,7 @@ export const BasicExample: React.FC = () => {
     return (
         <AriContainer width={400}>
             <AriDragList 
+                className="preview-drag-list"
                 items={items} 
                 onSortChange={handleSortChange}
             />

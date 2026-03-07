@@ -1,3 +1,104 @@
 .icon-search-space .z-space__item {
     width: 100%;
 }
+
+.icon-collection {
+    width: 100%;
+    position: relative;
+    color: var(--z-color-text);
+}
+
+.icon-collection__header {
+    position: static;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 16px 0;
+    background-color: var(--z-color-bg);
+    color: var(--z-color-text);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    border-bottom: 1px solid transparent;
+}
+
+.icon-collection__header--sticky {
+    position: sticky;
+    box-shadow: var(--z-color-box-shadow-popover);
+    border-bottom-color: var(--z-color-border-glass);
+}
+
+.icon-collection__tabs {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.icon-collection__status {
+    width: 100%;
+    color: var(--z-color-text-secondary);
+}
+
+.icon-collection__progress {
+    margin-left: 10px;
+    color: var(--z-color-brand-active);
+}
+
+.icon-collection__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+}
+
+.icon-collection__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 68px;
+    padding: 16px 12px;
+    border: 1px solid var(--z-color-border-glass);
+    border-radius: 8px;
+    background-color: var(--z-color-bg-solid);
+    color: var(--z-color-text);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.icon-collection__item:hover {
+    background-color: var(--z-color-bg-active);
+    border-color: var(--z-color-border-active);
+    transform: translateY(var(--z-transform-hover-translate-y));
+    box-shadow: var(--z-color-box-shadow);
+}
+
+.icon-collection__item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 16px;
+    margin-bottom: 8px;
+}
+
+.icon-collection__item-name {
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--z-color-text-secondary);
+    text-align: center;
+    word-break: break-word;
+}
+
+.icon-collection__item--error {
+    background-color: var(--z-color-danger-tertiary);
+    border-color: var(--z-color-border-danger);
+    color: var(--z-color-danger);
+}
+
+.icon-collection__item--error:hover {
+    background-color: var(--z-color-danger-tertiary);
+    border-color: var(--z-color-border-danger);
+    transform: none;
+    box-shadow: none;
+}
+
+.icon-collection__item--error .icon-collection__item-name {
+    color: var(--z-color-danger);
+}

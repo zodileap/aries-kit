@@ -33,6 +33,7 @@ export const BasicChartDemo: React.FC = () => {
                     title="饼图示例"
                     data={pieData}
                     height={350}
+                    animationDuration={1200}
                 />
             </AriCol>
             <AriCol span={8}>

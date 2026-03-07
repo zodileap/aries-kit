@@ -32,6 +32,11 @@
   $collapseNum: var(--z-collapse-num, 0);
   $layoutDuration: var(--z-collapse-layout-duration, 0);
   $staggerDelay: 50ms; // 与React Hook中的animationStaggerDelay保持一致
+  $translate-offset: 20px;
+
+  @if $direction == "right" {
+    $translate-offset: -20px;
+  }
 
   // 收起状态的默认设置
   height: 0;
@@ -49,7 +54,7 @@
   // 修改为只选择直接子元素的透明度和位移动画
   & [data-z-collapse-node] {
     opacity: 0;
-    transform: translateX(if($direction == "right", -20px, 20px));
+    transform: translateX($translate-offset);
     transition:
       opacity getVar(duration, element-interaction) ease-out,
       transform getVar(duration, element-interaction) ease-out;
@@ -61,6 +66,8 @@
   }
 
   // 展开状态 - 只修复高度计算
+  &.#{$namespace}-is-expanded,
+  .#{$namespace}-is-expanded > &,
   &.is-expanded,
   .is-expanded > & {
     height: var(--z-collapse-height, auto);

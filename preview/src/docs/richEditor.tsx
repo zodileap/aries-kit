@@ -13,6 +13,7 @@ import {
   CodeHighlightLinesExample,
   CalloutExample,
   CodeTitleExample,
+  AdvancedConfigExample,
 } from './codes/richEditor';
 import { sourceMap } from './codes/source-map';
 
@@ -114,6 +115,15 @@ export const richEditorExamples: Record<string, DocExample> = {
         demos: [{
             component: CodeTitleExample,
             sourceCode: sourceMap['richEditor']['CodeTitleExample']
+        }]
+    },
+    advancedConfig: {
+        title: '高级配置',
+        key: 'advanced-config',
+        description: '展示默认内容、模式回调、最小/最大高度，以及导入导出前置钩子的组合用法。',
+        demos: [{
+            component: AdvancedConfigExample,
+            sourceCode: sourceMap['richEditor']['AdvancedConfigExample']
         }]
     },
 };

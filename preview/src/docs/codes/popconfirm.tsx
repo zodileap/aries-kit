@@ -5,11 +5,11 @@ import type { AriPopconfirmProps } from '@aries-kit/react';
 export const BasicPopconfirm: React.FC = () => (
     <AriPopconfirm
         title="确定要执行此操作吗？"
+        description="该操作会立即生效，请确认是否继续。"
         onConfirm={() => AriMessage.success('已确认')}
         onCancel={() => AriMessage.info('已取消')}
-    >
-        <AriButton>点击触发</AriButton>
-    </AriPopconfirm>
+        children={<AriButton>点击触发</AriButton>}
+    />
 );
 
 export const PlacementPopconfirm: React.FC = () => {
@@ -75,6 +75,8 @@ export const ControlledPopconfirm: React.FC = () => {
 export const CustomButtonPopconfirm: React.FC = () => (
     <AriPopconfirm
         title="自定义按钮文本和属性"
+        defaultOpen={true}
+        closeOnEscape={false}
         okText="是的"
         cancelText="不了"
         okButtonProps={{ color: 'success', type: 'outline' }}

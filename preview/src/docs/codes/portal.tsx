@@ -14,25 +14,27 @@ export const BasicPortal: React.FC = () => {
             <AriButton onClick={() => setVisible(true)}>显示Portal内容</AriButton>
 
             {visible && (
-                <AriPortal>
-                    <div
-                        style={{
-                            position: 'fixed',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            background: 'white',
-                            padding: '20px',
-                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-                            zIndex: 1000
-                        }}
-                    >
-                        <AriFlex vertical space={16}>
-                            <AriTypography variant='h3' value='这个内容被传送到了document.body' />
-                            <AriButton onClick={() => setVisible(false)}>关闭</AriButton>
-                        </AriFlex>
-                    </div>
-                </AriPortal>
+                <AriPortal
+                    children={
+                        <div
+                            style={{
+                                position: 'fixed',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                background: 'white',
+                                padding: '20px',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                                zIndex: 1000
+                            }}
+                        >
+                            <AriFlex vertical space={16}>
+                                <AriTypography variant='h3' value='这个内容被传送到了document.body' />
+                                <AriButton onClick={() => setVisible(false)}>关闭</AriButton>
+                            </AriFlex>
+                        </div>
+                    }
+                />
             )}
         </>
     );

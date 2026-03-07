@@ -932,3 +932,49 @@ export const Button: React.FC<ButtonProps> = ({
   );
 };
 
+export const AdvancedConfigExample: React.FC = () => {
+  const [mode, setMode] = useState<'source' | 'visual' | 'split'>('split');
+  const defaultContent = [
+    '# 高级配置演示',
+    '',
+    '这个示例集中展示以下能力：',
+    '',
+    '- defaultValue: 非受控初始内容',
+    '- onModeChange: 同步模式切换',
+    '- minHeight / maxHeight: 约束编辑区域高度',
+    '- beforeImport: 导入前校验文件类型',
+    '- beforeExport: 导出前注入额外内容',
+    '',
+    '试试切换模式，或使用工具栏里的导入 / 导出按钮。',
+  ].join('\n');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriCard>
+        <AriRichEditor
+          defaultValue={defaultContent}
+          mode={mode}
+          onModeChange={(nextMode) => {
+            setMode(nextMode);
+            AriMessage.info('当前模式: ' + nextMode);
+          }}
+          minHeight={260}
+          maxHeight={360}
+          beforeImport={async (file) => {
+            const isMarkdown = file.name.endsWith('.md');
+            AriMessage.info('准备导入: ' + file.name);
+            if (!isMarkdown) {
+              AriMessage.warning('仅允许导入 .md 文件');
+            }
+            return isMarkdown;
+          }}
+          beforeExport={async (format, content) => {
+            AriMessage.success('准备导出 ' + format.toUpperCase() + ' 文件');
+            return content + '\n\n<!-- exported:' + format + ' -->';
+          }}
+        />
+      </AriCard>
+      <div>当前编辑模式: {mode}</div>
+    </AriFlex>
+  );
+};

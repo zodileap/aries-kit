@@ -45,7 +45,7 @@ export const SizeDemo: React.FC = () => (
 
 export const ColorDemo: React.FC = () => (
     <AriFlex vertical space={16}>
-        <AriProgress percent={40} strokeColor="#1890ff" />
+        <AriProgress percent={40} strokeColor="#1890ff" trailColor="#e6f4ff" />
         <AriProgress percent={60} strokeColor="#52c41a" />
         <AriProgress 
             percent={80} 
@@ -64,8 +64,8 @@ export const ColorDemo: React.FC = () => (
 
 export const StepsDemo: React.FC = () => (
     <AriFlex vertical space={16}>
-        <AriProgress percent={60} steps={5} />
-        <AriProgress percent={30} steps={10} size="sm" />
+        <AriProgress percent={60} steps={5} showInfo={false} />
+        <AriProgress percent={30} steps={10} size="sm" stepSmall />
         <AriProgress percent={100} steps={10} strokeColor="#52c41a" />
         <AriProgress percent={60} steps={5} strokeColor="#f5222d" status="exception" />
     </AriFlex>

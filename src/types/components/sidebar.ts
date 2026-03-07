@@ -34,7 +34,10 @@ export interface AriSidebarProps extends _Props {
  */
 export interface AriTreeViewProps extends AriSidebarProps {
     tree: AriTreeNode[];
+    selectedKey?: string | null;
+    expandedKeys?: string[];
     onNodeSelect?: (node: AriTreeNode) => void;
+    onExpandedKeysChange?: (expandedKeys: string[]) => void;
 }
 
 

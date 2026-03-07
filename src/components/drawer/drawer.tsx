@@ -26,6 +26,7 @@ export const AriDrawer: React.FC<AriDrawerProps> = ({
   destroyOnClose = false,
   title,
   footer,
+  zIndex = 1000,
   className = '',
   style,
   bodyStyle,
@@ -159,7 +160,7 @@ export const AriDrawer: React.FC<AriDrawerProps> = ({
             cn.is('visible', visible),
             cn.is('contained', isDirectRender)
           )}
-          style={{ ...maskStyle }}
+          style={{ zIndex, ...maskStyle }}
           onClick={handleMaskClick}
         />
       )}
@@ -175,6 +176,7 @@ export const AriDrawer: React.FC<AriDrawerProps> = ({
         style={{ 
           ...positionStyle, 
           ...style,
+          zIndex,
           // 如果不可见且不应该渲染子元素，则隐藏整个组件
           display: !shouldRenderChildren && !visible ? 'none' : undefined
         }}

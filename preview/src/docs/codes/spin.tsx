@@ -6,7 +6,7 @@ export const BasicSpin = () => {
     const cs = useCss("")
     return (
         <AriFlex>
-            <AriSpin spinning={spinning}>
+            <AriSpin spinning={spinning} className="preview-spin-outline">
                 <div style={{ padding: '20px', backgroundColor: cs.getCssVarName('color', 'bg'), minHeight: '120px' }}>
                     可以被包裹的内容区域
                 </div>

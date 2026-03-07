@@ -67,6 +67,12 @@ export const TextSwitch: React.FC = () => {
     return (
         <AriFlex vertical>
             <AriSwitch checked={checked} onChange={handleChange} checkedChildren="开启" unCheckedChildren="关闭" /> 
+            <AriSwitch
+                defaultChecked="on"
+                checkedValue="on"
+                uncheckedValue="off"
+                onChange={(value) => console.log('switch value:', value)}
+            />
         </AriFlex>
     );
 };

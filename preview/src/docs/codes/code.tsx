@@ -220,3 +220,50 @@ export const FontSizeDemo: React.FC = () => (
         />
     </AriFlex>
 );
+
+export const CodeEditorOptionsDemo: React.FC = () => {
+    const [languageTagVisible, setLanguageTagVisible] = useState(true);
+
+    return (
+        <>
+            <style>{`
+                .preview-code-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                    border-radius: 14px;
+                }
+            `}</style>
+            <AriFlex vertical space={16}>
+                <AriCode
+                    className="preview-code-outline"
+                    title="隐藏复制与语言标签"
+                    language="typescript"
+                    showCopyButton={false}
+                    showLanguageTag={false}
+                    showToolbar={false}
+                    tabSize={2}
+                    value={`function formatUser(user: { name: string }) {\n\treturn user.name;\n}`}
+                />
+
+                {languageTagVisible && (
+                    <AriCode
+                        title="可关闭语言标签"
+                        language="markdown"
+                        languageTagClosable
+                        onLanguageTagClose={() => setLanguageTagVisible(false)}
+                        value={`# Aries Kit\n\n点击右上角的语言标签关闭按钮后，这个示例会被移除。`}
+                    />
+                )}
+
+                <AriCode
+                    title="空白可编辑代码块"
+                    language="javascript"
+                    editable
+                    placeholder="// 请输入脚本内容"
+                    value=""
+                    onChange={() => undefined}
+                />
+            </AriFlex>
+        </>
+    );
+};

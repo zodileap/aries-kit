@@ -85,24 +85,6 @@ export const spinAPI: DocAPI = {
             default: '-'
         },
         {
-            param: 'standalone',
-            desc: '是否为独立使用模式',
-            type: 'boolean',
-            default: 'false'
-        },
-        {
-            param: 'width',
-            desc: '当独立使用时的宽度',
-            type: 'number | string',
-            default: '-'
-        },
-        {
-            param: 'height',
-            desc: '当独立使用时的高度',
-            type: 'number | string',
-            default: '-'
-        },
-        {
             param: 'className',
             desc: '自定义类名',
             type: 'string',

@@ -3,9 +3,10 @@ import { AriFlex, AriIcon } from '@aries-kit/react';
 export const BasicIcon: React.FC = () => (
     <>
         <AriFlex space={16}>
-            <AriIcon name="star" />
+            <AriIcon name="star" className="preview-icon-outline" />
             <AriIcon name="edit" />
             <AriIcon name="delete" />
+            <AriIcon fullPath="/assets/icons/star.svg" size="lg" />
         </AriFlex>
     </>
 );

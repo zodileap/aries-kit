@@ -10,6 +10,8 @@ export const BasicInput: React.FC = () => {
                 placeholder="请输入内容"
                 value={value}
                 onChange={setValue}
+                minLength={3}
+                className="preview-input-outline"
             />
             <div>当前输入值: {value}</div>
         </AriFlex>

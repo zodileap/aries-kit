@@ -171,7 +171,10 @@ export const GradientColorPicker: React.FC = () => {
 
 export const DisabledColorPicker: React.FC = () => {
     return (
-        <AriColorPicker defaultValue="#1890ff" disabled />
+        <AriFlex space={16}>
+            <AriColorPicker defaultValue="#1890ff" disabled />
+            <AriColorPicker defaultValue="#722ed1" placement="top" showInput={false} />
+        </AriFlex>
     );
 };
 

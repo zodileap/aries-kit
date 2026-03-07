@@ -1,62 +1,35 @@
-import React from 'react';
-import { anchors as menuAnchors } from './docs/menu';
-import { anchors as contextMenuAnchors } from './docs/context-menu';
-import { anchors as containerAnchors } from './docs/container';
-import { anchors as appLayoutAnchors } from './docs/app-layout';
-import { anchors as buttonAnchors } from './docs/button';
-import { anchors as socialLoginButtonAnchors } from './docs/social-login-button';
-import { anchors as dividerAnchors } from './docs/divider';
-import { anchors as formAnchors } from './docs/form';
-import { anchors as iconAnchors } from './docs/icon';
-import { anchors as imageAnchors } from './docs/image';
-import { anchors as inputAnchors } from './docs/input';
-import { anchors as linkAnchors } from './docs/link';
-import { anchors as messageAnchors } from './docs/message';
-import { anchors as navAnchors } from './docs/nav';
-import { anchors as sidebarAnchors } from './docs/sidebar';
-import { anchors as flexAnchors } from './docs/flex';
-import { anchors as tableAnchors } from './docs/table';
-import { anchors as tagAnchors } from './docs/tag';
-import { anchors as selectAnchors } from './docs/select';
-import { anchors as tabsAnchors } from './docs/tabs';
-import { anchors as checkboxAnchors } from './docs/checkbox';
-import { anchors as emptyAnchors } from './docs/empty';
-import { anchors as spinAnchors } from './docs/spin';
-import { anchors as gridAnchors } from './docs/grid';
-import { anchors as layoutAnchors } from './docs/layout';
-import { anchors as fixedSizeGridAnchors } from './docs/fixed-size-grid';
-import { anchors as paginationAnchors } from './docs/pagination';
-import { anchors as switchAnchors } from './docs/switch';
-import { anchors as breadcrumbAnchors } from './docs/breadcrumb';
-import { anchors as calloutAnchors } from './docs/callout';
-import { anchors as stickyAnchors } from './docs/sticky';
-import { anchors as chartAnchors } from './docs/chart';
-import { anchors as radioAnchors } from './docs/radio';
-import { anchors as portalAnchors } from './docs/portal';
-import { anchors as tooltipAnchors } from './docs/tooltip';
-import { anchors as calendarAnchors } from './docs/calendar';
-import { anchors as progressAnchors } from './docs/progress';
-import { anchors as colorPickerAnchors } from './docs/color-picker';
-import { anchors as modalAnchors } from './docs/modal';
-import { anchors as sliderAnchors } from './docs/slider';
-import { anchors as drawerAnchors } from './docs/drawer';
-import { anchors as typographyAnchors } from './docs/typography';
-import { anchors as popconfirmAnchors } from './docs/popconfirm';
-import { anchors as notificationAnchors } from './docs/notification';
-import { anchors as resultAnchors } from './docs/result';
-import { anchors as particleAnchors } from './docs/particle'; // 新增导入
-import { anchors as codeAnchors } from './docs/code';
-import { anchors as datePickerAnchors } from './docs/date-picker'; // 新增导入
-import { anchors as timePickerAnchors } from './docs/time-picker'; // 新增导入
-import { anchors as carouselAnchors } from './docs/carousel'; // 新增导入
-import { anchors as statisticAnchors } from './docs/statistic';
-import { anchors as listAnchors } from './docs/list'; // 新增导入
-import { anchors as avatarAnchors } from './docs/avatar'; // 新增导入
-import { anchors as timelineAnchors } from './docs/timeline'; // 新增导入
-import { anchors as dragListAnchors } from './docs/drag-list';
-import { anchors as uploadAnchors } from './docs/upload';
-import { anchors as richEditorAnchors } from './docs/richEditor';
+import type { ComponentType } from 'react';
 import { AriMenuItemProps } from '@ari/types';
+
+type PreviewAnchor = {
+    key: string;
+    label: string;
+};
+
+type PreviewDocModule = {
+    default: ComponentType;
+    anchors?: PreviewAnchor[];
+};
+
+const docModules = import.meta.glob('./docs/*.tsx', {
+    eager: true,
+}) as Record<string, PreviewDocModule>;
+
+const getDocModule = (name: string) => docModules[`./docs/${name}.tsx`];
+
+const getDocComponent = (name: string) => {
+    const module = getDocModule(name);
+
+    if (!module?.default) {
+        throw new Error(`Preview doc module not found: ${name}`);
+    }
+
+    return module.default;
+};
+
+const getDocAnchors = (name: string, fallback: PreviewAnchor[] = []) => {
+    return getDocModule(name)?.anchors ?? fallback;
+};
 
 export const menuConfig: AriMenuItemProps[] = [
     {
@@ -356,307 +329,307 @@ export const menuConfig: AriMenuItemProps[] = [
 export const routes = [
     {
         path: '/menu',
-        component: React.lazy(() => import('./docs/menu')),
-        anchors: menuAnchors
+        component: getDocComponent('menu'),
+        anchors: getDocAnchors('menu')
     },
     {
         path: '/context-menu',
-        component: React.lazy(() => import('./docs/context-menu')),
-        anchors: contextMenuAnchors
+        component: getDocComponent('context-menu'),
+        anchors: getDocAnchors('context-menu')
     },
     {
         path: '/container',
-        component: React.lazy(() => import('./docs/container')),
-        anchors: containerAnchors
+        component: getDocComponent('container'),
+        anchors: getDocAnchors('container')
     },
     {
         path: '/card',
-        component: React.lazy(() => import('./docs/card')),
-        anchors: containerAnchors
+        component: getDocComponent('card'),
+        anchors: getDocAnchors('card')
     },
     {
         path: '/collapse',
-        component: React.lazy(() => import('./docs/collapse')),
-        anchors: containerAnchors
+        component: getDocComponent('collapse'),
+        anchors: getDocAnchors('collapse')
     },
     {
         path: '/app-layout',
-        component: React.lazy(() => import('./docs/app-layout')),
-        anchors: appLayoutAnchors
+        component: getDocComponent('app-layout'),
+        anchors: getDocAnchors('app-layout')
     },
     {
         path: '/button',
-        component: React.lazy(() => import('./docs/button')),
-        anchors: buttonAnchors
+        component: getDocComponent('button'),
+        anchors: getDocAnchors('button')
     },
     {
         path: '/social-login-button',
-        component: React.lazy(() => import('./docs/social-login-button')),
-        anchors: socialLoginButtonAnchors
+        component: getDocComponent('social-login-button'),
+        anchors: getDocAnchors('social-login-button')
     },
     {
         path: '/divider',
-        component: React.lazy(() => import('./docs/divider')),
-        anchors: dividerAnchors
+        component: getDocComponent('divider'),
+        anchors: getDocAnchors('divider')
     },
     {
         path: '/form',
-        component: React.lazy(() => import('./docs/form')),
-        anchors: formAnchors
+        component: getDocComponent('form'),
+        anchors: getDocAnchors('form')
     },
     {
         path: '/icon',
-        component: React.lazy(() => import('./docs/icon')),
-        anchors: iconAnchors
+        component: getDocComponent('icon'),
+        anchors: getDocAnchors('icon')
     },
     {
         path: '/image',
-        component: React.lazy(() => import('./docs/image')),
-        anchors: imageAnchors
+        component: getDocComponent('image'),
+        anchors: getDocAnchors('image')
     },
     {
         path: '/input',
-        component: React.lazy(() => import('./docs/input')),
-        anchors: inputAnchors
+        component: getDocComponent('input'),
+        anchors: getDocAnchors('input')
     },
     {
         path: '/link',
-        component: React.lazy(() => import('./docs/link')),
-        anchors: linkAnchors
+        component: getDocComponent('link'),
+        anchors: getDocAnchors('link')
     },
     {
         path: '/select',
-        component: React.lazy(() => import('./docs/select')),
-        anchors: selectAnchors
+        component: getDocComponent('select'),
+        anchors: getDocAnchors('select')
     },
     {
         path: '/callout',
-        component: React.lazy(() => import('./docs/callout')),
-        anchors: calloutAnchors
+        component: getDocComponent('callout'),
+        anchors: getDocAnchors('callout')
     },
     {
         path: '/message',
-        component: React.lazy(() => import('./docs/message')),
-        anchors: messageAnchors
+        component: getDocComponent('message'),
+        anchors: getDocAnchors('message')
     },
     {
         path: '/nav',
-        component: React.lazy(() => import('./docs/nav')),
-        anchors: navAnchors
+        component: getDocComponent('nav'),
+        anchors: getDocAnchors('nav')
     },
     {
         path: '/sidebar',
-        component: React.lazy(() => import('./docs/sidebar')),
-        anchors: sidebarAnchors
+        component: getDocComponent('sidebar'),
+        anchors: getDocAnchors('sidebar')
     },
     {
         path: '/flex',
-        component: React.lazy(() => import('./docs/flex')),
-        anchors: flexAnchors
+        component: getDocComponent('flex'),
+        anchors: getDocAnchors('flex')
     },
     {
         path: '/table',
-        component: React.lazy(() => import('./docs/table')),
-        anchors: tableAnchors
+        component: getDocComponent('table'),
+        anchors: getDocAnchors('table')
     },
     {
         path: '/tag',
-        component: React.lazy(() => import('./docs/tag')),
-        anchors: tagAnchors
+        component: getDocComponent('tag'),
+        anchors: getDocAnchors('tag')
     },
     {
         path: '/tabs',
-        component: React.lazy(() => import('./docs/tabs')),
-        anchors: tabsAnchors
+        component: getDocComponent('tabs'),
+        anchors: getDocAnchors('tabs')
     },
     {
         path: '/checkbox',
-        component: React.lazy(() => import('./docs/checkbox')),
-        anchors: checkboxAnchors
+        component: getDocComponent('checkbox'),
+        anchors: getDocAnchors('checkbox')
     },
     {
         path: '/empty',
-        component: React.lazy(() => import('./docs/empty')),
-        anchors: emptyAnchors
+        component: getDocComponent('empty'),
+        anchors: getDocAnchors('empty')
     },
     {
         path: '/color',
-        component: React.lazy(() => import('./docs/color')),
-        anchors: emptyAnchors
+        component: getDocComponent('color'),
+        anchors: getDocAnchors('color')
     },
     {
         path: "/style",
-        component: React.lazy(() => import('./docs/style')),
-        anchors: emptyAnchors
+        component: getDocComponent('style'),
+        anchors: getDocAnchors('style')
     },
     {
         path: '/spin',
-        component: React.lazy(() => import('./docs/spin')),
-        anchors: spinAnchors
+        component: getDocComponent('spin'),
+        anchors: getDocAnchors('spin')
     },
     {
         path: '/grid',
-        component: React.lazy(() => import('./docs/grid')),
-        anchors: gridAnchors
+        component: getDocComponent('grid'),
+        anchors: getDocAnchors('grid')
     },
     {
         path: '/fixed-size-grid',
-        component: React.lazy(() => import('./docs/fixed-size-grid')),
-        anchors: fixedSizeGridAnchors
+        component: getDocComponent('fixed-size-grid'),
+        anchors: getDocAnchors('fixed-size-grid')
     },
     {
         path: '/pagination',
-        component: React.lazy(() => import('./docs/pagination')),
-        anchors: paginationAnchors
+        component: getDocComponent('pagination'),
+        anchors: getDocAnchors('pagination')
     },
     {
         path: '/switch',
-        component: React.lazy(() => import('./docs/switch')),
-        anchors: switchAnchors
+        component: getDocComponent('switch'),
+        anchors: getDocAnchors('switch')
     },
     {
         path: '/layout',
-        component: React.lazy(() => import('./docs/layout')),
-        anchors: layoutAnchors
+        component: getDocComponent('layout'),
+        anchors: getDocAnchors('layout')
     },
     {
         path: '/sticky',
-        component: React.lazy(() => import('./docs/sticky')),
-        anchors: stickyAnchors
+        component: getDocComponent('sticky'),
+        anchors: getDocAnchors('sticky')
     },
     {
         path: '/breadcrumb',
-        component: React.lazy(() => import('./docs/breadcrumb')),
-        anchors: breadcrumbAnchors
+        component: getDocComponent('breadcrumb'),
+        anchors: getDocAnchors('breadcrumb')
     },
     {
         path: '/chart',
-        component: React.lazy(() => import('./docs/chart')),
-        anchors: chartAnchors
+        component: getDocComponent('chart'),
+        anchors: getDocAnchors('chart')
     },
     {
         path: '/radio',
-        component: React.lazy(() => import('./docs/radio')),
-        anchors: radioAnchors
+        component: getDocComponent('radio'),
+        anchors: getDocAnchors('radio')
     },
     {
         path: '/portal',
-        component: React.lazy(() => import('./docs/portal')),
-        anchors: portalAnchors
+        component: getDocComponent('portal'),
+        anchors: getDocAnchors('portal')
     },
     {
         path: '/tooltip',
-        component: React.lazy(() => import('./docs/tooltip')),
-        anchors: tooltipAnchors
+        component: getDocComponent('tooltip'),
+        anchors: getDocAnchors('tooltip')
     },
     {
         path: '/calendar',
-        component: React.lazy(() => import('./docs/calendar')),
-        anchors: calendarAnchors
+        component: getDocComponent('calendar'),
+        anchors: getDocAnchors('calendar')
     },
     {
         path: '/color-picker',
-        component: React.lazy(() => import('./docs/color-picker')),
-        anchors: colorPickerAnchors
+        component: getDocComponent('color-picker'),
+        anchors: getDocAnchors('color-picker')
     },
     {
         path: '/modal',
-        component: React.lazy(() => import('./docs/modal')),
-        anchors: modalAnchors
+        component: getDocComponent('modal'),
+        anchors: getDocAnchors('modal')
     },
     {
         path: '/slider',
-        component: React.lazy(() => import('./docs/slider')),
-        anchors: sliderAnchors
+        component: getDocComponent('slider'),
+        anchors: getDocAnchors('slider')
     },
     {
         path: '/drawer',
-        component: React.lazy(() => import('./docs/drawer')),
-        anchors: drawerAnchors
+        component: getDocComponent('drawer'),
+        anchors: getDocAnchors('drawer')
     },
     {
         path: '/typography',
-        component: React.lazy(() => import('./docs/typography')),
-        anchors: typographyAnchors
+        component: getDocComponent('typography'),
+        anchors: getDocAnchors('typography')
     },
     {
         path: '/popconfirm',
-        component: React.lazy(() => import('./docs/popconfirm')),
-        anchors: popconfirmAnchors
+        component: getDocComponent('popconfirm'),
+        anchors: getDocAnchors('popconfirm')
     },
     {
         path: '/notification',
-        component: React.lazy(() => import('./docs/notification')),
-        anchors: notificationAnchors
+        component: getDocComponent('notification'),
+        anchors: getDocAnchors('notification')
     },
     { 
         path: '/result',
-        component: React.lazy(() => import('./docs/result')),
-        anchors: resultAnchors
+        component: getDocComponent('result'),
+        anchors: getDocAnchors('result')
     },
     { 
         path: '/code',
-        component: React.lazy(() => import('./docs/code')),
-        anchors: codeAnchors
+        component: getDocComponent('code'),
+        anchors: getDocAnchors('code')
     },
     { 
         path: '/particle',
-        component: React.lazy(() => import('./docs/particle')),
-        anchors: particleAnchors
+        component: getDocComponent('particle'),
+        anchors: getDocAnchors('particle')
     },
     { 
         path: '/date-picker',
-        component: React.lazy(() => import('./docs/date-picker')),
-        anchors: datePickerAnchors
+        component: getDocComponent('date-picker'),
+        anchors: getDocAnchors('date-picker')
     }, // 新增路由
     { 
         path: '/time-picker',
-        component: React.lazy(() => import('./docs/time-picker')),
-        anchors: timePickerAnchors
+        component: getDocComponent('time-picker'),
+        anchors: getDocAnchors('time-picker')
     }, // 新增路由
     {
         path: '/carousel',
-        component: React.lazy(() => import('./docs/carousel')),
-        anchors: carouselAnchors
+        component: getDocComponent('carousel'),
+        anchors: getDocAnchors('carousel')
     }, // 新增路由
     {
         path: '/list',
-        component: React.lazy(() => import('./docs/list')),
-        anchors: listAnchors
+        component: getDocComponent('list'),
+        anchors: getDocAnchors('list')
     }, // 新增路由
     {
         path: '/statistic',
-        component: React.lazy(() => import('./docs/statistic')),
-        anchors: statisticAnchors
+        component: getDocComponent('statistic'),
+        anchors: getDocAnchors('statistic')
     }, // 新增路由
     {
         path: '/progress',
-        component: React.lazy(() => import('./docs/progress')),
-        anchors: progressAnchors
+        component: getDocComponent('progress'),
+        anchors: getDocAnchors('progress')
     }, // 新增路由
     {
         path: '/avatar',
-        component: React.lazy(() => import('./docs/avatar')),
-        anchors: avatarAnchors
+        component: getDocComponent('avatar'),
+        anchors: getDocAnchors('avatar')
     }, // 新增路由
     {
         path: '/timeline',
-        component: React.lazy(() => import('./docs/timeline')),
-        anchors: timelineAnchors
+        component: getDocComponent('timeline'),
+        anchors: getDocAnchors('timeline')
     }, // 新增路由
     {
         path: '/drag-list',
-        component: React.lazy(() => import('./docs/drag-list')),
-        anchors: dragListAnchors
+        component: getDocComponent('drag-list'),
+        anchors: getDocAnchors('drag-list')
     },
     {
         path: '/richEditor',
-        component: React.lazy(() => import('./docs/richEditor')),
-        anchors: richEditorAnchors
+        component: getDocComponent('richEditor'),
+        anchors: getDocAnchors('richEditor')
     },
     {
         path: '/upload',
-        component: React.lazy(() => import('./docs/upload')),
-        anchors: uploadAnchors
+        component: getDocComponent('upload'),
+        anchors: getDocAnchors('upload')
     }
 ];

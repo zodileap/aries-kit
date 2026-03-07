@@ -43,8 +43,15 @@ export const SizeDemo: React.FC = () => (
 
 export const TypeDemo: React.FC = () => (
     <>
+        <style>{`
+            .preview-button-outline {
+                outline: 2px dashed var(--z-color-primary);
+                outline-offset: 4px;
+            }
+        `}</style>
         <AriButton type="dashed" label="虚线按钮" />
         <AriButton type="link" label="链接按钮" />
         <AriButton type="text" label="文本按钮" />
+        <AriButton htmlType="submit" className="preview-button-outline" label="提交按钮" />
     </>
 );

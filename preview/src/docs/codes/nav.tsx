@@ -12,6 +12,8 @@ export const BasicNav: React.FC = () => {
             { key: "products", label: "产品", path: "/products" },
             { key: "about", label: "关于", path: "/about" },
           ]}
+          sticky
+          suffixed={<span style={{ fontSize: 12 }}>文档入口</span>}
           logo={
             <AriImage
               fileName="/assets/logo/logo.png"

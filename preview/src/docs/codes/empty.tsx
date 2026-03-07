@@ -1,7 +1,7 @@
 import { AriEmpty } from '@aries-kit/react';
 
 export const BasicEmpty: React.FC = () => (
-    <AriEmpty />
+    <AriEmpty className="preview-empty-state" />
 );
 
 export const CustomIconDemo: React.FC = () => (

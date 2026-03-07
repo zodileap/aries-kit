@@ -32,6 +32,8 @@ export type AriDrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
  *   - title: 标题。
  *   - footer: 页脚内容。
  *     default: 1000
+ *   - zIndex: 抽屉层级。
+ *     default: 1000
  *   - className: 自定义类名。
  *   - style: 自定义样式。
  *   - bodyStyle: drawer body 的样式。
@@ -55,6 +57,7 @@ export interface AriDrawerProps {
   destroyOnClose?: boolean;
   title?: React.ReactNode;
   footer?: React.ReactNode;
+  zIndex?: number;
   className?: string;
   style?: React.CSSProperties;
   bodyStyle?: React.CSSProperties;

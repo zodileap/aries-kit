@@ -1,6 +1,14 @@
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import { BasicExample, AutoplayExample, NoLoopExample, CustomIndicatorsExample, ChildrenExample, MinimalExample } from './codes/carousel';
+import {
+    AutoplayExample,
+    BasicExample,
+    ChildrenExample,
+    ControlledCarouselExample,
+    CustomIndicatorsExample,
+    MinimalExample,
+    NoLoopExample,
+} from './codes/carousel';
 import { sourceMap } from './codes/source-map';
 
 export const carouselExamples: Record<string, DocExample> = {
@@ -56,6 +64,15 @@ export const carouselExamples: Record<string, DocExample> = {
         demos: [{
             component: MinimalExample,
             sourceCode: sourceMap['carousel']['MinimalExample']
+        }]
+    },
+    controlled: {
+        title: '受控索引与自定义项',
+        key: 'controlled',
+        description: '展示受控模式、默认索引、动画时长、自定义轮播项渲染和切换回调。',
+        demos: [{
+            component: ControlledCarouselExample,
+            sourceCode: sourceMap['carousel']['ControlledCarouselExample']
         }]
     }
 };

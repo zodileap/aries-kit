@@ -1,7 +1,13 @@
 import React from 'react';
 import Doc from '../layout/doc';
 import { DocAPI, DocExample } from '../layout/types';
-import { BasicContextMenu, CustomContextMenu, DetachedContextMenu } from './codes/context-menu';
+import {
+    BasicContextMenu,
+    ContextMenuBehaviorDemo,
+    ContextMenuControlDemo,
+    CustomContextMenu,
+    DetachedContextMenu,
+} from './codes/context-menu';
 import { sourceMap } from './codes/source-map';
 
 export const contextMenuExamples: Record<string, DocExample> = {
@@ -29,7 +35,25 @@ export const contextMenuExamples: Record<string, DocExample> = {
         description: '通过 targetRef 将右键菜单挂载到外部目标元素，不需要由 ContextMenu 额外包裹节点。',
         demos: [{
             component: DetachedContextMenu,
-            sourceCode: 'DetachedContextMenu',
+            sourceCode: sourceMap['context-menu']?.['DetachedContextMenu'],
+        }],
+    },
+    behavior: {
+        title: '挂载与关闭策略',
+        key: 'behavior',
+        description: '展示默认打开、自定义挂载容器、偏移量、安全边距以及 overlay 面板样式能力。',
+        demos: [{
+            component: ContextMenuBehaviorDemo,
+            sourceCode: sourceMap['context-menu']?.['ContextMenuBehaviorDemo'],
+        }],
+    },
+    control: {
+        title: '菜单控制选项',
+        key: 'control',
+        description: '展示 menuProps、选中后保留菜单与禁用状态。',
+        demos: [{
+            component: ContextMenuControlDemo,
+            sourceCode: sourceMap['context-menu']?.['ContextMenuControlDemo'],
         }],
     },
 };

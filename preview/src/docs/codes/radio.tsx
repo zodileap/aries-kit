@@ -28,6 +28,12 @@ export const BasicRadio: React.FC = () => {
         onChange={handleChange}
         label="选项2"
       />
+      <AriRadio
+        name="default-radio"
+        value="default"
+        defaultChecked={true}
+        label="默认选中（非受控）"
+      />
     </AriFlex>
   );
 };

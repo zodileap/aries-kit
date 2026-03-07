@@ -1,5 +1,5 @@
 import { AriCarousel } from '@ari/components';
-import React from 'react';
+import React, { useState } from 'react';
 
 // 毛玻璃轮播示例图片数据
 const carouselImages = [
@@ -103,8 +103,12 @@ export const CustomIndicatorsExample: React.FC = () => (
 // 使用子元素的示例
 export const ChildrenExample: React.FC = () => (
     <div style={{ width: '100%', height: '500px', background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' }}>
-        <AriCarousel height="500px" autoplay={true} interval={3000}>
-            <div style={{ 
+        <AriCarousel
+            height="500px"
+            autoplay={true}
+            interval={3000}
+            children={[
+                <div key="child-1" style={{ 
                 width: '100%',
                 height: '100%', 
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -119,8 +123,8 @@ export const ChildrenExample: React.FC = () => (
                 borderRadius: '16px'
             }}>
                 轮播内容1
-            </div>
-            <div style={{ 
+            </div>,
+                <div key="child-2" style={{ 
                 width: '100%',
                 height: '100%', 
                 background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
@@ -135,8 +139,8 @@ export const ChildrenExample: React.FC = () => (
                 borderRadius: '16px'
             }}>
                 轮播内容2
-            </div>
-            <div style={{ 
+            </div>,
+                <div key="child-3" style={{ 
                 width: '100%',
                 height: '100%', 
                 background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
@@ -152,7 +156,8 @@ export const ChildrenExample: React.FC = () => (
             }}>
                 轮播内容3
             </div>
-        </AriCarousel>
+            ]}
+        />
     </div>
 );
 
@@ -168,3 +173,50 @@ export const MinimalExample: React.FC = () => (
         />
     </div>
 );
+
+export const ControlledCarouselExample: React.FC = () => {
+    const [activeIndex, setActiveIndex] = useState(2);
+
+    return (
+        <div style={{ width: '100%', height: '420px', background: 'linear-gradient(135deg, #111827 0%, #334155 100%)' }}>
+            <AriCarousel
+                items={carouselImages}
+                activeIndex={activeIndex}
+                defaultActiveIndex={1}
+                duration={900}
+                onChange={setActiveIndex}
+                renderItem={(item, index) => (
+                    <div
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            borderRadius: '18px',
+                        }}
+                    >
+                        <img
+                            src={item.src}
+                            alt={item.alt}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                        <div
+                            style={{
+                                position: 'absolute',
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                padding: '20px',
+                                color: '#fff',
+                                background: 'linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7))',
+                            }}
+                        >
+                            第 {index + 1} 张: {item.title}
+                        </div>
+                    </div>
+                )}
+                height={420}
+            />
+        </div>
+    );
+};

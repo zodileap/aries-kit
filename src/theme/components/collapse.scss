@@ -12,7 +12,6 @@
 
   &:hover {
     box-shadow: getVar(color, box-shadow-popover);
-    transform: translateY(getVar(transform, hover-translate-y));
   }
 
   &__item {

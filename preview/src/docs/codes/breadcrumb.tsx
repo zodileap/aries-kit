@@ -3,6 +3,12 @@ import React from 'react';
 
 export const BasicBreadcrumb: React.FC = () => (
   <AriContainer>
+    <style>{`
+      .preview-breadcrumb-outline {
+        outline: 2px dashed var(--z-color-primary);
+        outline-offset: 4px;
+      }
+    `}</style>
     <AriBreadcrumb 
       items={[
         { key: 'home', label: '首页' },
@@ -16,6 +22,8 @@ export const BasicBreadcrumb: React.FC = () => (
 export const WithIconBreadcrumb: React.FC = () => (
   <AriContainer>
     <AriBreadcrumb 
+      className="preview-breadcrumb-outline"
+      showIcon
       items={[
         { key: 'home', label: '首页', icon: 'home' },
         { key: 'products', label: '产品列表', icon: 'unorderedlist' },
@@ -31,7 +39,7 @@ export const WithLinkBreadcrumb: React.FC = () => (
       items={[
         { key: 'home', label: '首页', href: '#/home' },
         { key: 'products', label: '产品列表', href: '#/products' },
-        { key: 'detail', label: '产品详情' }
+        { key: 'detail', label: '产品详情', disabled: true }
       ]} 
     />
   </AriContainer>

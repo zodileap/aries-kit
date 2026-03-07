@@ -1,7 +1,17 @@
 import React from 'react';
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import { BasicContainer, PositionDemo, ShadowDemo, BorderRadiusDemo, FillDemo, BorderDemo, BackgroundDemo, CustomBackgroundDemo } from './codes/container';
+import {
+    BackgroundDemo,
+    BasicContainer,
+    BorderDemo,
+    BorderRadiusDemo,
+    CustomBackgroundDemo,
+    FillDemo,
+    PositionDemo,
+    ShadowDemo,
+    SizeAndMaterialDemo,
+} from './codes/container';
 import { sourceMap } from './codes/source-map';
 
 export const containerExamples: Record<string, DocExample> = {
@@ -75,6 +85,15 @@ export const containerExamples: Record<string, DocExample> = {
         demos: [{
             component: CustomBackgroundDemo,
             sourceCode: sourceMap['container']['CustomBackgroundDemo']
+        }]
+    },
+    sizeAndMaterial: {
+        title: '尺寸与材质',
+        key: 'size-material',
+        description: '集中展示尺寸约束、玻璃材质、透明模式、模糊、溢出滚动与自定义类名样式。',
+        demos: [{
+            component: SizeAndMaterialDemo,
+            sourceCode: sourceMap['container']['SizeAndMaterialDemo']
         }]
     }
 };

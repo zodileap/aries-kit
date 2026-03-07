@@ -493,3 +493,94 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: `成员 ${index + 1}`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            `}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => `显示 ${range[0]}-${range[1]} / 共 ${total} 条`}
+                />
+            </AriFlex>
+        </>
+    );
+};
+
+export const ScrollPagingDemo: React.FC = () => {
+    const data = Array.from({ length: 6 }).map((_, index) => ({
+        id: index + 1,
+        name: `日志 ${index + 1}`,
+        status: index % 2 === 0 ? '已完成' : '处理中',
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: '编号', key: 'id', width: 80 },
+        { title: '标题', key: 'name' },
+        { title: '状态', key: 'status' },
+    ];
+
+    return (
+        <AriFlex vertical space={24}>
+            <div>
+                <AriTypography variant='body' value='滚动分页：当前没有更多数据，因此底部会直接显示 noMoreText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={80}
+                    hasMore={false}
+                    loadingText='正在拉取更多日志...'
+                    noMoreText='日志已经全部加载完成'
+                    defaultPageSize={6}
+                />
+            </div>
+
+            <div>
+                <AriTypography variant='body' value='当 loading 为 true 时，会显示自定义 loadingText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={120}
+                    hasMore
+                    loading
+                    loadingText='正在同步下一页数据...'
+                    noMoreText='已没有更多记录'
+                    defaultPageSize={6}
+                />
+            </div>
+        </AriFlex>
+    );
+};

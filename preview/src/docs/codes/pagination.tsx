@@ -71,7 +71,7 @@ export const SizeChangerPagination: React.FC = () => {
 
 export const DisabledPagination: React.FC = () => {
     return (
-        <AriPagination total={50} disabled />
+        <AriPagination total={50} disabled defaultCurrent={2} defaultPageSize={20} />
     );
 };
 

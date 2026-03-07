@@ -9,11 +9,13 @@ export const BasicParticle: React.FC = () => (
             sizeRange={[3, 25]}
             speedRange={[0.1, 0.3]}
             glowIntensity={1.2}
+            animationSpeed={1.3}
             interactive={true}
             interactionRadius={120}
             alphaRange={[0.4, 0.9]}
             blurAmount={20}
             backgroundColor="#000000"
+            className="preview-particle-showcase"
         >
             <AriCard style={{ 
                 maxWidth: 350, 

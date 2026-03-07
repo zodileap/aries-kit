@@ -14,7 +14,9 @@ import {
     EllipsisDemo,
     MaxHeightDemo,
     PaginationDemo,
-    EmptyPlaceholderDemo
+    EmptyPlaceholderDemo,
+    PaginationModesDemo,
+    ScrollPagingDemo,
 } from './codes/table';
 import { sourceMap } from './codes/source-map';
 
@@ -124,7 +126,15 @@ export const tableExamples: Record<string, DocExample> = {
         description: '表格支持完整的分页功能，包括页码切换、每页条数调整、快速跳转等功能。',
         demos: [{
             component: PaginationDemo,
-            sourceCode: ''
+            sourceCode: sourceMap['table']['PaginationDemo']
+        }, {
+            title: '默认分页与分页器位置',
+            component: PaginationModesDemo,
+            sourceCode: sourceMap['table']['PaginationModesDemo']
+        }, {
+            title: '滚动分页提示',
+            component: ScrollPagingDemo,
+            sourceCode: sourceMap['table']['ScrollPagingDemo']
         }]
     },
     emptyPlaceholder: {
@@ -133,7 +143,7 @@ export const tableExamples: Record<string, DocExample> = {
         description: '通过 emptyPlaceholder 属性自定义空值的占位符显示。',
         demos: [{
             component: EmptyPlaceholderDemo,
-            sourceCode: ''
+            sourceCode: sourceMap['table']['EmptyPlaceholderDemo']
         }]
     }
 };

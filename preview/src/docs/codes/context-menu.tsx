@@ -2,6 +2,14 @@ import React, { useRef, useState } from 'react';
 import { AriButton, AriContainer, AriContextMenu, AriFlex, AriInput, AriTypography } from '@aries-kit/react';
 import { getCssVarName } from '@ari/utils';
 
+const contextMenuOverlayClassName = 'preview-context-menu-overlay';
+
+const contextMenuPreviewStyle = `
+.${contextMenuOverlayClassName} {
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+`;
+
 /**
  * 描述：基础用法示例。
  */
@@ -16,23 +24,24 @@ export const BasicContextMenu: React.FC = () => {
         <AriContextMenu
             items={menuItems}
             onSelect={(key) => console.log('context menu select:', key)}
-        >
-            <AriContainer
-                showBorder
-                material='glass'
-                padding={getCssVarName('inset')}
-                style={{
-                    width: getCssVarName('element-size', 'content-sm'),
-                    minHeight: getCssVarName('element-size', 'content-xs'),
-                }}
-            >
-                <AriTypography variant='h3' value='右键这里打开菜单' />
-                <AriTypography
-                    variant='caption'
-                    value='默认渲染 AriMenu，支持 onSelect 回调。'
-                />
-            </AriContainer>
-        </AriContextMenu>
+            children={
+                <AriContainer
+                    showBorder
+                    material='glass'
+                    padding={getCssVarName('inset')}
+                    style={{
+                        width: getCssVarName('element-size', 'content-sm'),
+                        minHeight: getCssVarName('element-size', 'content-xs'),
+                    }}
+                >
+                    <AriTypography variant='h3' value='右键这里打开菜单' />
+                    <AriTypography
+                        variant='caption'
+                        value='默认渲染 AriMenu，支持 onSelect 回调。'
+                    />
+                </AriContainer>
+            }
+        />
     );
 };
 
@@ -71,22 +80,23 @@ export const CustomContextMenu: React.FC = () => {
                     </AriFlex>
                 </AriContainer>
             )}
-        >
-            <AriContainer
-                showBorder
-                padding={getCssVarName('inset')}
-                style={{
-                    width: getCssVarName('element-size', 'content-sm'),
-                    minHeight: getCssVarName('element-size', 'content-xs'),
-                }}
-            >
-                <AriTypography variant='h3' value='右键这里打开自定义菜单' />
-                <AriTypography
-                    variant='caption'
-                    value='使用 renderOverlay 完全自定义内部内容。'
-                />
-            </AriContainer>
-        </AriContextMenu>
+            children={
+                <AriContainer
+                    showBorder
+                    padding={getCssVarName('inset')}
+                    style={{
+                        width: getCssVarName('element-size', 'content-sm'),
+                        minHeight: getCssVarName('element-size', 'content-xs'),
+                    }}
+                >
+                    <AriTypography variant='h3' value='右键这里打开自定义菜单' />
+                    <AriTypography
+                        variant='caption'
+                        value='使用 renderOverlay 完全自定义内部内容。'
+                    />
+                </AriContainer>
+            }
+        />
     );
 };
 
@@ -126,6 +136,104 @@ export const DetachedContextMenu: React.FC = () => {
                     value='AriContextMenu 不包裹此区域，只通过 targetRef 监听右键事件。'
                 />
             </div>
+        </AriFlex>
+    );
+};
+
+export const ContextMenuBehaviorDemo: React.FC = () => {
+    const portalRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <>
+            <style>{contextMenuPreviewStyle}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography
+                    variant='caption'
+                    value='下面这个菜单使用 defaultOpen 默认展开，并把菜单挂载到虚线容器内。'
+                />
+                <div
+                    ref={portalRef}
+                    style={{
+                        position: 'relative',
+                        minHeight: 220,
+                        border: '1px dashed var(--z-color-border)',
+                        borderRadius: 'var(--z-border-radius-container)',
+                        padding: 16,
+                        overflow: 'hidden',
+                    }}
+                >
+                    <AriContextMenu
+                        defaultOpen
+                        overlay={
+                            <AriFlex vertical space={8}>
+                                <AriTypography variant='h3' value='静态 Overlay 面板' />
+                                <AriTypography
+                                    variant='caption'
+                                    value='这个示例同时覆盖 overlay、defaultOpen、offset、mouseGap、安全边距和挂载容器。'
+                                />
+                            </AriFlex>
+                        }
+                        closeOnClickOutside={false}
+                        closeOnEscape={false}
+                        closeOnScroll
+                        offset={{ x: 24, y: 24 }}
+                        mouseGap={{ x: 12, y: 12 }}
+                        safePadding={24}
+                        portalContainer={portalRef.current}
+                        overlayClassName={contextMenuOverlayClassName}
+                        overlayStyle={{ width: 260, borderRadius: 16 }}
+                        children={
+                            <AriContainer
+                                showBorder
+                                padding={16}
+                                style={{ width: 220 }}
+                            >
+                                <AriTypography variant='body' value='这个触发区域只用来显式展示 children。' />
+                            </AriContainer>
+                        }
+                    />
+                </div>
+            </AriFlex>
+        </>
+    );
+};
+
+export const ContextMenuControlDemo: React.FC = () => {
+    const menuItems = [
+        { key: 'pin', label: '置顶', icon: 'push_pin' },
+        {
+            key: 'share',
+            label: '分享',
+            icon: 'share',
+            children: [
+                { key: 'link', label: '复制链接', icon: 'link' },
+                { key: 'team', label: '分享给团队', icon: 'groups' },
+            ],
+        },
+    ];
+
+    return (
+        <AriFlex vertical space={16}>
+            <AriContextMenu
+                items={menuItems}
+                menuProps={{ defaultExpandedKeys: ['share'], expandIconPosition: 'left' }}
+                closeOnSelect={false}
+                children={
+                    <AriContainer showBorder padding={16} style={{ width: 240 }}>
+                        <AriTypography variant='body' value='右键此处：选中后不会自动关闭菜单。' />
+                    </AriContainer>
+                }
+            />
+
+            <AriContextMenu
+                disabled
+                items={menuItems}
+                children={
+                    <AriContainer showBorder padding={16} style={{ width: 240 }}>
+                        <AriTypography variant='body' value='这个触发区域已禁用右键菜单。' />
+                    </AriContainer>
+                }
+            />
         </AriFlex>
     );
 };

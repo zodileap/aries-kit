@@ -59,6 +59,11 @@ export const DurationDemo: React.FC = () => {
 export const CloseButtonDemo: React.FC = () => {
     return (
         <AriContainer>
+            <style>{`
+                .preview-message-outline {
+                    outline: 2px dashed var(--z-color-warning);
+                }
+            `}</style>
             <AriButton
                 label="显示可关闭消息"
                 onClick={() => {
@@ -72,9 +77,21 @@ export const CloseButtonDemo: React.FC = () => {
                     })
                 }}
             />
+            <AriButton
+                label="显示自定义类型消息"
+                onClick={() => {
+                    AriMessage({
+                        content: '自定义配置消息',
+                        type: 'warning',
+                        zIndex: 1400,
+                        className: 'preview-message-outline',
+                        onClose: () => {
+                            console.log('自定义消息关闭');
+                        }
+                    })
+                }}
+            />
         </AriContainer>
     );
 }
-
-
 

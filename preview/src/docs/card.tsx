@@ -1,6 +1,6 @@
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import {BasicCard} from './codes/card';
+import { BasicCard, CardLayoutDemo, CardSurfaceDemo } from './codes/card';
 import { sourceMap } from './codes/source-map';
 
 export const cardExamples: Record<string, DocExample> = {
@@ -11,6 +11,24 @@ export const cardExamples: Record<string, DocExample> = {
         demos: [{
             component: BasicCard,
             sourceCode: sourceMap['card']['BasicCard']
+        }]
+    },
+    surface: {
+        title: '卡片表面样式',
+        key: 'surface',
+        description: '集中展示标题、边框、阴影、材质、背景、透明度、滚动溢出与自定义类名样式。',
+        demos: [{
+            component: CardSurfaceDemo,
+            sourceCode: sourceMap['card']['CardSurfaceDemo']
+        }]
+    },
+    layout: {
+        title: '布局与尺寸',
+        key: 'layout',
+        description: '展示定位、对齐、宽高限制与 fill 填充等布局能力。',
+        demos: [{
+            component: CardLayoutDemo,
+            sourceCode: sourceMap['card']['CardLayoutDemo']
         }]
     }
 };

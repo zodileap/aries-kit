@@ -1,7 +1,15 @@
 import { AriTag, AriFlex, AriMessage } from '@aries-kit/react';
 
 export const BasicTag: React.FC = () => (
-    <AriTag>默认标签</AriTag>
+    <>
+        <style>{`
+            .preview-tag-outline {
+                outline: 2px dashed var(--z-color-primary);
+                outline-offset: 4px;
+            }
+        `}</style>
+        <AriTag children="默认标签" className="preview-tag-outline" />
+    </>
 );
 
 export const ClosableDemo: React.FC = () => {
@@ -57,5 +65,6 @@ export const CombinationDemo: React.FC = () => (
         <AriTag bordered color="success" icon="check-circle" closable>已完成</AriTag>
         <AriTag bordered color="warning" icon="clock">待处理</AriTag>
         <AriTag bordered color="danger" icon="exclamation-circle" closable>紧急</AriTag>
+        <AriTag size="lg" active color="info" children="激活态" />
     </AriFlex>
 );

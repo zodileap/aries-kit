@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { AriDrawer, AriButton, AriFlex, AriRadio, AriDrawerPlacement } from '@aries-kit/react';
+import { AriDrawer, AriButton, AriFlex, AriInput, AriRadio, AriDrawerPlacement, AriTypography } from '@aries-kit/react';
 
 export const BasicDrawer: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -148,5 +148,69 @@ export const ContainerDrawer: React.FC = () => {
         <p>一些抽屉内容...</p>
       </AriDrawer>
     </div>
+  );
+};
+
+export const DrawerStyleDrawer: React.FC = () => {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <>
+      <style>{`
+        .preview-drawer-shell {
+          box-shadow: 0 24px 48px rgba(0, 0, 0, 0.16);
+        }
+      `}</style>
+      <AriButton onClick={() => setVisible(true)}>打开样式化抽屉</AriButton>
+      <AriDrawer
+        visible={visible}
+        onClose={() => setVisible(false)}
+        title="样式与层级"
+        width={420}
+        closable={false}
+        zIndex={1200}
+        className="preview-drawer-shell"
+        headerStyle={{ background: 'rgba(33, 150, 243, 0.08)' }}
+        bodyStyle={{ background: 'rgba(3, 169, 244, 0.04)', padding: 24 }}
+        footerStyle={{ background: 'rgba(76, 175, 80, 0.08)' }}
+        maskStyle={{ background: 'rgba(7, 10, 18, 0.42)' }}
+        footer={(
+          <AriFlex justify="flex-end" space={8}>
+            <AriButton type="text" onClick={() => setVisible(false)}>关闭</AriButton>
+            <AriButton color="primary" onClick={() => setVisible(false)}>保存</AriButton>
+          </AriFlex>
+        )}
+      >
+        <AriTypography variant='body' value='这个示例覆盖 width、closable、zIndex、className 以及 header/body/footer/mask 样式。' />
+      </AriDrawer>
+    </>
+  );
+};
+
+export const DrawerBehaviorDrawer: React.FC = () => {
+  const [visible, setVisible] = useState(false);
+  const [draft, setDraft] = useState('关闭后应被销毁');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriButton onClick={() => setVisible(true)}>打开无遮罩抽屉</AriButton>
+      <AriTypography variant='caption' value='mask={false} 时点击外围不再有遮罩；maskClosable={false} 也不会点击外部关闭。' />
+      <AriDrawer
+        visible={visible}
+        onClose={() => setVisible(false)}
+        title="行为控制"
+        placement="left"
+        mask={false}
+        maskClosable={false}
+        destroyOnClose
+        style={{ borderRight: '1px solid var(--z-color-border)' }}
+      >
+        <AriFlex vertical space={12}>
+          <AriTypography variant='caption' value='关闭后再次打开，输入框内容会因为 destroyOnClose 被重置。' />
+          <AriInput value={draft} onChange={setDraft} placeholder='输入任意文本后关闭再重开' />
+          <AriButton onClick={() => setVisible(false)}>手动关闭</AriButton>
+        </AriFlex>
+      </AriDrawer>
+    </AriFlex>
   );
 };

@@ -60,6 +60,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
+        api: 'modern-compiler',
         additionalData: `@import "@ari/theme/index.scss";`,
       },
     },

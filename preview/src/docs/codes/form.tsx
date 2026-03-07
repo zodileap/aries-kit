@@ -97,14 +97,20 @@ export const ValidationDemo: React.FC = () => {
     return (
       <AriForm
         layout="horizontal"
+        density="loose"
+        size="lg"
         labelWidth={100}
         onFinish={handleFinish}
         onFinishFailed={handleFinishFailed}
+        className="preview-validation-form"
         style={{ maxWidth: 600 }}
       >
         <AriFormItem
           label="用户名"
           name="username"
+          className="preview-validation-item"
+          colon={false}
+          error="该表单项固定展示 error 属性示例"
           rules={[
             { required: true, message: "请输入用户名" },
             { min: 3, max: 20, message: "用户名长度必须在3-20个字符之间" },
@@ -437,5 +443,4 @@ export const UseHookDemo: React.FC = () => {
         </AriFlex>
     );
 };
-
 

@@ -54,3 +54,48 @@ export const BasicDatePicker: React.FC = () => {
         </AriFlex>
     );
 };
+
+export const AdvancedDatePicker: React.FC = () => {
+    return (
+        <>
+            <style>{`
+                .preview-date-picker-outline {
+                    outline: 2px dashed var(--z-color-warning);
+                    outline-offset: 4px;
+                    border-radius: 14px;
+                }
+            `}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='h4' value='高级配置' />
+                <AriDatePicker
+                    defaultValue={new Date(2025, 4, 10)}
+                    maxDate={new Date(2025, 4, 20)}
+                    disabledDates={[new Date(2025, 4, 12), new Date(2025, 4, 16)]}
+                    calendarProps={{
+                        showToday: false,
+                        firstDayOfWeek: 1,
+                    }}
+                    placement='top-end'
+                    prefixIcon='event_available'
+                    readonly={false}
+                    className='preview-date-picker-outline'
+                    style={{ width: 320 }}
+                    placeholder='顶部弹出，可手动输入'
+                />
+
+                <AriTypography variant='h4' value='日期时间联动' />
+                <AriDatePicker
+                    showTime
+                    defaultValue={new Date(2025, 4, 18, 14, 30, 0)}
+                    timePickerProps={{
+                        showSecond: false,
+                        use12Hours: true,
+                        prefixIcon: 'schedule_send',
+                    }}
+                    dateTimeFormat={(d) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.toLocaleTimeString()}`}
+                    placeholder='选择日期与时间'
+                />
+            </AriFlex>
+        </>
+    );
+};

@@ -20,6 +20,8 @@ export const BasicCalendar: React.FC = () => {
 export const DisabledCalendar: React.FC = () => {
     // 禁用过去的日期
     const today = new Date();
+    const nextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+    const lastAvailableDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 12);
     
     // 禁用特定日期
     const disabledDates = [
@@ -43,6 +45,17 @@ export const DisabledCalendar: React.FC = () => {
             <AriFlex vertical>
                 <div style={{ marginBottom: 8 }}>完全禁用的日历:</div>
                 <AriCalendar disabled />
+            </AriFlex>
+
+            <AriFlex vertical>
+                <div style={{ marginBottom: 8 }}>默认值、最大日期、周起始与方形日期样式:</div>
+                <AriCalendar
+                    defaultValue={nextWeek}
+                    maxDate={lastAvailableDate}
+                    showToday={false}
+                    firstDayOfWeek={1}
+                    dateShape="square"
+                />
             </AriFlex>
         </AriFlex>
     );

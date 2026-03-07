@@ -8,10 +8,16 @@ export const sourceMap = {
 
     return (
         <AriAppLayoutProvider appConfig={mockConfig}>
-            <AriAppLayout style={{ width: '300px', height: 'auto' }}>
-                <h3>示例应用</h3>
-                <p>这是一个基础的应用布局示例</p>
-            </AriAppLayout>
+            <AriAppLayout
+                className="preview-app-layout-outline"
+                style={{ width: '300px', height: 'auto' }}
+                children={(
+                    <>
+                        <h3>示例应用</h3>
+                        <p>这是一个基础的应用布局示例</p>
+                    </>
+                )}
+            />
         </AriAppLayoutProvider>
     );
 };`,
@@ -19,11 +25,17 @@ export const sourceMap = {
   "avatar": {
     "BasicAvatar": `export const BasicAvatar: React.FC = () => (
   <>
+        <style>{\`
+            .preview-avatar-outline {
+                outline: 2px dashed var(--z-color-primary);
+                outline-offset: 4px;
+            }
+        \`}</style>
         <AriFlex space={16} align="center">
-            <AriAvatar size='xs' src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+            <AriAvatar size='xs' src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" alt="默认图片头像" className="preview-avatar-outline" />
             <AriAvatar icon="person" />
             <AriAvatar text="用户" />
-            <AriAvatar>U</AriAvatar>
+            <AriAvatar children="U" />
         </AriFlex>
     </>
 );`,
@@ -88,6 +100,12 @@ export const sourceMap = {
   "breadcrumb": {
     "BasicBreadcrumb": `export const BasicBreadcrumb: React.FC = () => (
 <AriContainer>
+    <style>{\`
+      .preview-breadcrumb-outline {
+        outline: 2px dashed var(--z-color-primary);
+        outline-offset: 4px;
+      }
+    \`}</style>
     <AriBreadcrumb 
       items={[
         { key: 'home', label: '首页' },
@@ -100,6 +118,8 @@ export const sourceMap = {
     "WithIconBreadcrumb": `export const WithIconBreadcrumb: React.FC = () => (
 <AriContainer>
     <AriBreadcrumb 
+      className="preview-breadcrumb-outline"
+      showIcon
       items={[
         { key: 'home', label: '首页', icon: 'home' },
         { key: 'products', label: '产品列表', icon: 'unorderedlist' },
@@ -114,7 +134,7 @@ export const sourceMap = {
       items={[
         { key: 'home', label: '首页', href: '#/home' },
         { key: 'products', label: '产品列表', href: '#/products' },
-        { key: 'detail', label: '产品详情' }
+        { key: 'detail', label: '产品详情', disabled: true }
       ]} 
     />
   </AriContainer>
@@ -217,9 +237,16 @@ export const sourceMap = {
 );`,
     "TypeDemo": `export const TypeDemo: React.FC = () => (
   <>
+        <style>{\`
+            .preview-button-outline {
+                outline: 2px dashed var(--z-color-primary);
+                outline-offset: 4px;
+            }
+        \`}</style>
         <AriButton type="dashed" label="虚线按钮" />
         <AriButton type="link" label="链接按钮" />
         <AriButton type="text" label="文本按钮" />
+        <AriButton htmlType="submit" className="preview-button-outline" label="提交按钮" />
     </>
 );`,
   },
@@ -243,6 +270,8 @@ export const sourceMap = {
 export const DisabledCalendar: React.FC = () => {
     // 禁用过去的日期
     const today = new Date();
+    const nextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+    const lastAvailableDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 12);
     
     // 禁用特定日期
     const disabledDates = [
@@ -266,6 +295,17 @@ export const DisabledCalendar: React.FC = () => {
             <AriFlex vertical>
                 <div style={{ marginBottom: 8 }}>完全禁用的日历:</div>
                 <AriCalendar disabled />
+            </AriFlex>
+
+            <AriFlex vertical>
+                <div style={{ marginBottom: 8 }}>默认值、最大日期、周起始与方形日期样式:</div>
+                <AriCalendar
+                    defaultValue={nextWeek}
+                    maxDate={lastAvailableDate}
+                    showToday={false}
+                    firstDayOfWeek={1}
+                    dateShape="square"
+                />
             </AriFlex>
         </AriFlex>
     );
@@ -374,6 +414,8 @@ export const CustomRenderCalendar: React.FC = () => {
     "DisabledCalendar": `export const DisabledCalendar: React.FC = () => {
   // 禁用过去的日期
     const today = new Date();
+    const nextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+    const lastAvailableDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 12);
     
     // 禁用特定日期
     const disabledDates = [
@@ -397,6 +439,17 @@ export const CustomRenderCalendar: React.FC = () => {
             <AriFlex vertical>
                 <div style={{ marginBottom: 8 }}>完全禁用的日历:</div>
                 <AriCalendar disabled />
+            </AriFlex>
+
+            <AriFlex vertical>
+                <div style={{ marginBottom: 8 }}>默认值、最大日期、周起始与方形日期样式:</div>
+                <AriCalendar
+                    defaultValue={nextWeek}
+                    maxDate={lastAvailableDate}
+                    showToday={false}
+                    firstDayOfWeek={1}
+                    dateShape="square"
+                />
             </AriFlex>
         </AriFlex>
     );
@@ -588,9 +641,11 @@ export const CustomRenderCalendar: React.FC = () => {
   "callout": {
     "BasicExample": `export const BasicExample: React.FC = () => (
 <AriFlex vertical space={16}>
-    <AriCallout type="note">
-      这是一个基础的注意告示框，用于显示一般性的重要信息。
-    </AriCallout>
+    <AriCallout
+      type="note"
+      className="preview-callout-outline"
+      children="这是一个基础的注意告示框，用于显示一般性的重要信息。"
+    />
     
     <AriCallout type="tip">
       这是一个提示告示框，用于分享有用的建议和最佳实践。
@@ -852,9 +907,119 @@ const [calloutType, setCalloutType] = useState<'note' | 'tip' | 'info' | 'warnin
         <AriFlex vertical space={24} padding={20}>
             <AriCard>
                 <AriTypography variant='caption' value='这是一个基础的卡片组件，默认带有阴影和圆角效果。' />
-                <AriTypography variant='caption' value='卡片组件继承自Container组件，保留了所有Container的功能' />
-                <AriTypography variant='caption' value='你可以在卡片中放置任何内容，比如文字、图片、表格等' />
+                <AriTypography variant='caption' value='卡片组件继承自 Container 组件，保留了所有布局与表面属性。' />
+                <AriTypography variant='caption' value='你可以在卡片中放置文字、图片、表格或操作区。' />
             </AriCard>
+        </AriFlex>
+    );
+};`,
+    "CardSurfaceDemo": `export const CardSurfaceDemo: React.FC = () => {
+  return (
+        <>
+            <style>{cardPreviewStyle}</style>
+            <AriFlex vertical space={24} padding={20}>
+                <AriCard
+                    title='带标题的玻璃卡片'
+                    shadowMode='active'
+                    hoverTransform
+                    showBorder
+                    borderStyle='dashed'
+                    showBorderRadius
+                    material='glass'
+                    bgVariant='glass'
+                    blur
+                    className={cardPreviewClassName}
+                    style={{
+                        background: 'linear-gradient(135deg, rgba(98, 0, 238, 0.18), rgba(0, 188, 212, 0.14))',
+                    }}
+                >
+                    <AriTypography variant='caption' value='悬停时可看到 active 阴影与位移。' />
+                    <AriTypography variant='caption' value='className 会给卡片增加外部虚线轮廓，style 会覆盖表面背景。' />
+                </AriCard>
+
+                <AriFlex space={16} wrap>
+                    <AriCard
+                        title='无圆角实色卡片'
+                        showBorder
+                        showBorderRadius={false}
+                        borderStyle='solid'
+                        shadowMode='never'
+                        bgColor='rgba(255, 193, 7, 0.18)'
+                        width={260}
+                        height={160}
+                    >
+                        <AriTypography variant='caption' value='通过 showBorderRadius={false} 关闭圆角。' />
+                    </AriCard>
+
+                    <AriCard
+                        title='Ghost 溢出卡片'
+                        ghost
+                        overflow='auto'
+                        minWidth={220}
+                        maxWidth={260}
+                        minHeight={120}
+                        maxHeight={160}
+                        height={140}
+                        showBorder
+                    >
+                        <AriTypography variant='caption' value='ghost 会让卡片更透明，overflow="auto" 会在内容过多时出现滚动。' />
+                        <AriTypography variant='caption' value='这里刻意放入多段说明文本，以便观察最小/最大尺寸与滚动行为。' />
+                        <AriTypography variant='caption' value='当内容超出高度限制时，卡片内部会保持在设定尺寸内。' />
+                    </AriCard>
+                </AriFlex>
+            </AriFlex>
+        </>
+    );
+};`,
+    "CardLayoutDemo": `export const CardLayoutDemo: React.FC = () => {
+  return (
+        <AriFlex vertical space={24} padding={20}>
+            <AriContainer
+                showBorder
+                padding={16}
+                style={{
+                    minHeight: 260,
+                    position: 'relative',
+                    background:
+                        'linear-gradient(135deg, rgba(0, 150, 136, 0.08), rgba(63, 81, 181, 0.08))',
+                }}
+            >
+                <AriTypography variant='caption' value='下面的卡片使用 positionType="absolute" 与 alignment="bottomRight" 固定在右下角。' />
+                <AriCard
+                    title='定位卡片'
+                    positionType='absolute'
+                    alignment='bottomRight'
+                    width={220}
+                    minWidth={180}
+                    maxWidth={240}
+                    height={130}
+                    minHeight={120}
+                    maxHeight={150}
+                    showBorder
+                    bgVariant='solid'
+                >
+                    <AriTypography variant='caption' value='positionType 与 alignment 常用于浮层式信息卡。' />
+                </AriCard>
+            </AriContainer>
+
+            <div
+                style={{
+                    height: 220,
+                    border: '1px dashed var(--z-color-border)',
+                    borderRadius: 'var(--z-border-radius-container)',
+                    padding: 12,
+                    boxSizing: 'border-box',
+                }}
+            >
+                <AriCard
+                    title='填充父容器'
+                    fill
+                    showBorder
+                    bgColor='rgba(76, 175, 80, 0.12)'
+                >
+                    <AriTypography variant='caption' value='fill 会让卡片占满父容器的可用宽高。' />
+                </AriCard>
+            </div>
         </AriFlex>
     );
 };`,
@@ -919,8 +1084,12 @@ const [calloutType, setCalloutType] = useState<'note' | 'tip' | 'info' | 'warnin
 );`,
     "ChildrenExample": `export const ChildrenExample: React.FC = () => (
   <div style={{ width: '100%', height: '500px', background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' }}>
-        <AriCarousel height="500px" autoplay={true} interval={3000}>
-            <div style={{ 
+        <AriCarousel
+            height="500px"
+            autoplay={true}
+            interval={3000}
+            children={[
+                <div key="child-1" style={{ 
                 width: '100%',
                 height: '100%', 
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -935,8 +1104,8 @@ const [calloutType, setCalloutType] = useState<'note' | 'tip' | 'info' | 'warnin
                 borderRadius: '16px'
             }}>
                 轮播内容1
-            </div>
-            <div style={{ 
+            </div>,
+                <div key="child-2" style={{ 
                 width: '100%',
                 height: '100%', 
                 background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
@@ -951,8 +1120,8 @@ const [calloutType, setCalloutType] = useState<'note' | 'tip' | 'info' | 'warnin
                 borderRadius: '16px'
             }}>
                 轮播内容2
-            </div>
-            <div style={{ 
+            </div>,
+                <div key="child-3" style={{ 
                 width: '100%',
                 height: '100%', 
                 background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
@@ -968,7 +1137,8 @@ const [calloutType, setCalloutType] = useState<'note' | 'tip' | 'info' | 'warnin
             }}>
                 轮播内容3
             </div>
-        </AriCarousel>
+            ]}
+        />
     </div>
 );`,
     "MinimalExample": `export const MinimalExample: React.FC = () => (
@@ -982,6 +1152,52 @@ const [calloutType, setCalloutType] = useState<'note' | 'tip' | 'info' | 'warnin
         />
     </div>
 );`,
+    "ControlledCarouselExample": `export const ControlledCarouselExample: React.FC = () => {
+  const [activeIndex, setActiveIndex] = useState(2);
+
+    return (
+        <div style={{ width: '100%', height: '420px', background: 'linear-gradient(135deg, #111827 0%, #334155 100%)' }}>
+            <AriCarousel
+                items={carouselImages}
+                activeIndex={activeIndex}
+                defaultActiveIndex={1}
+                duration={900}
+                onChange={setActiveIndex}
+                renderItem={(item, index) => (
+                    <div
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            borderRadius: '18px',
+                        }}
+                    >
+                        <img
+                            src={item.src}
+                            alt={item.alt}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                        <div
+                            style={{
+                                position: 'absolute',
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                padding: '20px',
+                                color: '#fff',
+                                background: 'linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7))',
+                            }}
+                        >
+                            第 {index + 1} 张: {item.title}
+                        </div>
+                    </div>
+                )}
+                height={420}
+            />
+        </div>
+    );
+};`,
   },
   "chart": {
     "BasicChartDemo": `export const BasicChartDemo: React.FC = () => {
@@ -1015,6 +1231,7 @@ const [calloutType, setCalloutType] = useState<'note' | 'tip' | 'info' | 'warnin
                     title="饼图示例"
                     data={pieData}
                     height={350}
+                    animationDuration={1200}
                 />
             </AriCol>
             <AriCol span={8}>
@@ -1303,9 +1520,11 @@ export const LegendAndLabelsDemo: React.FC = () => {
             <AriCheckbox
                 checked={checked}
                 onChange={setChecked}
+                className="preview-checkbox-outline"
             >
                 点击选择
             </AriCheckbox>
+            <AriCheckbox defaultChecked>默认选中</AriCheckbox>
             <AriButton label="选择" onClick={() => setChecked(!checked)} />
         </AriFlex>
     );
@@ -1384,7 +1603,8 @@ export const CheckboxGroupDemo: React.FC = () => {
             </div>
         </AriFlex>
     );
-};`,
+};
+`,
     "CheckboxGroupDemo": `export const CheckboxGroupDemo: React.FC = () => {
   const [value, setValue] = useState<Array<string | number>>(['选项1', '选项3']);
     
@@ -1402,7 +1622,8 @@ export const CheckboxGroupDemo: React.FC = () => {
             </div>
         </AriFlex>
     );
-};`,
+};
+`,
   },
   "code": {
     "BasicCodeDemo": `export const BasicCodeDemo: React.FC = () => (
@@ -1706,6 +1927,52 @@ console.log(value);\`}
         />
     </AriFlex>
 );`,
+    "CodeEditorOptionsDemo": `export const CodeEditorOptionsDemo: React.FC = () => {
+  const [languageTagVisible, setLanguageTagVisible] = useState(true);
+
+    return (
+        <>
+            <style>{\`
+                .preview-code-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                    border-radius: 14px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriCode
+                    className="preview-code-outline"
+                    title="隐藏复制与语言标签"
+                    language="typescript"
+                    showCopyButton={false}
+                    showLanguageTag={false}
+                    showToolbar={false}
+                    tabSize={2}
+                    value={\`function formatUser(user: { name: string }) {\n\treturn user.name;\n}\`}
+                />
+
+                {languageTagVisible && (
+                    <AriCode
+                        title="可关闭语言标签"
+                        language="markdown"
+                        languageTagClosable
+                        onLanguageTagClose={() => setLanguageTagVisible(false)}
+                        value={\`# Aries Kit\n\n点击右上角的语言标签关闭按钮后，这个示例会被移除。\`}
+                    />
+                )}
+
+                <AriCode
+                    title="空白可编辑代码块"
+                    language="javascript"
+                    editable
+                    placeholder="// 请输入脚本内容"
+                    value=""
+                    onChange={() => undefined}
+                />
+            </AriFlex>
+        </>
+    );
+};`,
   },
   "collapse": {
     "BasicCollapse": `export const BasicCollapse: React.FC = () => {
@@ -1916,7 +2183,10 @@ export const GradientColorPicker: React.FC = () => {
 
 export const DisabledColorPicker: React.FC = () => {
     return (
-        <AriColorPicker defaultValue="#1890ff" disabled />
+        <AriFlex space={16}>
+            <AriColorPicker defaultValue="#1890ff" disabled />
+            <AriColorPicker defaultValue="#722ed1" placement="top" showInput={false} />
+        </AriFlex>
     );
 };
 
@@ -2117,7 +2387,10 @@ export const GradientColorPicker: React.FC = () => {
 
 export const DisabledColorPicker: React.FC = () => {
     return (
-        <AriColorPicker defaultValue="#1890ff" disabled />
+        <AriFlex space={16}>
+            <AriColorPicker defaultValue="#1890ff" disabled />
+            <AriColorPicker defaultValue="#722ed1" placement="top" showInput={false} />
+        </AriFlex>
     );
 };
 
@@ -2264,7 +2537,10 @@ export const GradientColorPicker: React.FC = () => {
 
 export const DisabledColorPicker: React.FC = () => {
     return (
-        <AriColorPicker defaultValue="#1890ff" disabled />
+        <AriFlex space={16}>
+            <AriColorPicker defaultValue="#1890ff" disabled />
+            <AriColorPicker defaultValue="#722ed1" placement="top" showInput={false} />
+        </AriFlex>
     );
 };
 
@@ -2368,7 +2644,10 @@ export const FormUsageColorPicker: React.FC = () => {
 
 export const DisabledColorPicker: React.FC = () => {
     return (
-        <AriColorPicker defaultValue="#1890ff" disabled />
+        <AriFlex space={16}>
+            <AriColorPicker defaultValue="#1890ff" disabled />
+            <AriColorPicker defaultValue="#722ed1" placement="top" showInput={false} />
+        </AriFlex>
     );
 };
 
@@ -2433,7 +2712,10 @@ export const FormUsageColorPicker: React.FC = () => {
 `,
     "DisabledColorPicker": `export const DisabledColorPicker: React.FC = () => {
   return (
-        <AriColorPicker defaultValue="#1890ff" disabled />
+        <AriFlex space={16}>
+            <AriColorPicker defaultValue="#1890ff" disabled />
+            <AriColorPicker defaultValue="#722ed1" placement="top" showInput={false} />
+        </AriFlex>
     );
 };`,
     "FormUsageColorPicker": `export const FormUsageColorPicker: React.FC = () => {
@@ -2501,223 +2783,228 @@ export const FormUsageColorPicker: React.FC = () => {
         基础容器
     </AriContainer>
 );`,
-    "BorderRadiusDemo": `export const BorderRadiusDemo: React.FC = () => {
-  return (
-        <AriContainer showBorderRadius={true} shadowMode="always" style={{ height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--z-color-bg-secondary)' }} >
-            圆角容器
-        </AriContainer>
-    );
-};`,
-    "FillDemo": `export const FillDemo: React.FC = () => {
-  const cs = useCss("");
-    return (
-        <>
-            <AriFlex vertical>
-                <AriContainer
-                    fill={false}
-                >
-                    默认不填充容器
-                </AriContainer>
-
-                <div style={{backgroundColor: '#f0f2f5', padding: '1rem'}}>
-                    <AriContainer
-                        fill={true}
-                    >
-                        填充容器
-                    </AriContainer>
-                </div>
-            </AriFlex>
-
-        </>
-    );
-};`,
     "PositionDemo": `export const PositionDemo: React.FC = () => {
   return (
-        <>
-            <AriFlex vertical>
-                <AriContainer
-                    showBorder={true}
-                    showBorderRadius={true}
-                    alignment={WIDGET_POSITIONS.LEFT}
-                >
-                    左对齐
-                </AriContainer>
-                <div style={{ position: 'relative', width: '100%', marginBottom: '1rem', height: '80px' }}>
-                    <AriContainer
-                        showBorder={true}
-                        showBorderRadius={true}
-                        alignment={WIDGET_POSITIONS.CENTER}
-                    >
-                        居中对齐
-                    </AriContainer>
-                </div>
-            </AriFlex>
+        <AriFlex vertical space={16}>
+            <AriContainer
+                showBorder
+                showBorderRadius
+                alignment={WIDGET_POSITIONS.LEFT}
+                padding={16}
+                style={{ minHeight: '80px' }}
+            >
+                左对齐
+            </AriContainer>
 
-        </>
+            <AriContainer
+                showBorder
+                showBorderRadius
+                alignment={WIDGET_POSITIONS.CENTER}
+                padding={16}
+                style={{ minHeight: '80px' }}
+            >
+                居中对齐
+            </AriContainer>
+
+            <div
+                style={{
+                    position: 'relative',
+                    minHeight: 180,
+                    border: '1px dashed var(--z-color-border)',
+                    borderRadius: 'var(--z-border-radius-container)',
+                    padding: 12,
+                    boxSizing: 'border-box',
+                }}
+            >
+                <AriContainer
+                    positionType='absolute'
+                    alignment='bottomRight'
+                    width={180}
+                    height={90}
+                    showBorder
+                    showBorderRadius
+                    padding={16}
+                    bgVariant='solid'
+                >
+                    absolute + bottomRight
+                </AriContainer>
+            </div>
+        </AriFlex>
     );
 };`,
     "ShadowDemo": `export const ShadowDemo: React.FC = () => {
   return (
-        <>
-            <AriFlex vertical space={24} padding={16}>
-                <AriContainer shadowMode="always">
-                    <div >
-                        始终显示阴影
-                    </div>
+        <AriFlex vertical space={24} padding={16}>
+            <AriContainer shadowMode='always' padding={16}>
+                始终显示阴影
+            </AriContainer>
+            <AriContainer shadowMode='active' hoverTransform padding={16}>
+                悬停显示阴影并上浮
+            </AriContainer>
+            <AriContainer shadowMode='never' padding={16} showBorder>
+                不显示阴影
+            </AriContainer>
+        </AriFlex>
+    );
+};`,
+    "BorderRadiusDemo": `export const BorderRadiusDemo: React.FC = () => {
+  return (
+        <AriFlex space={16} wrap>
+            <AriContainer
+                showBorderRadius
+                shadowMode='always'
+                padding={16}
+                style={{
+                    minHeight: '100px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'var(--z-color-bg-secondary)',
+                    width: 220,
+                }}
+            >
+                默认圆角
+            </AriContainer>
+            <AriContainer
+                showBorder
+                showBorderRadius={false}
+                padding={16}
+                style={{
+                    minHeight: '100px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'var(--z-color-bg-secondary)',
+                    width: 220,
+                }}
+            >
+                关闭圆角
+            </AriContainer>
+        </AriFlex>
+    );
+};`,
+    "FillDemo": `export const FillDemo: React.FC = () => {
+  return (
+        <AriFlex vertical space={16}>
+            <AriContainer fill={false} showBorder padding={16}>
+                默认不填充容器
+            </AriContainer>
+
+            <div
+                style={{
+                    backgroundColor: 'var(--z-color-bg-secondary)',
+                    padding: '1rem',
+                    height: 180,
+                    borderRadius: 'var(--z-border-radius-container)',
+                }}
+            >
+                <AriContainer fill showBorder padding={16}>
+                    填充容器
                 </AriContainer>
-                <AriContainer shadowMode="active">
-                    <div>
-                        悬停显示阴影（鼠标移上来试试）
-                    </div>
-                </AriContainer>
-            </AriFlex>
-        </>
+            </div>
+        </AriFlex>
     );
 };`,
     "BorderDemo": `export const BorderDemo: React.FC = () => {
   return (
-        <>
-            <AriFlex vertical>
-                <AriContainer showBorder={true}>
-                    显示边框
-                </AriContainer>
-                <AriContainer showBorder={true} borderStyle='dashed'>
-                    显示虚线
-                </AriContainer>
-                <AriContainer showBorder={true} borderStyle='dotted'>
-                    显示点线
-                </AriContainer>
-            </AriFlex>
-        </>
+        <AriFlex vertical space={16}>
+            <AriContainer showBorder padding={16}>
+                实线边框
+            </AriContainer>
+            <AriContainer showBorder borderStyle='dashed' padding={16}>
+                虚线边框
+            </AriContainer>
+            <AriContainer showBorder borderStyle='dotted' padding={16}>
+                点线边框
+            </AriContainer>
+        </AriFlex>
     );
-}
-
-export const BackgroundDemo: React.FC = () => {
-    return (
-        <>
-            <AriFlex vertical space={16} style={{ backgroundColor: 'var(--z-color-bg-tertiary)', padding: '16px' }}>
-                <AriContainer style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed #ccc' }}>
-                    默认容器（无背景色）
-                </AriContainer>
-                <AriContainer 
-                    bgVariant="solid" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    实心背景色变体
-                </AriContainer>
-                <AriContainer 
-                    bgVariant="glass" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    玻璃背景色变体
-                </AriContainer>
-            </AriFlex>
-        </>
-    );
-}
-
-export const CustomBackgroundDemo: React.FC = () => {
-    return (
-        <>
-            <AriFlex vertical space={16}>
-                <AriContainer 
-                    bgColor="#f0f8ff" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    自定义背景色（浅蓝色）
-                </AriContainer>
-                <AriContainer 
-                    bgColor="var(--color-brand)" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}
-                >
-                    使用主题变量背景色
-                </AriContainer>
-                <AriContainer 
-                    bgColor="linear-gradient(45deg, #ff6b6b, #4ecdc4)" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}
-                >
-                    渐变背景色
-                </AriContainer>
-            </AriFlex>
-        </>
-    );
-}`,
+};`,
     "BackgroundDemo": `export const BackgroundDemo: React.FC = () => {
   return (
-        <>
-            <AriFlex vertical space={16} style={{ backgroundColor: 'var(--z-color-bg-tertiary)', padding: '16px' }}>
-                <AriContainer style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed #ccc' }}>
-                    默认容器（无背景色）
-                </AriContainer>
-                <AriContainer 
-                    bgVariant="solid" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    实心背景色变体
-                </AriContainer>
-                <AriContainer 
-                    bgVariant="glass" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    玻璃背景色变体
-                </AriContainer>
-            </AriFlex>
-        </>
+        <AriFlex vertical space={16} style={{ backgroundColor: 'var(--z-color-bg-tertiary)', padding: '16px' }}>
+            <AriContainer
+                style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed #ccc' }}
+            >
+                默认容器（无背景色）
+            </AriContainer>
+            <AriContainer
+                bgVariant='solid'
+                style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+                实心背景色变体
+            </AriContainer>
+            <AriContainer
+                bgVariant='glass'
+                style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+                玻璃背景色变体
+            </AriContainer>
+        </AriFlex>
     );
-}
-
-export const CustomBackgroundDemo: React.FC = () => {
-    return (
-        <>
-            <AriFlex vertical space={16}>
-                <AriContainer 
-                    bgColor="#f0f8ff" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    自定义背景色（浅蓝色）
-                </AriContainer>
-                <AriContainer 
-                    bgColor="var(--color-brand)" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}
-                >
-                    使用主题变量背景色
-                </AriContainer>
-                <AriContainer 
-                    bgColor="linear-gradient(45deg, #ff6b6b, #4ecdc4)" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}
-                >
-                    渐变背景色
-                </AriContainer>
-            </AriFlex>
-        </>
-    );
-}`,
+};`,
     "CustomBackgroundDemo": `export const CustomBackgroundDemo: React.FC = () => {
   return (
+        <AriFlex vertical space={16}>
+            <AriContainer
+                bgColor='#f0f8ff'
+                style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+                自定义背景色（浅蓝色）
+            </AriContainer>
+            <AriContainer
+                bgColor='linear-gradient(45deg, #ff6b6b, #4ecdc4)'
+                style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}
+            >
+                渐变背景色
+            </AriContainer>
+        </AriFlex>
+    );
+};`,
+    "SizeAndMaterialDemo": `export const SizeAndMaterialDemo: React.FC = () => {
+  return (
         <>
-            <AriFlex vertical space={16}>
-                <AriContainer 
-                    bgColor="#f0f8ff" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    自定义背景色（浅蓝色）
-                </AriContainer>
-                <AriContainer 
-                    bgColor="var(--color-brand)" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}
-                >
-                    使用主题变量背景色
-                </AriContainer>
-                <AriContainer 
-                    bgColor="linear-gradient(45deg, #ff6b6b, #4ecdc4)" 
-                    style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}
-                >
-                    渐变背景色
-                </AriContainer>
+            <style>{containerPreviewStyle}</style>
+            <AriFlex vertical space={24} padding={16}>
+                <AriFlex space={16} wrap>
+                    <AriContainer
+                        width={220}
+                        minWidth={180}
+                        maxWidth={260}
+                        height={120}
+                        minHeight={100}
+                        maxHeight={140}
+                        padding={16}
+                        showBorder
+                        bgVariant='solid'
+                    >
+                        <AriTypography variant='caption' value='width / minWidth / maxWidth / height / minHeight / maxHeight' />
+                    </AriContainer>
+
+                    <AriContainer
+                        showBorder
+                        ghost
+                        material='glass'
+                        blur
+                        overflow='auto'
+                        padding={16}
+                        className={containerPreviewClassName}
+                        style={{
+                            width: 240,
+                            maxHeight: 140,
+                            background:
+                                'linear-gradient(135deg, rgba(255, 87, 34, 0.12), rgba(33, 150, 243, 0.12))',
+                        }}
+                    >
+                        <AriTypography variant='caption' value='ghost / material / blur / overflow / className / style' />
+                        <AriTypography variant='caption' value='这里放入多行文本，方便观察滚动与玻璃材质的视觉差异。' />
+                        <AriTypography variant='caption' value='当内容超出高度时，overflow="auto" 会让容器内部滚动。' />
+                    </AriContainer>
+                </AriFlex>
             </AriFlex>
         </>
     );
-}`,
+};`,
   },
   "context-menu": {
     "BasicContextMenu": `export const BasicContextMenu: React.FC = () => {
@@ -2731,23 +3018,24 @@ export const CustomBackgroundDemo: React.FC = () => {
         <AriContextMenu
             items={menuItems}
             onSelect={(key) => console.log('context menu select:', key)}
-        >
-            <AriContainer
-                showBorder
-                material='glass'
-                padding={getCssVarName('inset')}
-                style={{
-                    width: getCssVarName('element-size', 'content-sm'),
-                    minHeight: getCssVarName('element-size', 'content-xs'),
-                }}
-            >
-                <AriTypography variant='h3' value='右键这里打开菜单' />
-                <AriTypography
-                    variant='caption'
-                    value='默认渲染 AriMenu，支持 onSelect 回调。'
-                />
-            </AriContainer>
-        </AriContextMenu>
+            children={
+                <AriContainer
+                    showBorder
+                    material='glass'
+                    padding={getCssVarName('inset')}
+                    style={{
+                        width: getCssVarName('element-size', 'content-sm'),
+                        minHeight: getCssVarName('element-size', 'content-xs'),
+                    }}
+                >
+                    <AriTypography variant='h3' value='右键这里打开菜单' />
+                    <AriTypography
+                        variant='caption'
+                        value='默认渲染 AriMenu，支持 onSelect 回调。'
+                    />
+                </AriContainer>
+            }
+        />
     );
 };`,
     "CustomContextMenu": `export const CustomContextMenu: React.FC = () => {
@@ -2782,22 +3070,23 @@ export const CustomBackgroundDemo: React.FC = () => {
                     </AriFlex>
                 </AriContainer>
             )}
-        >
-            <AriContainer
-                showBorder
-                padding={getCssVarName('inset')}
-                style={{
-                    width: getCssVarName('element-size', 'content-sm'),
-                    minHeight: getCssVarName('element-size', 'content-xs'),
-                }}
-            >
-                <AriTypography variant='h3' value='右键这里打开自定义菜单' />
-                <AriTypography
-                    variant='caption'
-                    value='使用 renderOverlay 完全自定义内部内容。'
-                />
-            </AriContainer>
-        </AriContextMenu>
+            children={
+                <AriContainer
+                    showBorder
+                    padding={getCssVarName('inset')}
+                    style={{
+                        width: getCssVarName('element-size', 'content-sm'),
+                        minHeight: getCssVarName('element-size', 'content-xs'),
+                    }}
+                >
+                    <AriTypography variant='h3' value='右键这里打开自定义菜单' />
+                    <AriTypography
+                        variant='caption'
+                        value='使用 renderOverlay 完全自定义内部内容。'
+                    />
+                </AriContainer>
+            }
+        />
     );
 };`,
     "DetachedContextMenu": `export const DetachedContextMenu: React.FC = () => {
@@ -2836,7 +3125,242 @@ export const CustomBackgroundDemo: React.FC = () => {
         </AriFlex>
     );
 };
+
+export const ContextMenuBehaviorDemo: React.FC = () => {
+    const portalRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <>
+            <style>{contextMenuPreviewStyle}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography
+                    variant='caption'
+                    value='下面这个菜单使用 defaultOpen 默认展开，并把菜单挂载到虚线容器内。'
+                />
+                <div
+                    ref={portalRef}
+                    style={{
+                        position: 'relative',
+                        minHeight: 220,
+                        border: '1px dashed var(--z-color-border)',
+                        borderRadius: 'var(--z-border-radius-container)',
+                        padding: 16,
+                        overflow: 'hidden',
+                    }}
+                >
+                    <AriContextMenu
+                        defaultOpen
+                        overlay={
+                            <AriFlex vertical space={8}>
+                                <AriTypography variant='h3' value='静态 Overlay 面板' />
+                                <AriTypography
+                                    variant='caption'
+                                    value='这个示例同时覆盖 overlay、defaultOpen、offset、mouseGap、安全边距和挂载容器。'
+                                />
+                            </AriFlex>
+                        }
+                        closeOnClickOutside={false}
+                        closeOnEscape={false}
+                        closeOnScroll
+                        offset={{ x: 24, y: 24 }}
+                        mouseGap={{ x: 12, y: 12 }}
+                        safePadding={24}
+                        portalContainer={portalRef.current}
+                        overlayClassName={contextMenuOverlayClassName}
+                        overlayStyle={{ width: 260, borderRadius: 16 }}
+                        children={
+                            <AriContainer
+                                showBorder
+                                padding={16}
+                                style={{ width: 220 }}
+                            >
+                                <AriTypography variant='body' value='这个触发区域只用来显式展示 children。' />
+                            </AriContainer>
+                        }
+                    />
+                </div>
+            </AriFlex>
+        </>
+    );
+};
+
+export const ContextMenuControlDemo: React.FC = () => {
+    const menuItems = [
+        { key: 'pin', label: '置顶', icon: 'push_pin' },
+        {
+            key: 'share',
+            label: '分享',
+            icon: 'share',
+            children: [
+                { key: 'link', label: '复制链接', icon: 'link' },
+                { key: 'team', label: '分享给团队', icon: 'groups' },
+            ],
+        },
+    ];
+
+    return (
+        <AriFlex vertical space={16}>
+            <AriContextMenu
+                items={menuItems}
+                menuProps={{ defaultExpandedKeys: ['share'], expandIconPosition: 'left' }}
+                closeOnSelect={false}
+                children={
+                    <AriContainer showBorder padding={16} style={{ width: 240 }}>
+                        <AriTypography variant='body' value='右键此处：选中后不会自动关闭菜单。' />
+                    </AriContainer>
+                }
+            />
+
+            <AriContextMenu
+                disabled
+                items={menuItems}
+                children={
+                    <AriContainer showBorder padding={16} style={{ width: 240 }}>
+                        <AriTypography variant='body' value='这个触发区域已禁用右键菜单。' />
+                    </AriContainer>
+                }
+            />
+        </AriFlex>
+    );
+};
 `,
+    "ContextMenuBehaviorDemo": `export const ContextMenuBehaviorDemo: React.FC = () => {
+  const portalRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <>
+            <style>{contextMenuPreviewStyle}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography
+                    variant='caption'
+                    value='下面这个菜单使用 defaultOpen 默认展开，并把菜单挂载到虚线容器内。'
+                />
+                <div
+                    ref={portalRef}
+                    style={{
+                        position: 'relative',
+                        minHeight: 220,
+                        border: '1px dashed var(--z-color-border)',
+                        borderRadius: 'var(--z-border-radius-container)',
+                        padding: 16,
+                        overflow: 'hidden',
+                    }}
+                >
+                    <AriContextMenu
+                        defaultOpen
+                        overlay={
+                            <AriFlex vertical space={8}>
+                                <AriTypography variant='h3' value='静态 Overlay 面板' />
+                                <AriTypography
+                                    variant='caption'
+                                    value='这个示例同时覆盖 overlay、defaultOpen、offset、mouseGap、安全边距和挂载容器。'
+                                />
+                            </AriFlex>
+                        }
+                        closeOnClickOutside={false}
+                        closeOnEscape={false}
+                        closeOnScroll
+                        offset={{ x: 24, y: 24 }}
+                        mouseGap={{ x: 12, y: 12 }}
+                        safePadding={24}
+                        portalContainer={portalRef.current}
+                        overlayClassName={contextMenuOverlayClassName}
+                        overlayStyle={{ width: 260, borderRadius: 16 }}
+                        children={
+                            <AriContainer
+                                showBorder
+                                padding={16}
+                                style={{ width: 220 }}
+                            >
+                                <AriTypography variant='body' value='这个触发区域只用来显式展示 children。' />
+                            </AriContainer>
+                        }
+                    />
+                </div>
+            </AriFlex>
+        </>
+    );
+};
+
+export const ContextMenuControlDemo: React.FC = () => {
+    const menuItems = [
+        { key: 'pin', label: '置顶', icon: 'push_pin' },
+        {
+            key: 'share',
+            label: '分享',
+            icon: 'share',
+            children: [
+                { key: 'link', label: '复制链接', icon: 'link' },
+                { key: 'team', label: '分享给团队', icon: 'groups' },
+            ],
+        },
+    ];
+
+    return (
+        <AriFlex vertical space={16}>
+            <AriContextMenu
+                items={menuItems}
+                menuProps={{ defaultExpandedKeys: ['share'], expandIconPosition: 'left' }}
+                closeOnSelect={false}
+                children={
+                    <AriContainer showBorder padding={16} style={{ width: 240 }}>
+                        <AriTypography variant='body' value='右键此处：选中后不会自动关闭菜单。' />
+                    </AriContainer>
+                }
+            />
+
+            <AriContextMenu
+                disabled
+                items={menuItems}
+                children={
+                    <AriContainer showBorder padding={16} style={{ width: 240 }}>
+                        <AriTypography variant='body' value='这个触发区域已禁用右键菜单。' />
+                    </AriContainer>
+                }
+            />
+        </AriFlex>
+    );
+};
+`,
+    "ContextMenuControlDemo": `export const ContextMenuControlDemo: React.FC = () => {
+  const menuItems = [
+        { key: 'pin', label: '置顶', icon: 'push_pin' },
+        {
+            key: 'share',
+            label: '分享',
+            icon: 'share',
+            children: [
+                { key: 'link', label: '复制链接', icon: 'link' },
+                { key: 'team', label: '分享给团队', icon: 'groups' },
+            ],
+        },
+    ];
+
+    return (
+        <AriFlex vertical space={16}>
+            <AriContextMenu
+                items={menuItems}
+                menuProps={{ defaultExpandedKeys: ['share'], expandIconPosition: 'left' }}
+                closeOnSelect={false}
+                children={
+                    <AriContainer showBorder padding={16} style={{ width: 240 }}>
+                        <AriTypography variant='body' value='右键此处：选中后不会自动关闭菜单。' />
+                    </AriContainer>
+                }
+            />
+
+            <AriContextMenu
+                disabled
+                items={menuItems}
+                children={
+                    <AriContainer showBorder padding={16} style={{ width: 240 }}>
+                        <AriTypography variant='body' value='这个触发区域已禁用右键菜单。' />
+                    </AriContainer>
+                }
+            />
+        </AriFlex>
+    );
+};`,
   },
   "date-picker": {
     "BasicDatePicker": `export const BasicDatePicker: React.FC = () => {
@@ -2890,11 +3414,106 @@ export const CustomBackgroundDemo: React.FC = () => {
         </AriFlex>
     );
 };
+
+export const AdvancedDatePicker: React.FC = () => {
+    return (
+        <>
+            <style>{\`
+                .preview-date-picker-outline {
+                    outline: 2px dashed var(--z-color-warning);
+                    outline-offset: 4px;
+                    border-radius: 14px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='h4' value='高级配置' />
+                <AriDatePicker
+                    defaultValue={new Date(2025, 4, 10)}
+                    maxDate={new Date(2025, 4, 20)}
+                    disabledDates={[new Date(2025, 4, 12), new Date(2025, 4, 16)]}
+                    calendarProps={{
+                        showToday: false,
+                        firstDayOfWeek: 1,
+                    }}
+                    placement='top-end'
+                    prefixIcon='event_available'
+                    readonly={false}
+                    className='preview-date-picker-outline'
+                    style={{ width: 320 }}
+                    placeholder='顶部弹出，可手动输入'
+                />
+
+                <AriTypography variant='h4' value='日期时间联动' />
+                <AriDatePicker
+                    showTime
+                    defaultValue={new Date(2025, 4, 18, 14, 30, 0)}
+                    timePickerProps={{
+                        showSecond: false,
+                        use12Hours: true,
+                        prefixIcon: 'schedule_send',
+                    }}
+                    dateTimeFormat={(d) => \`\${d.getFullYear()}-\${d.getMonth() + 1}-\${d.getDate()} \${d.toLocaleTimeString()}\`}
+                    placeholder='选择日期与时间'
+                />
+            </AriFlex>
+        </>
+    );
+};
 `,
+    "AdvancedDatePicker": `export const AdvancedDatePicker: React.FC = () => {
+  return (
+        <>
+            <style>{\`
+                .preview-date-picker-outline {
+                    outline: 2px dashed var(--z-color-warning);
+                    outline-offset: 4px;
+                    border-radius: 14px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='h4' value='高级配置' />
+                <AriDatePicker
+                    defaultValue={new Date(2025, 4, 10)}
+                    maxDate={new Date(2025, 4, 20)}
+                    disabledDates={[new Date(2025, 4, 12), new Date(2025, 4, 16)]}
+                    calendarProps={{
+                        showToday: false,
+                        firstDayOfWeek: 1,
+                    }}
+                    placement='top-end'
+                    prefixIcon='event_available'
+                    readonly={false}
+                    className='preview-date-picker-outline'
+                    style={{ width: 320 }}
+                    placeholder='顶部弹出，可手动输入'
+                />
+
+                <AriTypography variant='h4' value='日期时间联动' />
+                <AriDatePicker
+                    showTime
+                    defaultValue={new Date(2025, 4, 18, 14, 30, 0)}
+                    timePickerProps={{
+                        showSecond: false,
+                        use12Hours: true,
+                        prefixIcon: 'schedule_send',
+                    }}
+                    dateTimeFormat={(d) => \`\${d.getFullYear()}-\${d.getMonth() + 1}-\${d.getDate()} \${d.toLocaleTimeString()}\`}
+                    placeholder='选择日期与时间'
+                />
+            </AriFlex>
+        </>
+    );
+};`,
   },
   "divider": {
     "BasicDivider": `export const BasicDivider: React.FC = () => (
   <>
+        <style>{\`
+            .preview-divider-outline {
+                outline: 2px dashed var(--z-color-primary);
+                outline-offset: 4px;
+            }
+        \`}</style>
         <div>上方内容</div>
         <AriDivider />
         <div>下方内容</div>
@@ -2903,7 +3522,7 @@ export const CustomBackgroundDemo: React.FC = () => {
     "LabelDivider": `export const LabelDivider: React.FC = () => (
   <>
         <div>登录账号</div>
-        <AriDivider>或者</AriDivider>
+        <AriDivider children="或者" />
         <div>扫码登录</div>
     </>
 );`,
@@ -2933,7 +3552,7 @@ export const CustomBackgroundDemo: React.FC = () => {
         <div>内容区域</div>
         <AriDivider plain>简洁样式</AriDivider>
         <div>内容区域</div>
-        <AriDivider>默认样式</AriDivider>
+        <AriDivider label="备用 label 文本" className="preview-divider-outline" style={{ color: 'var(--z-color-primary)' }} />
         <div>内容区域</div>
     </>
 );`,
@@ -2962,6 +3581,7 @@ export const CustomBackgroundDemo: React.FC = () => {
     return (
         <AriContainer width={400}>
             <AriDragList 
+                className="preview-drag-list"
                 items={items} 
                 onSortChange={handleSortChange}
             />
@@ -3327,7 +3947,8 @@ export const ComplexDataExample: React.FC = () => {
             </AriContainer>
         </AriFlex>
     );
-};`,
+};
+`,
     "GapExample": `export const GapExample: React.FC = () => {
   const items: AriDragListItem[] = [
         { id: 1, content: '拖拽项 1' },
@@ -3683,7 +4304,8 @@ export const ComplexDataExample: React.FC = () => {
             </AriContainer>
         </AriFlex>
     );
-};`,
+};
+`,
     "DisabledExample": `export const DisabledExample: React.FC = () => {
   const [items] = useState<AriDragListItem[]>([
         { id: 1, content: '正常项目 - 可以拖拽' },
@@ -3920,7 +4542,8 @@ export const ComplexDataExample: React.FC = () => {
             </AriContainer>
         </AriFlex>
     );
-};`,
+};
+`,
     "HandleConfigExample": `export const HandleConfigExample: React.FC = () => {
   const items: AriDragListItem[] = [
         { id: 1, content: '显示拖拽手柄的项目' },
@@ -4118,7 +4741,8 @@ export const ComplexDataExample: React.FC = () => {
             </AriContainer>
         </AriFlex>
     );
-};`,
+};
+`,
     "ComplexDataExample": `export const ComplexDataExample: React.FC = () => {
   const [categories, setCategories] = useState<AriDragListItem[]>([
         {
@@ -4224,7 +4848,8 @@ export const ComplexDataExample: React.FC = () => {
             </AriContainer>
         </AriFlex>
     );
-};`,
+};
+`,
   },
   "drawer": {
     "BasicDrawer": `export const BasicDrawer: React.FC = () => {
@@ -4375,6 +5000,70 @@ export const ContainerDrawer: React.FC = () => {
     </div>
   );
 };
+
+export const DrawerStyleDrawer: React.FC = () => {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <>
+      <style>{\`
+        .preview-drawer-shell {
+          box-shadow: 0 24px 48px rgba(0, 0, 0, 0.16);
+        }
+      \`}</style>
+      <AriButton onClick={() => setVisible(true)}>打开样式化抽屉</AriButton>
+      <AriDrawer
+        visible={visible}
+        onClose={() => setVisible(false)}
+        title="样式与层级"
+        width={420}
+        closable={false}
+        zIndex={1200}
+        className="preview-drawer-shell"
+        headerStyle={{ background: 'rgba(33, 150, 243, 0.08)' }}
+        bodyStyle={{ background: 'rgba(3, 169, 244, 0.04)', padding: 24 }}
+        footerStyle={{ background: 'rgba(76, 175, 80, 0.08)' }}
+        maskStyle={{ background: 'rgba(7, 10, 18, 0.42)' }}
+        footer={(
+          <AriFlex justify="flex-end" space={8}>
+            <AriButton type="text" onClick={() => setVisible(false)}>关闭</AriButton>
+            <AriButton color="primary" onClick={() => setVisible(false)}>保存</AriButton>
+          </AriFlex>
+        )}
+      >
+        <AriTypography variant='body' value='这个示例覆盖 width、closable、zIndex、className 以及 header/body/footer/mask 样式。' />
+      </AriDrawer>
+    </>
+  );
+};
+
+export const DrawerBehaviorDrawer: React.FC = () => {
+  const [visible, setVisible] = useState(false);
+  const [draft, setDraft] = useState('关闭后应被销毁');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriButton onClick={() => setVisible(true)}>打开无遮罩抽屉</AriButton>
+      <AriTypography variant='caption' value='mask={false} 时点击外围不再有遮罩；maskClosable={false} 也不会点击外部关闭。' />
+      <AriDrawer
+        visible={visible}
+        onClose={() => setVisible(false)}
+        title="行为控制"
+        placement="left"
+        mask={false}
+        maskClosable={false}
+        destroyOnClose
+        style={{ borderRight: '1px solid var(--z-color-border)' }}
+      >
+        <AriFlex vertical space={12}>
+          <AriTypography variant='caption' value='关闭后再次打开，输入框内容会因为 destroyOnClose 被重置。' />
+          <AriInput value={draft} onChange={setDraft} placeholder='输入任意文本后关闭再重开' />
+          <AriButton onClick={() => setVisible(false)}>手动关闭</AriButton>
+        </AriFlex>
+      </AriDrawer>
+    </AriFlex>
+  );
+};
 `,
     "CustomContentDrawer": `export const CustomContentDrawer: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -4454,11 +5143,137 @@ const [visible, setVisible] = useState(false);
     </div>
   );
 };
+
+export const DrawerStyleDrawer: React.FC = () => {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <>
+      <style>{\`
+        .preview-drawer-shell {
+          box-shadow: 0 24px 48px rgba(0, 0, 0, 0.16);
+        }
+      \`}</style>
+      <AriButton onClick={() => setVisible(true)}>打开样式化抽屉</AriButton>
+      <AriDrawer
+        visible={visible}
+        onClose={() => setVisible(false)}
+        title="样式与层级"
+        width={420}
+        closable={false}
+        zIndex={1200}
+        className="preview-drawer-shell"
+        headerStyle={{ background: 'rgba(33, 150, 243, 0.08)' }}
+        bodyStyle={{ background: 'rgba(3, 169, 244, 0.04)', padding: 24 }}
+        footerStyle={{ background: 'rgba(76, 175, 80, 0.08)' }}
+        maskStyle={{ background: 'rgba(7, 10, 18, 0.42)' }}
+        footer={(
+          <AriFlex justify="flex-end" space={8}>
+            <AriButton type="text" onClick={() => setVisible(false)}>关闭</AriButton>
+            <AriButton color="primary" onClick={() => setVisible(false)}>保存</AriButton>
+          </AriFlex>
+        )}
+      >
+        <AriTypography variant='body' value='这个示例覆盖 width、closable、zIndex、className 以及 header/body/footer/mask 样式。' />
+      </AriDrawer>
+    </>
+  );
+};
+
+export const DrawerBehaviorDrawer: React.FC = () => {
+  const [visible, setVisible] = useState(false);
+  const [draft, setDraft] = useState('关闭后应被销毁');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriButton onClick={() => setVisible(true)}>打开无遮罩抽屉</AriButton>
+      <AriTypography variant='caption' value='mask={false} 时点击外围不再有遮罩；maskClosable={false} 也不会点击外部关闭。' />
+      <AriDrawer
+        visible={visible}
+        onClose={() => setVisible(false)}
+        title="行为控制"
+        placement="left"
+        mask={false}
+        maskClosable={false}
+        destroyOnClose
+        style={{ borderRight: '1px solid var(--z-color-border)' }}
+      >
+        <AriFlex vertical space={12}>
+          <AriTypography variant='caption' value='关闭后再次打开，输入框内容会因为 destroyOnClose 被重置。' />
+          <AriInput value={draft} onChange={setDraft} placeholder='输入任意文本后关闭再重开' />
+          <AriButton onClick={() => setVisible(false)}>手动关闭</AriButton>
+        </AriFlex>
+      </AriDrawer>
+    </AriFlex>
+  );
+};
 `,
+    "DrawerStyleDrawer": `export const DrawerStyleDrawer: React.FC = () => {
+const [visible, setVisible] = useState(false);
+
+  return (
+    <>
+      <style>{\`
+        .preview-drawer-shell {
+          box-shadow: 0 24px 48px rgba(0, 0, 0, 0.16);
+        }
+      \`}</style>
+      <AriButton onClick={() => setVisible(true)}>打开样式化抽屉</AriButton>
+      <AriDrawer
+        visible={visible}
+        onClose={() => setVisible(false)}
+        title="样式与层级"
+        width={420}
+        closable={false}
+        zIndex={1200}
+        className="preview-drawer-shell"
+        headerStyle={{ background: 'rgba(33, 150, 243, 0.08)' }}
+        bodyStyle={{ background: 'rgba(3, 169, 244, 0.04)', padding: 24 }}
+        footerStyle={{ background: 'rgba(76, 175, 80, 0.08)' }}
+        maskStyle={{ background: 'rgba(7, 10, 18, 0.42)' }}
+        footer={(
+          <AriFlex justify="flex-end" space={8}>
+            <AriButton type="text" onClick={() => setVisible(false)}>关闭</AriButton>
+            <AriButton color="primary" onClick={() => setVisible(false)}>保存</AriButton>
+          </AriFlex>
+        )}
+      >
+        <AriTypography variant='body' value='这个示例覆盖 width、closable、zIndex、className 以及 header/body/footer/mask 样式。' />
+      </AriDrawer>
+    </>
+  );
+};`,
+    "DrawerBehaviorDrawer": `export const DrawerBehaviorDrawer: React.FC = () => {
+const [visible, setVisible] = useState(false);
+  const [draft, setDraft] = useState('关闭后应被销毁');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriButton onClick={() => setVisible(true)}>打开无遮罩抽屉</AriButton>
+      <AriTypography variant='caption' value='mask={false} 时点击外围不再有遮罩；maskClosable={false} 也不会点击外部关闭。' />
+      <AriDrawer
+        visible={visible}
+        onClose={() => setVisible(false)}
+        title="行为控制"
+        placement="left"
+        mask={false}
+        maskClosable={false}
+        destroyOnClose
+        style={{ borderRight: '1px solid var(--z-color-border)' }}
+      >
+        <AriFlex vertical space={12}>
+          <AriTypography variant='caption' value='关闭后再次打开，输入框内容会因为 destroyOnClose 被重置。' />
+          <AriInput value={draft} onChange={setDraft} placeholder='输入任意文本后关闭再重开' />
+          <AriButton onClick={() => setVisible(false)}>手动关闭</AriButton>
+        </AriFlex>
+      </AriDrawer>
+    </AriFlex>
+  );
+};`,
   },
   "empty": {
     "BasicEmpty": `export const BasicEmpty: React.FC = () => (
-  <AriEmpty />
+  <AriEmpty className="preview-empty-state" />
 );`,
     "CustomIconDemo": `export const CustomIconDemo: React.FC = () => (
   <AriEmpty
@@ -4477,6 +5292,7 @@ const [visible, setVisible] = useState(false);
     "BasicGrid": `export const BasicGrid: React.FC = () => (
   <AriContainer style={{ height: '400px',overflowY: 'auto' }}>
         <AriFixedSizeGrid
+            className="preview-fixed-size-grid"
             columnCount={4}
             columnWidth={100}
             rowHeight={100}
@@ -4602,7 +5418,7 @@ const [visible, setVisible] = useState(false);
   },
   "flex": {
     "BasicFlex": `export const BasicFlex: React.FC = () => (
-  <AriFlex>
+  <AriFlex fill className="preview-flex-outline">
         <AriButton label="按钮1" />
         <AriButton label="按钮2" />
         <AriButton label="按钮3" />
@@ -4797,14 +5613,20 @@ const [visible, setVisible] = useState(false);
     return (
       <AriForm
         layout="horizontal"
+        density="loose"
+        size="lg"
         labelWidth={100}
         onFinish={handleFinish}
         onFinishFailed={handleFinishFailed}
+        className="preview-validation-form"
         style={{ maxWidth: 600 }}
       >
         <AriFormItem
           label="用户名"
           name="username"
+          className="preview-validation-item"
+          colon={false}
+          error="该表单项固定展示 error 属性示例"
           rules={[
             { required: true, message: "请输入用户名" },
             { min: 3, max: 20, message: "用户名长度必须在3-20个字符之间" },
@@ -5129,7 +5951,6 @@ export const UseHookDemo: React.FC = () => {
     );
 };
 
-
 `,
     "UseHookDemo": `export const UseHookDemo: React.FC = () => {
   // 自定义表单字段组件
@@ -5373,9 +6194,10 @@ export const UseHookDemo: React.FC = () => {
     "BasicIcon": `export const BasicIcon: React.FC = () => (
   <>
         <AriFlex space={16}>
-            <AriIcon name="star" />
+            <AriIcon name="star" className="preview-icon-outline" />
             <AriIcon name="edit" />
             <AriIcon name="delete" />
+            <AriIcon fullPath="/assets/icons/star.svg" size="lg" />
         </AriFlex>
     </>
 );`,
@@ -5458,6 +6280,8 @@ export const UseHookDemo: React.FC = () => {
   <AriImage
         fileName="example.png"
         usage="image"
+        alt="基础示例图片"
+        className="preview-image-outline"
         style={{ width: '200px' }}
     />
 );`,
@@ -5536,6 +6360,8 @@ export const UseHookDemo: React.FC = () => {
                 placeholder="请输入内容"
                 value={value}
                 onChange={setValue}
+                minLength={3}
+                className="preview-input-outline"
             />
             <div>当前输入值: {value}</div>
         </AriFlex>
@@ -6428,7 +7254,7 @@ export const CustomLayout: React.FC = () => {
   <AriFlex space={16} vertical>
         <AriLink href="https://aries-react.dev/docs" icon="link">带左侧图标的链接</AriLink>
         <AriLink href="https://aries-react.dev/docs" icon="link" iconPosition="right">带右侧图标的链接</AriLink>
-        <AriLink href="https://aries-react.dev/docs" type="brand" icon="external-link" target="_blank">外部链接</AriLink>
+        <AriLink href="https://aries-react.dev/docs" type="brand" icon="external-link" target="_blank" rel="noreferrer noopener">外部链接</AriLink>
         <AriLink href="https://aries-react.dev/docs" type="success" icon="download">下载链接</AriLink>
     </AriFlex>
 );`,
@@ -6438,6 +7264,16 @@ export const CustomLayout: React.FC = () => {
             <AriTypography variant='h4' value="块级链接示例" />
             <AriLink href="https://aries-react.dev/docs" block>默认块级链接</AriLink>
             <AriLink href="https://aries-react.dev/docs" type="brand" block icon="link">带图标的块级链接</AriLink>
+            <AriLink
+                href="#"
+                className="preview-link-outline"
+                onClick={(event) => {
+                    event.preventDefault();
+                    console.log('link clicked');
+                }}
+            >
+                带 className 与点击事件的链接
+            </AriLink>
         </AriFlex>
     </AriContainer>
 );`,
@@ -6556,8 +7392,10 @@ export const CustomLayout: React.FC = () => {
                 {loading ? '停止加载' : '开始加载'}
             </AriButton>
             <AriList
+                className="preview-loading-list"
                 bordered
                 loading={loading}
+                loadingMessage={<span>正在同步列表数据...</span>}
                 dataSource={data}
                 renderItem={(item) => <div>{item}</div>}
             />
@@ -6568,8 +7406,9 @@ export const CustomLayout: React.FC = () => {
   const data = [1, 2, 3];
 
     return (
-        <AriList bordered>
-            {data.map((item, index) => (
+        <AriList
+            bordered
+            children={data.map((item, index) => (
                 <AriListItem 
                     key={item}
                     split={index < data.length - 1}
@@ -6583,9 +7422,9 @@ export const CustomLayout: React.FC = () => {
                         <AriAvatar>{item}</AriAvatar>
                         <div>列表项 {item} 的内容</div>
                     </AriFlex>
-                </AriListItem>
+                    </AriListItem>
             ))}
-        </AriList>
+        />
     );
 };
 
@@ -6701,13 +7540,14 @@ export const ComplexList: React.FC = () => {
   "menu": {
     "BasicMenu": `export const BasicMenu: React.FC = () => {
   const items = [
-        { key: '1', label: '菜单项1', icon: 'home' },
-        { key: '2', label: '菜单项2', icon: 'person' },
+        { key: '1', label: '菜单项1', icon: 'home', textPosition: 'top' as const },
+        { key: '2', label: '菜单项2', icon: 'person', disabled: true },
         { key: '3', label: '菜单项3', icon: 'settings' }
     ];
 
     return (
         <AriMenu
+            className="preview-basic-menu"
             items={items}
             defaultSelectedKey="1"
             onSelect={(key, item) => console.log('selected:', key, item)}
@@ -6715,7 +7555,8 @@ export const ComplexList: React.FC = () => {
     );
 };`,
     "SubMenu": `export const SubMenu: React.FC = () => {
-  const items = [
+  const [expandedKeys, setExpandedKeys] = useState<string[]>(['1']);
+    const items = [
         {
             key: '1',
             label: '菜单1',
@@ -6739,11 +7580,292 @@ export const ComplexList: React.FC = () => {
     return (
         <AriMenu
             items={items}
-            defaultExpandedKeys={['1']}
+            expandedKeys={expandedKeys}
+            onExpand={setExpandedKeys}
             mode="vertical"
         />
     );
-};`,
+};
+
+export const ModeDemo: React.FC = () => {
+    const items = [
+        { key: '1', label: '菜单项1', icon: 'home' },
+        { key: '2', label: '菜单项2', icon: 'person' },
+        { key: '3', label: '菜单项3', icon: 'settings' }
+    ];
+
+    return (
+        <>
+            <AriContainer style={{ marginBottom: '20px' }}>
+                <h4>水平模式</h4>
+                <AriMenu items={items} mode="horizontal" />
+            </AriContainer>
+
+            <AriContainer>
+                <h4>垂直模式</h4>
+                <AriMenu items={items} mode="vertical" />
+            </AriContainer>
+        </>
+    );
+};
+
+export const IconAnimationDemo: React.FC = () => {
+    const items = [
+        {
+            key: 'sync',
+            label: '同步中（旋转）',
+            icon: 'sync',
+            fillIcon: 'sync',
+            iconAnimation: 'spinning' as const,
+            iconState: 'loading' as const,
+            meta: <AriTypography variant='caption'>处理中</AriTypography>,
+        },
+        {
+            key: 'success',
+            label: '同步完成',
+            icon: 'check_circle',
+            fillIcon: 'check_circle',
+            iconState: 'success' as const,
+            meta: <AriTypography variant='caption'>已完成</AriTypography>,
+        },
+        {
+            key: 'warning',
+            label: '同步失败（抖动）',
+            icon: 'warning',
+            fillIcon: 'warning',
+            iconAnimation: 'shake' as const,
+            iconState: 'error' as const,
+            meta: <AriTypography variant='caption'>需重试</AriTypography>,
+        }
+    ];
+
+    return (
+        <AriMenu
+            items={items}
+            defaultSelectedKey='sync'
+        />
+    );
+};
+
+export const ArrowPositionDemo: React.FC = () => {
+    const items = [
+        {
+            key: '1',
+            label: '菜单1',
+            icon: 'folder',
+            children: [
+                { key: '1-1', label: '子项1-1' },
+                { key: '1-2', label: '子项1-2' }
+            ]
+        },
+        {
+            key: '2',
+            label: '菜单2',
+            icon: 'folder',
+            children: [
+                { key: '2-1', label: '子项2-1' },
+                { key: '2-2', label: '子项2-2' }
+            ]
+        }
+    ];
+
+    return (
+        <AriFlex vertical space={16}>
+            <AriContainer>
+                <AriTypography variant='caption'>右侧箭头（默认）</AriTypography>
+                <AriMenu items={items} defaultExpandedKeys={['1']} expandIconPosition="right" />
+            </AriContainer>
+            <AriContainer>
+                <AriTypography variant='caption'>左侧箭头</AriTypography>
+                <AriMenu items={items} defaultExpandedKeys={['1']} expandIconPosition="left" />
+            </AriContainer>
+            <AriContainer>
+                <AriTypography variant='caption'>无箭头</AriTypography>
+                <AriMenu items={items} defaultExpandedKeys={['1']} expandIconPosition="none" />
+            </AriContainer>
+        </AriFlex>
+    );
+};
+
+
+export const GroupDemo: React.FC = () => {
+    const items = [
+        {
+            key: 'group1',
+            label: '系统功能',
+            isGroup: true
+        },
+        {
+            key: 'dashboard',
+            label: '仪表盘',
+            icon: 'dashboard'
+        },
+        {
+            key: 'settings',
+            label: '系统设置',
+            icon: 'settings'
+        },
+        {
+            key: 'group2',
+            label: '内容管理',
+            isGroup: true
+        },
+        {
+            key: 'article',
+            label: '文章管理',
+            icon: 'article'
+        },
+        {
+            key: 'comment',
+            label: '评论管理',
+            icon: 'comment'
+        }
+    ];
+
+    return (
+        <AriMenu items={items} defaultSelectedKey="dashboard" />
+    );
+};
+
+export const SessionLikeMenu: React.FC = () => {
+    const [selectedKey, setSelectedKey] = useState('s-1');
+    const [pinnedKeys, setPinnedKeys] = useState<string[]>([]);
+    const [renamingKey, setRenamingKey] = useState<string>('');
+    const [renameValue, setRenameValue] = useState('');
+    const [contextMenu, setContextMenu] = useState<{ x: number; y: number; key: string } | null>(null);
+    const [titleMap, setTitleMap] = useState<Record<string, string>>({});
+
+    const sessions = [
+        { key: 's-1', title: '机械臂材质方案：PBR + 烘焙流程', time: '今天 10:12' },
+        { key: 's-2', title: '低模角色风格探索', time: '昨天 18:22' },
+        { key: 's-3', title: '工业控制台重建与导出', time: '02/08 09:18' },
+    ];
+
+    const sortedSessions = useMemo(() => {
+        return [...sessions].sort((a, b) => {
+            const aPinned = pinnedKeys.includes(a.key);
+            const bPinned = pinnedKeys.includes(b.key);
+            if (aPinned === bPinned) return 0;
+            return aPinned ? -1 : 1;
+        });
+    }, [pinnedKeys]);
+
+    const startRename = (key: string) => {
+        const target = sessions.find(item => item.key === key);
+        if (!target) return;
+        setRenamingKey(key);
+        setRenameValue(titleMap[key] || target.title);
+    };
+
+    const commitRename = () => {
+        if (!renamingKey) return;
+        const value = renameValue.trim();
+        if (value) {
+            setTitleMap(prev => ({ ...prev, [renamingKey]: value }));
+        }
+        setRenamingKey('');
+        setRenameValue('');
+    };
+
+    return (
+        <AriContainer style={{ position: 'relative', maxWidth: 360 }}>
+            <AriTypography variant='caption'>
+                标题左侧自适应省略，右侧时间固定；Hover 显示图钉/删除；右键菜单支持重命名。
+            </AriTypography>
+            <AriContainer style={{ height: 8 }} />
+            <AriMenu
+                selectedKey={selectedKey}
+                items={sortedSessions.map((session) => {
+                    const isPinned = pinnedKeys.includes(session.key);
+                    const isRenaming = renamingKey === session.key;
+                    const title = titleMap[session.key] || session.title;
+                    return {
+                        key: session.key,
+                        label: isRenaming ? (
+                            <AriInput
+                                value={renameValue}
+                                autoFocus
+                                onChange={setRenameValue}
+                                onBlur={commitRename}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter') {
+                                        event.preventDefault();
+                                        commitRename();
+                                    }
+                                    if (event.key === 'Escape') {
+                                        event.preventDefault();
+                                        setRenamingKey('');
+                                        setRenameValue('');
+                                    }
+                                }}
+                            />
+                        ) : (
+                            title
+                        ),
+                        meta: isRenaming ? null : <AriTypography variant='caption'>{session.time}</AriTypography>,
+                        actions: isRenaming ? null : (
+                            <AriFlex align='center' space={4}>
+                                <AriButton
+                                    type='text'
+                                    size='sm'
+                                    icon={isPinned ? 'push_pin_fill' : 'push_pin'}
+                                    onClick={() => {
+                                        setPinnedKeys(prev =>
+                                            prev.includes(session.key)
+                                                ? prev.filter(key => key !== session.key)
+                                                : [session.key, ...prev]
+                                        );
+                                    }}
+                                />
+                                <AriButton
+                                    type='text'
+                                    size='sm'
+                                    icon='delete'
+                                    onClick={() => console.log('delete:', session.key)}
+                                />
+                            </AriFlex>
+                        ),
+                        showActionsOnHover: true,
+                        onContextMenu: (event) => {
+                            event.preventDefault();
+                            setContextMenu({ x: event.clientX, y: event.clientY, key: session.key });
+                        },
+                        onClick: () => setSelectedKey(session.key),
+                    };
+                })}
+                onSelect={(key) => setSelectedKey(key)}
+            />
+
+            {contextMenu ? (
+                <AriContainer
+                    style={{
+                        position: 'fixed',
+                        left: contextMenu.x,
+                        top: contextMenu.y,
+                        zIndex: 999,
+                        minWidth: 180,
+                    }}
+                    onClick={(event) => event.stopPropagation()}
+                >
+                    <AriMenu
+                        items={[
+                            {
+                                key: 'rename',
+                                icon: 'edit',
+                                label: '重新命名',
+                                onClick: () => {
+                                    startRename(contextMenu.key);
+                                    setContextMenu(null);
+                                },
+                            }
+                        ]}
+                    />
+                </AriContainer>
+            ) : null}
+        </AriContainer>
+    );
+};
+`,
     "ModeDemo": `export const ModeDemo: React.FC = () => {
   const items = [
         { key: '1', label: '菜单项1', icon: 'home' },
@@ -7096,6 +8218,11 @@ export const DurationDemo: React.FC = () => {
     "CloseButtonDemo": `export const CloseButtonDemo: React.FC = () => {
   return (
         <AriContainer>
+            <style>{\`
+                .preview-message-outline {
+                    outline: 2px dashed var(--z-color-warning);
+                }
+            \`}</style>
             <AriButton
                 label="显示可关闭消息"
                 onClick={() => {
@@ -7109,11 +8236,23 @@ export const DurationDemo: React.FC = () => {
                     })
                 }}
             />
+            <AriButton
+                label="显示自定义类型消息"
+                onClick={() => {
+                    AriMessage({
+                        content: '自定义配置消息',
+                        type: 'warning',
+                        zIndex: 1400,
+                        className: 'preview-message-outline',
+                        onClose: () => {
+                            console.log('自定义消息关闭');
+                        }
+                    })
+                }}
+            />
         </AriContainer>
     );
 }
-
-
 
 `,
   },
@@ -7327,6 +8466,47 @@ export const CustomModal: React.FC = () => {
     </AriFlex>
   );
 };
+
+export const ModalLifecycle: React.FC = () => {
+  const [visible, setVisible] = useState(false);
+  const [status, setStatus] = useState('尚未打开');
+
+  return (
+    <>
+      <style>{\`
+        .preview-modal-outline {
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+        }
+      \`}</style>
+      <AriFlex vertical space={16}>
+        <AriTypography variant='body' value={\`生命周期状态: \${status}\`} />
+        <AriButton color="primary" onClick={() => setVisible(true)}>
+          打开生命周期对话框
+        </AriButton>
+
+        <AriModal
+          visible={visible}
+          title="生命周期与外观"
+          closable={false}
+          mask={false}
+          maskStyle={{ background: 'rgba(0, 0, 0, 0.55)' }}
+          className="preview-modal-outline"
+          forceRender
+          afterOpen={() => setStatus('已打开')}
+          afterClose={() => setStatus('已关闭')}
+          onClose={() => setVisible(false)}
+          children={(
+            <AriFlex vertical space={12}>
+              <AriTypography variant='body' value='这个示例显式覆盖 children、closable、className、mask、maskStyle、forceRender、afterOpen 和 afterClose。' />
+              <AriInput placeholder='forceRender 让内容在初始阶段也会挂载' />
+              <AriButton onClick={() => setVisible(false)}>关闭</AriButton>
+            </AriFlex>
+          )}
+        />
+      </AriFlex>
+    </>
+  );
+};
 `,
     "FullscreenModal": `export const FullscreenModal: React.FC = () => {
 const [visible, setVisible] = useState(false);
@@ -7401,6 +8581,46 @@ const [visible, setVisible] = useState(false);
     </AriFlex>
   );
 };`,
+    "ModalLifecycle": `export const ModalLifecycle: React.FC = () => {
+const [visible, setVisible] = useState(false);
+  const [status, setStatus] = useState('尚未打开');
+
+  return (
+    <>
+      <style>{\`
+        .preview-modal-outline {
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+        }
+      \`}</style>
+      <AriFlex vertical space={16}>
+        <AriTypography variant='body' value={\`生命周期状态: \${status}\`} />
+        <AriButton color="primary" onClick={() => setVisible(true)}>
+          打开生命周期对话框
+        </AriButton>
+
+        <AriModal
+          visible={visible}
+          title="生命周期与外观"
+          closable={false}
+          mask={false}
+          maskStyle={{ background: 'rgba(0, 0, 0, 0.55)' }}
+          className="preview-modal-outline"
+          forceRender
+          afterOpen={() => setStatus('已打开')}
+          afterClose={() => setStatus('已关闭')}
+          onClose={() => setVisible(false)}
+          children={(
+            <AriFlex vertical space={12}>
+              <AriTypography variant='body' value='这个示例显式覆盖 children、closable、className、mask、maskStyle、forceRender、afterOpen 和 afterClose。' />
+              <AriInput placeholder='forceRender 让内容在初始阶段也会挂载' />
+              <AriButton onClick={() => setVisible(false)}>关闭</AriButton>
+            </AriFlex>
+          )}
+        />
+      </AriFlex>
+    </>
+  );
+};`,
   },
   "nav": {
     "BasicNav": `export const BasicNav: React.FC = () => {
@@ -7414,6 +8634,8 @@ const [visible, setVisible] = useState(false);
             { key: "products", label: "产品", path: "/products" },
             { key: "about", label: "关于", path: "/about" },
           ]}
+          sticky
+          suffixed={<span style={{ fontSize: 12 }}>文档入口</span>}
           logo={
             <AriImage
               fileName="/assets/logo/logo.png"
@@ -7525,8 +8747,14 @@ const [visible, setVisible] = useState(false);
   "notification": {
     "BasicNotification": `export const BasicNotification: React.FC = () => {
 const handleClick = () => {
-    // 基本使用
-    AriNotification.info('这是一条信息通知');
+    AriNotification({
+      type: 'info',
+      title: '基础通知',
+      content: '这是一条带完整配置的通知示例',
+      zIndex: 4000,
+      className: 'preview-notification-basic',
+      onClose: () => console.log('notification closed'),
+    });
   };
 
   return (
@@ -7752,7 +8980,7 @@ const ContextExample = () => {
 };`,
     "DisabledPagination": `export const DisabledPagination: React.FC = () => {
   return (
-        <AriPagination total={50} disabled />
+        <AriPagination total={50} disabled defaultCurrent={2} defaultPageSize={20} />
     );
 };`,
     "TotalInfoPagination": `export const TotalInfoPagination: React.FC = () => {
@@ -7797,11 +9025,13 @@ const ContextExample = () => {
             sizeRange={[3, 25]}
             speedRange={[0.1, 0.3]}
             glowIntensity={1.2}
+            animationSpeed={1.3}
             interactive={true}
             interactionRadius={120}
             alphaRange={[0.4, 0.9]}
             blurAmount={20}
             backgroundColor="#000000"
+            className="preview-particle-showcase"
         >
             <AriCard style={{ 
                 maxWidth: 350, 
@@ -7830,11 +9060,11 @@ const ContextExample = () => {
     "BasicPopconfirm": `export const BasicPopconfirm: React.FC = () => (
   <AriPopconfirm
         title="确定要执行此操作吗？"
+        description="该操作会立即生效，请确认是否继续。"
         onConfirm={() => AriMessage.success('已确认')}
         onCancel={() => AriMessage.info('已取消')}
-    >
-        <AriButton>点击触发</AriButton>
-    </AriPopconfirm>
+        children={<AriButton>点击触发</AriButton>}
+    />
 );`,
     "PlacementPopconfirm": `export const PlacementPopconfirm: React.FC = () => {
   const [placement, setPlacement] = useState<AriPopconfirmProps['placement']>('top');
@@ -7899,6 +9129,8 @@ export const ControlledPopconfirm: React.FC = () => {
 export const CustomButtonPopconfirm: React.FC = () => (
     <AriPopconfirm
         title="自定义按钮文本和属性"
+        defaultOpen={true}
+        closeOnEscape={false}
         okText="是的"
         cancelText="不了"
         okButtonProps={{ color: 'success', type: 'outline' }}
@@ -7947,6 +9179,8 @@ export const CustomButtonPopconfirm: React.FC = () => (
 export const CustomButtonPopconfirm: React.FC = () => (
     <AriPopconfirm
         title="自定义按钮文本和属性"
+        defaultOpen={true}
+        closeOnEscape={false}
         okText="是的"
         cancelText="不了"
         okButtonProps={{ color: 'success', type: 'outline' }}
@@ -7960,6 +9194,8 @@ export const CustomButtonPopconfirm: React.FC = () => (
     "CustomButtonPopconfirm": `export const CustomButtonPopconfirm: React.FC = () => (
   <AriPopconfirm
         title="自定义按钮文本和属性"
+        defaultOpen={true}
+        closeOnEscape={false}
         okText="是的"
         cancelText="不了"
         okButtonProps={{ color: 'success', type: 'outline' }}
@@ -7980,25 +9216,27 @@ export const CustomButtonPopconfirm: React.FC = () => (
             <AriButton onClick={() => setVisible(true)}>显示Portal内容</AriButton>
 
             {visible && (
-                <AriPortal>
-                    <div
-                        style={{
-                            position: 'fixed',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            background: 'white',
-                            padding: '20px',
-                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-                            zIndex: 1000
-                        }}
-                    >
-                        <AriFlex vertical space={16}>
-                            <AriTypography variant='h3' value='这个内容被传送到了document.body' />
-                            <AriButton onClick={() => setVisible(false)}>关闭</AriButton>
-                        </AriFlex>
-                    </div>
-                </AriPortal>
+                <AriPortal
+                    children={
+                        <div
+                            style={{
+                                position: 'fixed',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                background: 'white',
+                                padding: '20px',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                                zIndex: 1000
+                            }}
+                        >
+                            <AriFlex vertical space={16}>
+                                <AriTypography variant='h3' value='这个内容被传送到了document.body' />
+                                <AriButton onClick={() => setVisible(false)}>关闭</AriButton>
+                            </AriFlex>
+                        </div>
+                    }
+                />
             )}
         </>
     );
@@ -8046,7 +9284,8 @@ export const CustomButtonPopconfirm: React.FC = () => (
             )}
         </AriFlex>
     );
-};`,
+};
+`,
   },
   "progress": {
     "BasicProgress": `export const BasicProgress: React.FC = () => (
@@ -8088,7 +9327,7 @@ export const CustomButtonPopconfirm: React.FC = () => (
 );`,
     "ColorDemo": `export const ColorDemo: React.FC = () => (
   <AriFlex vertical space={16}>
-        <AriProgress percent={40} strokeColor="#1890ff" />
+        <AriProgress percent={40} strokeColor="#1890ff" trailColor="#e6f4ff" />
         <AriProgress percent={60} strokeColor="#52c41a" />
         <AriProgress 
             percent={80} 
@@ -8106,8 +9345,8 @@ export const CustomButtonPopconfirm: React.FC = () => (
 );`,
     "StepsDemo": `export const StepsDemo: React.FC = () => (
   <AriFlex vertical space={16}>
-        <AriProgress percent={60} steps={5} />
-        <AriProgress percent={30} steps={10} size="sm" />
+        <AriProgress percent={60} steps={5} showInfo={false} />
+        <AriProgress percent={30} steps={10} size="sm" stepSmall />
         <AriProgress percent={100} steps={10} strokeColor="#52c41a" />
         <AriProgress percent={60} steps={5} strokeColor="#f5222d" status="exception" />
     </AriFlex>
@@ -8166,6 +9405,12 @@ const [value, setValue] = useState<string>('1');
         checked={value === "2"}
         onChange={handleChange}
         label="选项2"
+      />
+      <AriRadio
+        name="default-radio"
+        value="default"
+        defaultChecked={true}
+        label="默认选中（非受控）"
       />
     </AriFlex>
   );
@@ -8285,7 +9530,8 @@ export const RadioSizesExample: React.FC = () => {
       />
     </AriFlex>
   );
-};`,
+};
+`,
     "RadioGroupExample": `export const RadioGroupExample: React.FC = () => {
 const [value, setValue] = useState<string>('a');
   
@@ -8396,7 +9642,8 @@ export const RadioSizesExample: React.FC = () => {
       />
     </AriFlex>
   );
-};`,
+};
+`,
     "RadioGroupWithOptions": `export const RadioGroupWithOptions: React.FC = () => {
 const [value, setValue] = useState<string>('apple');
   
@@ -8487,7 +9734,8 @@ export const RadioSizesExample: React.FC = () => {
       />
     </AriFlex>
   );
-};`,
+};
+`,
     "RadioButtonExample": `export const RadioButtonExample: React.FC = () => {
 const [value, setValue] = useState<string>('small');
   
@@ -8555,7 +9803,8 @@ export const RadioSizesExample: React.FC = () => {
       />
     </AriFlex>
   );
-};`,
+};
+`,
     "RadioSizesExample": `export const RadioSizesExample: React.FC = () => {
 const [value, setValue] = useState<string>('default');
   
@@ -8591,11 +9840,13 @@ const [value, setValue] = useState<string>('default');
       />
     </AriFlex>
   );
-};`,
+};
+`,
   },
   "result": {
     "BasicResult": `export const BasicResult: React.FC = () => (
 <AriResult
+    className="preview-result-basic"
     title="基础结果"
     subTitle="这是一条基础结果的描述文本"
   />
@@ -9586,6 +10837,52 @@ export const Button: React.FC<ButtonProps> = ({
   );
 };
 
+export const AdvancedConfigExample: React.FC = () => {
+  const [mode, setMode] = useState<'source' | 'visual' | 'split'>('split');
+  const defaultContent = [
+    '# 高级配置演示',
+    '',
+    '这个示例集中展示以下能力：',
+    '',
+    '- defaultValue: 非受控初始内容',
+    '- onModeChange: 同步模式切换',
+    '- minHeight / maxHeight: 约束编辑区域高度',
+    '- beforeImport: 导入前校验文件类型',
+    '- beforeExport: 导出前注入额外内容',
+    '',
+    '试试切换模式，或使用工具栏里的导入 / 导出按钮。',
+  ].join('\n');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriCard>
+        <AriRichEditor
+          defaultValue={defaultContent}
+          mode={mode}
+          onModeChange={(nextMode) => {
+            setMode(nextMode);
+            AriMessage.info('当前模式: ' + nextMode);
+          }}
+          minHeight={260}
+          maxHeight={360}
+          beforeImport={async (file) => {
+            const isMarkdown = file.name.endsWith('.md');
+            AriMessage.info('准备导入: ' + file.name);
+            if (!isMarkdown) {
+              AriMessage.warning('仅允许导入 .md 文件');
+            }
+            return isMarkdown;
+          }}
+          beforeExport={async (format, content) => {
+            AriMessage.success('准备导出 ' + format.toUpperCase() + ' 文件');
+            return content + '\n\n<!-- exported:' + format + ' -->';
+          }}
+        />
+      </AriCard>
+      <div>当前编辑模式: {mode}</div>
+    </AriFlex>
+  );
+};
 `,
     "ToolbarExample": `export const ToolbarExample: React.FC = () => {
 const [content, setContent] = useState(\`# 工具栏演示
@@ -10404,6 +11701,52 @@ export const Button: React.FC<ButtonProps> = ({
   );
 };
 
+export const AdvancedConfigExample: React.FC = () => {
+  const [mode, setMode] = useState<'source' | 'visual' | 'split'>('split');
+  const defaultContent = [
+    '# 高级配置演示',
+    '',
+    '这个示例集中展示以下能力：',
+    '',
+    '- defaultValue: 非受控初始内容',
+    '- onModeChange: 同步模式切换',
+    '- minHeight / maxHeight: 约束编辑区域高度',
+    '- beforeImport: 导入前校验文件类型',
+    '- beforeExport: 导出前注入额外内容',
+    '',
+    '试试切换模式，或使用工具栏里的导入 / 导出按钮。',
+  ].join('\n');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriCard>
+        <AriRichEditor
+          defaultValue={defaultContent}
+          mode={mode}
+          onModeChange={(nextMode) => {
+            setMode(nextMode);
+            AriMessage.info('当前模式: ' + nextMode);
+          }}
+          minHeight={260}
+          maxHeight={360}
+          beforeImport={async (file) => {
+            const isMarkdown = file.name.endsWith('.md');
+            AriMessage.info('准备导入: ' + file.name);
+            if (!isMarkdown) {
+              AriMessage.warning('仅允许导入 .md 文件');
+            }
+            return isMarkdown;
+          }}
+          beforeExport={async (format, content) => {
+            AriMessage.success('准备导出 ' + format.toUpperCase() + ' 文件');
+            return content + '\n\n<!-- exported:' + format + ' -->';
+          }}
+        />
+      </AriCard>
+      <div>当前编辑模式: {mode}</div>
+    </AriFlex>
+  );
+};
 `,
     "AutoSaveExample": `export const AutoSaveExample: React.FC = () => {
 const [content, setContent] = useState('# 自动保存演示\n\n编辑内容会每5秒自动保存一次');
@@ -11080,6 +12423,52 @@ export const Button: React.FC<ButtonProps> = ({
   );
 };
 
+export const AdvancedConfigExample: React.FC = () => {
+  const [mode, setMode] = useState<'source' | 'visual' | 'split'>('split');
+  const defaultContent = [
+    '# 高级配置演示',
+    '',
+    '这个示例集中展示以下能力：',
+    '',
+    '- defaultValue: 非受控初始内容',
+    '- onModeChange: 同步模式切换',
+    '- minHeight / maxHeight: 约束编辑区域高度',
+    '- beforeImport: 导入前校验文件类型',
+    '- beforeExport: 导出前注入额外内容',
+    '',
+    '试试切换模式，或使用工具栏里的导入 / 导出按钮。',
+  ].join('\n');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriCard>
+        <AriRichEditor
+          defaultValue={defaultContent}
+          mode={mode}
+          onModeChange={(nextMode) => {
+            setMode(nextMode);
+            AriMessage.info('当前模式: ' + nextMode);
+          }}
+          minHeight={260}
+          maxHeight={360}
+          beforeImport={async (file) => {
+            const isMarkdown = file.name.endsWith('.md');
+            AriMessage.info('准备导入: ' + file.name);
+            if (!isMarkdown) {
+              AriMessage.warning('仅允许导入 .md 文件');
+            }
+            return isMarkdown;
+          }}
+          beforeExport={async (format, content) => {
+            AriMessage.success('准备导出 ' + format.toUpperCase() + ' 文件');
+            return content + '\n\n<!-- exported:' + format + ' -->';
+          }}
+        />
+      </AriCard>
+      <div>当前编辑模式: {mode}</div>
+    </AriFlex>
+  );
+};
 `,
     "CodeHighlightExample": `export const CodeHighlightExample: React.FC = () => {
 const [content, setContent] = useState(\`# 代码高亮功能演示
@@ -11726,6 +13115,52 @@ export const Button: React.FC<ButtonProps> = ({
   );
 };
 
+export const AdvancedConfigExample: React.FC = () => {
+  const [mode, setMode] = useState<'source' | 'visual' | 'split'>('split');
+  const defaultContent = [
+    '# 高级配置演示',
+    '',
+    '这个示例集中展示以下能力：',
+    '',
+    '- defaultValue: 非受控初始内容',
+    '- onModeChange: 同步模式切换',
+    '- minHeight / maxHeight: 约束编辑区域高度',
+    '- beforeImport: 导入前校验文件类型',
+    '- beforeExport: 导出前注入额外内容',
+    '',
+    '试试切换模式，或使用工具栏里的导入 / 导出按钮。',
+  ].join('\n');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriCard>
+        <AriRichEditor
+          defaultValue={defaultContent}
+          mode={mode}
+          onModeChange={(nextMode) => {
+            setMode(nextMode);
+            AriMessage.info('当前模式: ' + nextMode);
+          }}
+          minHeight={260}
+          maxHeight={360}
+          beforeImport={async (file) => {
+            const isMarkdown = file.name.endsWith('.md');
+            AriMessage.info('准备导入: ' + file.name);
+            if (!isMarkdown) {
+              AriMessage.warning('仅允许导入 .md 文件');
+            }
+            return isMarkdown;
+          }}
+          beforeExport={async (format, content) => {
+            AriMessage.success('准备导出 ' + format.toUpperCase() + ' 文件');
+            return content + '\n\n<!-- exported:' + format + ' -->';
+          }}
+        />
+      </AriCard>
+      <div>当前编辑模式: {mode}</div>
+    </AriFlex>
+  );
+};
 `,
     "CodeHighlightLinesExample": `export const CodeHighlightLinesExample: React.FC = () => {
 const [content, setContent] = useState(\`# 代码行高亮功能演示
@@ -12101,6 +13536,52 @@ export const Button: React.FC<ButtonProps> = ({
   );
 };
 
+export const AdvancedConfigExample: React.FC = () => {
+  const [mode, setMode] = useState<'source' | 'visual' | 'split'>('split');
+  const defaultContent = [
+    '# 高级配置演示',
+    '',
+    '这个示例集中展示以下能力：',
+    '',
+    '- defaultValue: 非受控初始内容',
+    '- onModeChange: 同步模式切换',
+    '- minHeight / maxHeight: 约束编辑区域高度',
+    '- beforeImport: 导入前校验文件类型',
+    '- beforeExport: 导出前注入额外内容',
+    '',
+    '试试切换模式，或使用工具栏里的导入 / 导出按钮。',
+  ].join('\n');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriCard>
+        <AriRichEditor
+          defaultValue={defaultContent}
+          mode={mode}
+          onModeChange={(nextMode) => {
+            setMode(nextMode);
+            AriMessage.info('当前模式: ' + nextMode);
+          }}
+          minHeight={260}
+          maxHeight={360}
+          beforeImport={async (file) => {
+            const isMarkdown = file.name.endsWith('.md');
+            AriMessage.info('准备导入: ' + file.name);
+            if (!isMarkdown) {
+              AriMessage.warning('仅允许导入 .md 文件');
+            }
+            return isMarkdown;
+          }}
+          beforeExport={async (format, content) => {
+            AriMessage.success('准备导出 ' + format.toUpperCase() + ' 文件');
+            return content + '\n\n<!-- exported:' + format + ' -->';
+          }}
+        />
+      </AriCard>
+      <div>当前编辑模式: {mode}</div>
+    </AriFlex>
+  );
+};
 `,
     "CalloutExample": `export const CalloutExample: React.FC = () => {
 const [content, setContent] = useState(\`# 告示框功能演示
@@ -12319,6 +13800,52 @@ export const Button: React.FC<ButtonProps> = ({
   );
 };
 
+export const AdvancedConfigExample: React.FC = () => {
+  const [mode, setMode] = useState<'source' | 'visual' | 'split'>('split');
+  const defaultContent = [
+    '# 高级配置演示',
+    '',
+    '这个示例集中展示以下能力：',
+    '',
+    '- defaultValue: 非受控初始内容',
+    '- onModeChange: 同步模式切换',
+    '- minHeight / maxHeight: 约束编辑区域高度',
+    '- beforeImport: 导入前校验文件类型',
+    '- beforeExport: 导出前注入额外内容',
+    '',
+    '试试切换模式，或使用工具栏里的导入 / 导出按钮。',
+  ].join('\n');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriCard>
+        <AriRichEditor
+          defaultValue={defaultContent}
+          mode={mode}
+          onModeChange={(nextMode) => {
+            setMode(nextMode);
+            AriMessage.info('当前模式: ' + nextMode);
+          }}
+          minHeight={260}
+          maxHeight={360}
+          beforeImport={async (file) => {
+            const isMarkdown = file.name.endsWith('.md');
+            AriMessage.info('准备导入: ' + file.name);
+            if (!isMarkdown) {
+              AriMessage.warning('仅允许导入 .md 文件');
+            }
+            return isMarkdown;
+          }}
+          beforeExport={async (format, content) => {
+            AriMessage.success('准备导出 ' + format.toUpperCase() + ' 文件');
+            return content + '\n\n<!-- exported:' + format + ' -->';
+          }}
+        />
+      </AriCard>
+      <div>当前编辑模式: {mode}</div>
+    </AriFlex>
+  );
+};
 `,
     "Button": `export const Button: React.FC<ButtonProps> = ({
 children,
@@ -12336,6 +13863,53 @@ children,
     </button>
   );
 };`,
+    "AdvancedConfigExample": `export const AdvancedConfigExample: React.FC = () => {
+const [mode, setMode] = useState<'source' | 'visual' | 'split'>('split');
+  const defaultContent = [
+    '# 高级配置演示',
+    '',
+    '这个示例集中展示以下能力：',
+    '',
+    '- defaultValue: 非受控初始内容',
+    '- onModeChange: 同步模式切换',
+    '- minHeight / maxHeight: 约束编辑区域高度',
+    '- beforeImport: 导入前校验文件类型',
+    '- beforeExport: 导出前注入额外内容',
+    '',
+    '试试切换模式，或使用工具栏里的导入 / 导出按钮。',
+  ].join('\n');
+
+  return (
+    <AriFlex vertical space={12}>
+      <AriCard>
+        <AriRichEditor
+          defaultValue={defaultContent}
+          mode={mode}
+          onModeChange={(nextMode) => {
+            setMode(nextMode);
+            AriMessage.info('当前模式: ' + nextMode);
+          }}
+          minHeight={260}
+          maxHeight={360}
+          beforeImport={async (file) => {
+            const isMarkdown = file.name.endsWith('.md');
+            AriMessage.info('准备导入: ' + file.name);
+            if (!isMarkdown) {
+              AriMessage.warning('仅允许导入 .md 文件');
+            }
+            return isMarkdown;
+          }}
+          beforeExport={async (format, content) => {
+            AriMessage.success('准备导出 ' + format.toUpperCase() + ' 文件');
+            return content + '\n\n<!-- exported:' + format + ' -->';
+          }}
+        />
+      </AriCard>
+      <div>当前编辑模式: {mode}</div>
+    </AriFlex>
+  );
+};
+`,
   },
   "select": {
     "BasicDemo": `export const BasicDemo: React.FC = () => {
@@ -12446,6 +14020,45 @@ children,
             arrowIcon="chevron_right"
             style={{ width: '220px' }}
         />
+    );
+};`,
+    "MultiSelectDemo": `export const MultiSelectDemo: React.FC = () => {
+  const options = [
+        { value: 'design', label: '设计' },
+        { value: 'frontend', label: '前端' },
+        { value: 'backend', label: '后端' },
+        { value: 'qa', label: '测试' },
+        { value: 'product', label: '产品' }
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-select-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 4px;
+                    border-radius: 10px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 defaultValue、multiple、searchable、sortable、maxItems、minItems 和 className。' />
+                <AriSelect
+                    options={options}
+                    defaultValue={['design', 'frontend']}
+                    multiple
+                    searchable
+                    sortable
+                    maxItems={4}
+                    minItems={1}
+                    className='preview-select-outline'
+                    placeholder='多选并支持搜索排序'
+                    onSortChange={(nextValues) => {
+                        console.log('sort changed:', nextValues);
+                    }}
+                    style={{ width: '320px' }}
+                />
+            </AriFlex>
+        </>
     );
 };`,
   },
@@ -12656,6 +14269,9 @@ export const EventHandlingDemo: React.FC = () => {
 };
 
 export const FileTreeDemo: React.FC = () => {
+    const [selectedNode, setSelectedNode] = useState<string>('root');
+    const [expandedKeys, setExpandedKeys] = useState<string[]>(['root', 'src']);
+
     const fileTreeData = [
         {
             key: 'root',
@@ -12791,14 +14407,23 @@ export const FileTreeDemo: React.FC = () => {
         }
     ];
     return (
-
-        <AriContainer style={{ height: '800px' }}>
-            <AriSidebar.TreeView
-                tree={fileTreeData}
-                width={300}
-                onNodeSelect={(node) => console.log('Selected:', node)}
-            />
-        </AriContainer>
+        <div>
+            <div style={{ marginBottom: '16px' }}>
+                <p><strong>当前选中节点:</strong> {selectedNode || '无'}</p>
+                <p><strong>当前展开节点:</strong> {expandedKeys.join(', ') || '无'}</p>
+            </div>
+            <AriContainer style={{ height: '800px' }}>
+                <AriSidebar.TreeView
+                    tree={fileTreeData}
+                    width={300}
+                    className="preview-sidebar-tree"
+                    selectedKey={selectedNode}
+                    expandedKeys={expandedKeys}
+                    onExpandedKeysChange={setExpandedKeys}
+                    onNodeSelect={(node) => setSelectedNode(node.key)}
+                />
+            </AriContainer>
+        </div>
     );
 }
 
@@ -12860,7 +14485,6 @@ export const TreeViewComponentDemo: React.FC = () => {
         </div>
     );
 };
-
 `,
     "ActivityBarPositionDemo": `export const ActivityBarPositionDemo: React.FC = () => {
   const [position, setPosition] = useState<'top' | 'bottom' | 'side'>('side');
@@ -13028,6 +14652,9 @@ export const EventHandlingDemo: React.FC = () => {
 };
 
 export const FileTreeDemo: React.FC = () => {
+    const [selectedNode, setSelectedNode] = useState<string>('root');
+    const [expandedKeys, setExpandedKeys] = useState<string[]>(['root', 'src']);
+
     const fileTreeData = [
         {
             key: 'root',
@@ -13163,14 +14790,23 @@ export const FileTreeDemo: React.FC = () => {
         }
     ];
     return (
-
-        <AriContainer style={{ height: '800px' }}>
-            <AriSidebar.TreeView
-                tree={fileTreeData}
-                width={300}
-                onNodeSelect={(node) => console.log('Selected:', node)}
-            />
-        </AriContainer>
+        <div>
+            <div style={{ marginBottom: '16px' }}>
+                <p><strong>当前选中节点:</strong> {selectedNode || '无'}</p>
+                <p><strong>当前展开节点:</strong> {expandedKeys.join(', ') || '无'}</p>
+            </div>
+            <AriContainer style={{ height: '800px' }}>
+                <AriSidebar.TreeView
+                    tree={fileTreeData}
+                    width={300}
+                    className="preview-sidebar-tree"
+                    selectedKey={selectedNode}
+                    expandedKeys={expandedKeys}
+                    onExpandedKeysChange={setExpandedKeys}
+                    onNodeSelect={(node) => setSelectedNode(node.key)}
+                />
+            </AriContainer>
+        </div>
     );
 }
 
@@ -13232,7 +14868,6 @@ export const TreeViewComponentDemo: React.FC = () => {
         </div>
     );
 };
-
 `,
     "EventHandlingDemo": `export const EventHandlingDemo: React.FC = () => {
   const [selectedNode, setSelectedNode] = useState<string>('');
@@ -13322,6 +14957,9 @@ export const TreeViewComponentDemo: React.FC = () => {
 };
 
 export const FileTreeDemo: React.FC = () => {
+    const [selectedNode, setSelectedNode] = useState<string>('root');
+    const [expandedKeys, setExpandedKeys] = useState<string[]>(['root', 'src']);
+
     const fileTreeData = [
         {
             key: 'root',
@@ -13457,14 +15095,23 @@ export const FileTreeDemo: React.FC = () => {
         }
     ];
     return (
-
-        <AriContainer style={{ height: '800px' }}>
-            <AriSidebar.TreeView
-                tree={fileTreeData}
-                width={300}
-                onNodeSelect={(node) => console.log('Selected:', node)}
-            />
-        </AriContainer>
+        <div>
+            <div style={{ marginBottom: '16px' }}>
+                <p><strong>当前选中节点:</strong> {selectedNode || '无'}</p>
+                <p><strong>当前展开节点:</strong> {expandedKeys.join(', ') || '无'}</p>
+            </div>
+            <AriContainer style={{ height: '800px' }}>
+                <AriSidebar.TreeView
+                    tree={fileTreeData}
+                    width={300}
+                    className="preview-sidebar-tree"
+                    selectedKey={selectedNode}
+                    expandedKeys={expandedKeys}
+                    onExpandedKeysChange={setExpandedKeys}
+                    onNodeSelect={(node) => setSelectedNode(node.key)}
+                />
+            </AriContainer>
+        </div>
     );
 }
 
@@ -13526,10 +15173,12 @@ export const TreeViewComponentDemo: React.FC = () => {
         </div>
     );
 };
-
 `,
     "FileTreeDemo": `export const FileTreeDemo: React.FC = () => {
-  const fileTreeData = [
+  const [selectedNode, setSelectedNode] = useState<string>('root');
+    const [expandedKeys, setExpandedKeys] = useState<string[]>(['root', 'src']);
+
+    const fileTreeData = [
         {
             key: 'root',
             name: '项目根目录',
@@ -13664,14 +15313,23 @@ export const TreeViewComponentDemo: React.FC = () => {
         }
     ];
     return (
-
-        <AriContainer style={{ height: '800px' }}>
-            <AriSidebar.TreeView
-                tree={fileTreeData}
-                width={300}
-                onNodeSelect={(node) => console.log('Selected:', node)}
-            />
-        </AriContainer>
+        <div>
+            <div style={{ marginBottom: '16px' }}>
+                <p><strong>当前选中节点:</strong> {selectedNode || '无'}</p>
+                <p><strong>当前展开节点:</strong> {expandedKeys.join(', ') || '无'}</p>
+            </div>
+            <AriContainer style={{ height: '800px' }}>
+                <AriSidebar.TreeView
+                    tree={fileTreeData}
+                    width={300}
+                    className="preview-sidebar-tree"
+                    selectedKey={selectedNode}
+                    expandedKeys={expandedKeys}
+                    onExpandedKeysChange={setExpandedKeys}
+                    onNodeSelect={(node) => setSelectedNode(node.key)}
+                />
+            </AriContainer>
+        </div>
     );
 }
 
@@ -13733,7 +15391,6 @@ export const TreeViewComponentDemo: React.FC = () => {
         </div>
     );
 };
-
 `,
     "TreeViewComponentDemo": `export const TreeViewComponentDemo: React.FC = () => {
   const [selectedNode, setSelectedNode] = useState<string>('');
@@ -13793,12 +15450,12 @@ export const TreeViewComponentDemo: React.FC = () => {
         </div>
     );
 };
-
 `,
   },
   "slider": {
     "BasicSlider": `export const BasicSlider: React.FC = () => {
   const [value, setValue] = useState(30);
+    const [settledValue, setSettledValue] = useState(30);
 
     const handleChange = (value: number) => {
         setValue(value);
@@ -13806,8 +15463,16 @@ export const TreeViewComponentDemo: React.FC = () => {
 
     return (
         <AriContainer>
-            <AriSliderComponent value={value} onChange={handleChange} />
+            <AriSliderComponent
+                value={value}
+                min={10}
+                max={90}
+                size={320}
+                onChange={handleChange}
+                onAfterChange={setSettledValue}
+            />
             <div style={{ marginTop: '20px' }}>当前值: {value}</div>
+            <div style={{ marginTop: '8px' }}>拖动结束后的值: {settledValue}</div>
         </AriContainer>
     );
 };`,
@@ -14153,7 +15818,7 @@ export const ShapeSlider: React.FC = () => {
     const cs = useCss("")
     return (
         <AriFlex>
-            <AriSpin spinning={spinning}>
+            <AriSpin spinning={spinning} className="preview-spin-outline">
                 <div style={{ padding: '20px', backgroundColor: cs.getCssVarName('color', 'bg'), minHeight: '120px' }}>
                     可以被包裹的内容区域
                 </div>
@@ -14251,6 +15916,7 @@ export const ShapeSlider: React.FC = () => {
             <AriStatistic
                 title="活跃用户"
                 value={112893}
+                valueStyle={{ color: 'var(--z-color-primary)' }}
             />
             <AriStatistic
                 title="反馈数"
@@ -14463,7 +16129,7 @@ export const ShapeSlider: React.FC = () => {
             <AriTypography value="向下滚动查看效果" />
         </AriContainer>
         
-        <AriSticky>
+        <AriSticky zIndex={200}>
             <AriContainer 
                 bgColor="#1677ff" 
                 style={{ padding: '10px 20px', color: 'white' }}
@@ -14717,6 +16383,12 @@ export const DisabledSticky: React.FC = () => {
     return (
         <AriFlex vertical>
             <AriSwitch checked={checked} onChange={handleChange} checkedChildren="开启" unCheckedChildren="关闭" /> 
+            <AriSwitch
+                defaultChecked="on"
+                checkedValue="on"
+                uncheckedValue="off"
+                onChange={(value) => console.log('switch value:', value)}
+            />
         </AriFlex>
     );
 };`,
@@ -15214,6 +16886,97 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};
+
+export const ScrollPagingDemo: React.FC = () => {
+    const data = Array.from({ length: 6 }).map((_, index) => ({
+        id: index + 1,
+        name: \`日志 \${index + 1}\`,
+        status: index % 2 === 0 ? '已完成' : '处理中',
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: '编号', key: 'id', width: 80 },
+        { title: '标题', key: 'name' },
+        { title: '状态', key: 'status' },
+    ];
+
+    return (
+        <AriFlex vertical space={24}>
+            <div>
+                <AriTypography variant='body' value='滚动分页：当前没有更多数据，因此底部会直接显示 noMoreText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={80}
+                    hasMore={false}
+                    loadingText='正在拉取更多日志...'
+                    noMoreText='日志已经全部加载完成'
+                    defaultPageSize={6}
+                />
+            </div>
+
+            <div>
+                <AriTypography variant='body' value='当 loading 为 true 时，会显示自定义 loadingText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={120}
+                    hasMore
+                    loading
+                    loadingText='正在同步下一页数据...'
+                    noMoreText='已没有更多记录'
+                    defaultPageSize={6}
+                />
+            </div>
+        </AriFlex>
+    );
+};
 `,
     "BorderedTable": `export const BorderedTable: React.FC = () => {
   const data = [
@@ -15688,6 +17451,97 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};
+
+export const ScrollPagingDemo: React.FC = () => {
+    const data = Array.from({ length: 6 }).map((_, index) => ({
+        id: index + 1,
+        name: \`日志 \${index + 1}\`,
+        status: index % 2 === 0 ? '已完成' : '处理中',
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: '编号', key: 'id', width: 80 },
+        { title: '标题', key: 'name' },
+        { title: '状态', key: 'status' },
+    ];
+
+    return (
+        <AriFlex vertical space={24}>
+            <div>
+                <AriTypography variant='body' value='滚动分页：当前没有更多数据，因此底部会直接显示 noMoreText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={80}
+                    hasMore={false}
+                    loadingText='正在拉取更多日志...'
+                    noMoreText='日志已经全部加载完成'
+                    defaultPageSize={6}
+                />
+            </div>
+
+            <div>
+                <AriTypography variant='body' value='当 loading 为 true 时，会显示自定义 loadingText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={120}
+                    hasMore
+                    loading
+                    loadingText='正在同步下一页数据...'
+                    noMoreText='已没有更多记录'
+                    defaultPageSize={6}
+                />
+            </div>
+        </AriFlex>
+    );
+};
 `,
     "CustomRenderTable": `export const CustomRenderTable: React.FC = () => {
   const data = [
@@ -16129,6 +17983,97 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};
+
+export const ScrollPagingDemo: React.FC = () => {
+    const data = Array.from({ length: 6 }).map((_, index) => ({
+        id: index + 1,
+        name: \`日志 \${index + 1}\`,
+        status: index % 2 === 0 ? '已完成' : '处理中',
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: '编号', key: 'id', width: 80 },
+        { title: '标题', key: 'name' },
+        { title: '状态', key: 'status' },
+    ];
+
+    return (
+        <AriFlex vertical space={24}>
+            <div>
+                <AriTypography variant='body' value='滚动分页：当前没有更多数据，因此底部会直接显示 noMoreText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={80}
+                    hasMore={false}
+                    loadingText='正在拉取更多日志...'
+                    noMoreText='日志已经全部加载完成'
+                    defaultPageSize={6}
+                />
+            </div>
+
+            <div>
+                <AriTypography variant='body' value='当 loading 为 true 时，会显示自定义 loadingText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={120}
+                    hasMore
+                    loading
+                    loadingText='正在同步下一页数据...'
+                    noMoreText='已没有更多记录'
+                    defaultPageSize={6}
+                />
+            </div>
+        </AriFlex>
+    );
+};
 `,
     "FixedColumnsTable": `export const FixedColumnsTable: React.FC = () => {
   const data = [
@@ -16538,6 +18483,97 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};
+
+export const ScrollPagingDemo: React.FC = () => {
+    const data = Array.from({ length: 6 }).map((_, index) => ({
+        id: index + 1,
+        name: \`日志 \${index + 1}\`,
+        status: index % 2 === 0 ? '已完成' : '处理中',
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: '编号', key: 'id', width: 80 },
+        { title: '标题', key: 'name' },
+        { title: '状态', key: 'status' },
+    ];
+
+    return (
+        <AriFlex vertical space={24}>
+            <div>
+                <AriTypography variant='body' value='滚动分页：当前没有更多数据，因此底部会直接显示 noMoreText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={80}
+                    hasMore={false}
+                    loadingText='正在拉取更多日志...'
+                    noMoreText='日志已经全部加载完成'
+                    defaultPageSize={6}
+                />
+            </div>
+
+            <div>
+                <AriTypography variant='body' value='当 loading 为 true 时，会显示自定义 loadingText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={120}
+                    hasMore
+                    loading
+                    loadingText='正在同步下一页数据...'
+                    noMoreText='已没有更多记录'
+                    defaultPageSize={6}
+                />
+            </div>
+        </AriFlex>
+    );
+};
 `,
     "SelectableTable": `export const SelectableTable: React.FC = () => {
   const data = [
@@ -16918,6 +18954,97 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};
+
+export const ScrollPagingDemo: React.FC = () => {
+    const data = Array.from({ length: 6 }).map((_, index) => ({
+        id: index + 1,
+        name: \`日志 \${index + 1}\`,
+        status: index % 2 === 0 ? '已完成' : '处理中',
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: '编号', key: 'id', width: 80 },
+        { title: '标题', key: 'name' },
+        { title: '状态', key: 'status' },
+    ];
+
+    return (
+        <AriFlex vertical space={24}>
+            <div>
+                <AriTypography variant='body' value='滚动分页：当前没有更多数据，因此底部会直接显示 noMoreText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={80}
+                    hasMore={false}
+                    loadingText='正在拉取更多日志...'
+                    noMoreText='日志已经全部加载完成'
+                    defaultPageSize={6}
+                />
+            </div>
+
+            <div>
+                <AriTypography variant='body' value='当 loading 为 true 时，会显示自定义 loadingText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={120}
+                    hasMore
+                    loading
+                    loadingText='正在同步下一页数据...'
+                    noMoreText='已没有更多记录'
+                    defaultPageSize={6}
+                />
+            </div>
+        </AriFlex>
+    );
+};
 `,
     "StripedTable": `export const StripedTable: React.FC = () => {
   const data = [
@@ -17270,6 +19397,97 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};
+
+export const ScrollPagingDemo: React.FC = () => {
+    const data = Array.from({ length: 6 }).map((_, index) => ({
+        id: index + 1,
+        name: \`日志 \${index + 1}\`,
+        status: index % 2 === 0 ? '已完成' : '处理中',
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: '编号', key: 'id', width: 80 },
+        { title: '标题', key: 'name' },
+        { title: '状态', key: 'status' },
+    ];
+
+    return (
+        <AriFlex vertical space={24}>
+            <div>
+                <AriTypography variant='body' value='滚动分页：当前没有更多数据，因此底部会直接显示 noMoreText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={80}
+                    hasMore={false}
+                    loadingText='正在拉取更多日志...'
+                    noMoreText='日志已经全部加载完成'
+                    defaultPageSize={6}
+                />
+            </div>
+
+            <div>
+                <AriTypography variant='body' value='当 loading 为 true 时，会显示自定义 loadingText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={120}
+                    hasMore
+                    loading
+                    loadingText='正在同步下一页数据...'
+                    noMoreText='已没有更多记录'
+                    defaultPageSize={6}
+                />
+            </div>
+        </AriFlex>
+    );
+};
 `,
     "StickyHeaderTable": `export const StickyHeaderTable: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17598,6 +19816,97 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};
+
+export const ScrollPagingDemo: React.FC = () => {
+    const data = Array.from({ length: 6 }).map((_, index) => ({
+        id: index + 1,
+        name: \`日志 \${index + 1}\`,
+        status: index % 2 === 0 ? '已完成' : '处理中',
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: '编号', key: 'id', width: 80 },
+        { title: '标题', key: 'name' },
+        { title: '状态', key: 'status' },
+    ];
+
+    return (
+        <AriFlex vertical space={24}>
+            <div>
+                <AriTypography variant='body' value='滚动分页：当前没有更多数据，因此底部会直接显示 noMoreText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={80}
+                    hasMore={false}
+                    loadingText='正在拉取更多日志...'
+                    noMoreText='日志已经全部加载完成'
+                    defaultPageSize={6}
+                />
+            </div>
+
+            <div>
+                <AriTypography variant='body' value='当 loading 为 true 时，会显示自定义 loadingText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={120}
+                    hasMore
+                    loading
+                    loadingText='正在同步下一页数据...'
+                    noMoreText='已没有更多记录'
+                    defaultPageSize={6}
+                />
+            </div>
+        </AriFlex>
+    );
+};
 `,
     "RowEventsTable": `export const RowEventsTable: React.FC = () => {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
@@ -17869,6 +20178,97 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};
+
+export const ScrollPagingDemo: React.FC = () => {
+    const data = Array.from({ length: 6 }).map((_, index) => ({
+        id: index + 1,
+        name: \`日志 \${index + 1}\`,
+        status: index % 2 === 0 ? '已完成' : '处理中',
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: '编号', key: 'id', width: 80 },
+        { title: '标题', key: 'name' },
+        { title: '状态', key: 'status' },
+    ];
+
+    return (
+        <AriFlex vertical space={24}>
+            <div>
+                <AriTypography variant='body' value='滚动分页：当前没有更多数据，因此底部会直接显示 noMoreText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={80}
+                    hasMore={false}
+                    loadingText='正在拉取更多日志...'
+                    noMoreText='日志已经全部加载完成'
+                    defaultPageSize={6}
+                />
+            </div>
+
+            <div>
+                <AriTypography variant='body' value='当 loading 为 true 时，会显示自定义 loadingText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={120}
+                    hasMore
+                    loading
+                    loadingText='正在同步下一页数据...'
+                    noMoreText='已没有更多记录'
+                    defaultPageSize={6}
+                />
+            </div>
+        </AriFlex>
+    );
+};
 `,
     "SizeDemo": `export const SizeDemo: React.FC = () => {
   const data = [
@@ -18081,7 +20481,46 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
-`,
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};`,
     "EllipsisDemo": `export const EllipsisDemo: React.FC = () => {
   const data = [
         { 
@@ -18260,7 +20699,46 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
-`,
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};`,
     "MaxHeightDemo": `export const MaxHeightDemo: React.FC = () => {
   const generateData = (count: number) => {
         const data = [];
@@ -18396,7 +20874,46 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
-`,
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};`,
     "PaginationDemo": `export const PaginationDemo: React.FC = () => {
   const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -18495,7 +21012,46 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
-`,
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};`,
     "EmptyPlaceholderDemo": `export const EmptyPlaceholderDemo: React.FC = () => {
   const data = [
         { name: '张三', age: null, city: '' },
@@ -18521,7 +21077,135 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         </AriFlex>
     );
 }
-`,
+
+export const PaginationModesDemo: React.FC = () => {
+    const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};`,
+    "PaginationModesDemo": `export const PaginationModesDemo: React.FC = () => {
+  const data = Array.from({ length: 36 }).map((_, index) => ({
+        id: index + 1,
+        name: \`成员 \${index + 1}\`,
+        role: index % 2 === 0 ? '开发' : '设计',
+        city: ['上海', '杭州', '深圳'][index % 3],
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: 'ID', key: 'id', width: 80 },
+        { title: '姓名', key: 'name' },
+        { title: '角色', key: 'role' },
+        { title: '城市', key: 'city' },
+    ];
+
+    return (
+        <>
+            <style>{\`
+                .preview-table-outline {
+                    outline: 2px dashed var(--z-color-primary);
+                    outline-offset: 6px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16}>
+                <AriTypography variant='body' value='这个示例覆盖 className、defaultCurrent、defaultPageSize 和 paginationPosition。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    className='preview-table-outline'
+                    defaultCurrent={2}
+                    defaultPageSize={5}
+                    paginationPosition='both'
+                    showTotal={(total, range) => \`显示 \${range[0]}-\${range[1]} / 共 \${total} 条\`}
+                />
+            </AriFlex>
+        </>
+    );
+};`,
+    "ScrollPagingDemo": `export const ScrollPagingDemo: React.FC = () => {
+  const data = Array.from({ length: 6 }).map((_, index) => ({
+        id: index + 1,
+        name: \`日志 \${index + 1}\`,
+        status: index % 2 === 0 ? '已完成' : '处理中',
+    }));
+
+    const columns: AriTableColumn[] = [
+        { title: '编号', key: 'id', width: 80 },
+        { title: '标题', key: 'name' },
+        { title: '状态', key: 'status' },
+    ];
+
+    return (
+        <AriFlex vertical space={24}>
+            <div>
+                <AriTypography variant='body' value='滚动分页：当前没有更多数据，因此底部会直接显示 noMoreText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={80}
+                    hasMore={false}
+                    loadingText='正在拉取更多日志...'
+                    noMoreText='日志已经全部加载完成'
+                    defaultPageSize={6}
+                />
+            </div>
+
+            <div>
+                <AriTypography variant='body' value='当 loading 为 true 时，会显示自定义 loadingText。' />
+                <AriTable
+                    data={data}
+                    columns={columns}
+                    bordered
+                    maxHeight={220}
+                    enableScrollPaging
+                    scrollThreshold={120}
+                    hasMore
+                    loading
+                    loadingText='正在同步下一页数据...'
+                    noMoreText='已没有更多记录'
+                    defaultPageSize={6}
+                />
+            </div>
+        </AriFlex>
+    );
+};`,
   },
   "tabs": {
     "BasicTabs": `export const BasicTabs: React.FC = () => {
@@ -18538,6 +21222,7 @@ export const EmptyPlaceholderDemo: React.FC = () => {
             activeKey={activeKey}
             items={items}
             onChange={setActiveKey}
+            className="preview-basic-tabs"
         />
     );
 };`,
@@ -18561,7 +21246,15 @@ export const EmptyPlaceholderDemo: React.FC = () => {
   },
   "tag": {
     "BasicTag": `export const BasicTag: React.FC = () => (
-  <AriTag>默认标签</AriTag>
+  <>
+        <style>{\`
+            .preview-tag-outline {
+                outline: 2px dashed var(--z-color-primary);
+                outline-offset: 4px;
+            }
+        \`}</style>
+        <AriTag children="默认标签" className="preview-tag-outline" />
+    </>
 );`,
     "ClosableDemo": `export const ClosableDemo: React.FC = () => {
   const handleClose = () => {
@@ -18612,6 +21305,7 @@ export const EmptyPlaceholderDemo: React.FC = () => {
         <AriTag bordered color="success" icon="check-circle" closable>已完成</AriTag>
         <AriTag bordered color="warning" icon="clock">待处理</AriTag>
         <AriTag bordered color="danger" icon="exclamation-circle" closable>紧急</AriTag>
+        <AriTag size="lg" active color="info" children="激活态" />
     </AriFlex>
 );`,
   },
@@ -18789,7 +21483,35 @@ export const TimePickerMinMax: React.FC = () => {
     return (
         <AriTimePicker minTime={minTime} maxTime={maxTime} />
     );
-};`,
+};
+
+export const TimePickerDisplayDemo: React.FC = () => {
+    return (
+        <>
+            <style>{\`
+                .preview-time-picker-outline {
+                    outline: 2px dashed var(--z-color-info);
+                    outline-offset: 4px;
+                    border-radius: 14px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16} height={320}>
+                <AriTypography variant='body' value='这个示例覆盖 format、placeholder、size、placement、prefixIcon、readonly、className 与 style。' />
+                <AriTimePicker
+                    placeholder='顶部结束位置弹出'
+                    size='large'
+                    placement='top-end'
+                    prefixIcon='alarm'
+                    readonly={false}
+                    className='preview-time-picker-outline'
+                    style={{ width: 320 }}
+                    format={(time) => \`\${time.getHours()} 点 \${time.getMinutes()} 分\`}
+                />
+            </AriFlex>
+        </>
+    );
+};
+`,
     "ControlledTimePicker": `export const ControlledTimePicker: React.FC = () => {
   const [time, setTime] = useState<Date | undefined>(new Date());
 
@@ -18821,7 +21543,35 @@ export const TimePickerMinMax: React.FC = () => {
     return (
         <AriTimePicker minTime={minTime} maxTime={maxTime} />
     );
-};`,
+};
+
+export const TimePickerDisplayDemo: React.FC = () => {
+    return (
+        <>
+            <style>{\`
+                .preview-time-picker-outline {
+                    outline: 2px dashed var(--z-color-info);
+                    outline-offset: 4px;
+                    border-radius: 14px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16} height={320}>
+                <AriTypography variant='body' value='这个示例覆盖 format、placeholder、size、placement、prefixIcon、readonly、className 与 style。' />
+                <AriTimePicker
+                    placeholder='顶部结束位置弹出'
+                    size='large'
+                    placement='top-end'
+                    prefixIcon='alarm'
+                    readonly={false}
+                    className='preview-time-picker-outline'
+                    style={{ width: 320 }}
+                    format={(time) => \`\${time.getHours()} 点 \${time.getMinutes()} 分\`}
+                />
+            </AriFlex>
+        </>
+    );
+};
+`,
     "TimePickerStep": `export const TimePickerStep: React.FC = () => {
   return (
         <AriTimePicker step={{ hour: 2, minute: 15, second: 30 }} />
@@ -18836,6 +21586,32 @@ export const TimePickerMinMax: React.FC = () => {
 
     return (
         <AriTimePicker minTime={minTime} maxTime={maxTime} />
+    );
+};`,
+    "TimePickerDisplayDemo": `export const TimePickerDisplayDemo: React.FC = () => {
+  return (
+        <>
+            <style>{\`
+                .preview-time-picker-outline {
+                    outline: 2px dashed var(--z-color-info);
+                    outline-offset: 4px;
+                    border-radius: 14px;
+                }
+            \`}</style>
+            <AriFlex vertical space={16} height={320}>
+                <AriTypography variant='body' value='这个示例覆盖 format、placeholder、size、placement、prefixIcon、readonly、className 与 style。' />
+                <AriTimePicker
+                    placeholder='顶部结束位置弹出'
+                    size='large'
+                    placement='top-end'
+                    prefixIcon='alarm'
+                    readonly={false}
+                    className='preview-time-picker-outline'
+                    style={{ width: 320 }}
+                    format={(time) => \`\${time.getHours()} 点 \${time.getMinutes()} 分\`}
+                />
+            </AriFlex>
+        </>
     );
 };`,
   },
@@ -19216,9 +21992,10 @@ export const TimePickerMinMax: React.FC = () => {
     "BasicTooltip": `export const BasicTooltip: React.FC = () => {
   return (
         <AriFlex space={16}>
-            <AriTooltip content="这是一个简单的提示框">
-                <AriButton>鼠标悬停</AriButton>
-            </AriTooltip>
+            <AriTooltip
+                content="这是一个简单的提示框"
+                children={<AriButton>鼠标悬停</AriButton>}
+            />
         </AriFlex>
     );
 };`,
@@ -19299,6 +22076,27 @@ export const TimePickerMinMax: React.FC = () => {
         </AriTooltip>
     );
 };`,
+    "TooltipBehaviorDemo": `export const TooltipBehaviorDemo: React.FC = () => {
+  return (
+        <AriFlex space={16} wrap>
+            <AriTooltip
+                content="延迟显示 / 隐藏，并在显示状态变化时输出日志"
+                showDelay={500}
+                hideDelay={300}
+                minWidth={240}
+                onShow={() => console.log('tooltip shown')}
+                onHide={() => console.log('tooltip hidden')}
+                children={<AriButton>延迟提示</AriButton>}
+            />
+
+            <AriTooltip
+                content="这个提示框已被禁用"
+                disabled
+                children={<AriButton>禁用状态</AriButton>}
+            />
+        </AriFlex>
+    );
+};`,
   },
   "typography": {
     "BasicTypography": `export const BasicTypography: React.FC = () => (
@@ -19377,6 +22175,34 @@ export const TimePickerMinMax: React.FC = () => {
       鼠标按下/松开：查看控制台输出
     </AriTypography>
   </AriFlex>
+);`,
+    "ContentTypography": `export const ContentTypography: React.FC = () => (
+<>
+    <style>{\`
+      .preview-typography-outline {
+        outline: 2px dashed var(--z-color-primary);
+        outline-offset: 4px;
+      }
+    \`}</style>
+    <AriFlex vertical space={12}>
+      <AriTypography
+        value="通过 value 直接传入文本内容"
+        className="preview-typography-outline"
+      />
+      <div style={{ width: 220, border: '1px solid #ccc', padding: '8px' }}>
+        <AriTypography
+          whiteSpace="nowrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          value="whiteSpace + overflow + textOverflow 组合后，超出的文本会显示省略号。"
+        />
+      </div>
+      <AriTypography>
+        <span>通过 children 传入 </span>
+        <strong>富文本节点</strong>
+      </AriTypography>
+    </AriFlex>
+  </>
 );`,
   },
   "upload": {
@@ -19713,7 +22539,94 @@ export const FrontendOnlyExample: React.FC = () => {
       </div>
     </AriFlex>
   );
-};`,
+};
+
+export const UploadListControlExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([
+    {
+      id: 'demo-image',
+      name: '封面图.png',
+      size: 512 * 1024,
+      type: 'image/png',
+      status: 'uploading',
+      progress: 64,
+      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+    },
+    {
+      id: 'demo-doc',
+      name: '需求说明.pdf',
+      size: 1024 * 1024,
+      type: 'application/pdf',
+      status: 'success',
+      progress: 100
+    }
+  ]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        onRemove={(file, index) => {
+          AriMessage.info(\`删除文件: \${file.name}（索引 \${index}）\`);
+        }}
+        onReorder={(nextFileList, fromIndex, toIndex) => {
+          setFileList(nextFileList);
+          AriMessage.info(\`文件从 \${fromIndex + 1} 移动到 \${toIndex + 1}\`);
+        }}
+        onPreview={(file) => {
+          AriMessage.success(\`预览文件: \${file.name}\`);
+        }}
+        listGap="lg"
+        showProgress
+        showFileSize
+        showRemoveButton
+        showPreviewButton
+        uploadText="拖动文件排序，观察列表间距"
+        uploadDescription="当前示例显式覆盖文件列表控制相关 props"
+      />
+
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        multiple={false}
+        dragUpload={false}
+        showFileList={false}
+        uploadIcon="file_upload"
+        uploadText="单文件上传，且关闭拖拽与文件列表"
+        uploadDescription="这里只保留点击选择文件，不显示下方列表"
+      />
+    </AriFlex>
+  );
+};
+
+export const UploadValidationAndEmptyExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        beforeUpload={(file) => {
+          const isAllowed = file.name.endsWith('.md') || file.name.endsWith('.txt');
+          if (!isAllowed) {
+            AriMessage.error('仅允许上传 .md 或 .txt 文件');
+          }
+          return isAllowed;
+        }}
+        renderEmpty={() => (
+          <div style={{ color: '#888', padding: '12px 0' }}>
+            当前没有文件，renderEmpty 正在生效。
+          </div>
+        )}
+        uploadText="上传文档文件"
+        uploadDescription="beforeUpload 会阻止非 .md / .txt 文件"
+      />
+    </AriFlex>
+  );
+};
+`,
     "FileTypesExample": `export const FileTypesExample: React.FC = () => {
 const [fileList, setFileList] = useState<AriUploadFile[]>([]);
 
@@ -20024,7 +22937,94 @@ export const FrontendOnlyExample: React.FC = () => {
       </div>
     </AriFlex>
   );
-};`,
+};
+
+export const UploadListControlExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([
+    {
+      id: 'demo-image',
+      name: '封面图.png',
+      size: 512 * 1024,
+      type: 'image/png',
+      status: 'uploading',
+      progress: 64,
+      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+    },
+    {
+      id: 'demo-doc',
+      name: '需求说明.pdf',
+      size: 1024 * 1024,
+      type: 'application/pdf',
+      status: 'success',
+      progress: 100
+    }
+  ]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        onRemove={(file, index) => {
+          AriMessage.info(\`删除文件: \${file.name}（索引 \${index}）\`);
+        }}
+        onReorder={(nextFileList, fromIndex, toIndex) => {
+          setFileList(nextFileList);
+          AriMessage.info(\`文件从 \${fromIndex + 1} 移动到 \${toIndex + 1}\`);
+        }}
+        onPreview={(file) => {
+          AriMessage.success(\`预览文件: \${file.name}\`);
+        }}
+        listGap="lg"
+        showProgress
+        showFileSize
+        showRemoveButton
+        showPreviewButton
+        uploadText="拖动文件排序，观察列表间距"
+        uploadDescription="当前示例显式覆盖文件列表控制相关 props"
+      />
+
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        multiple={false}
+        dragUpload={false}
+        showFileList={false}
+        uploadIcon="file_upload"
+        uploadText="单文件上传，且关闭拖拽与文件列表"
+        uploadDescription="这里只保留点击选择文件，不显示下方列表"
+      />
+    </AriFlex>
+  );
+};
+
+export const UploadValidationAndEmptyExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        beforeUpload={(file) => {
+          const isAllowed = file.name.endsWith('.md') || file.name.endsWith('.txt');
+          if (!isAllowed) {
+            AriMessage.error('仅允许上传 .md 或 .txt 文件');
+          }
+          return isAllowed;
+        }}
+        renderEmpty={() => (
+          <div style={{ color: '#888', padding: '12px 0' }}>
+            当前没有文件，renderEmpty 正在生效。
+          </div>
+        )}
+        uploadText="上传文档文件"
+        uploadDescription="beforeUpload 会阻止非 .md / .txt 文件"
+      />
+    </AriFlex>
+  );
+};
+`,
     "LimitExample": `export const LimitExample: React.FC = () => {
 const [fileList, setFileList] = useState<AriUploadFile[]>([]);
 
@@ -20306,7 +23306,94 @@ export const FrontendOnlyExample: React.FC = () => {
       </div>
     </AriFlex>
   );
-};`,
+};
+
+export const UploadListControlExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([
+    {
+      id: 'demo-image',
+      name: '封面图.png',
+      size: 512 * 1024,
+      type: 'image/png',
+      status: 'uploading',
+      progress: 64,
+      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+    },
+    {
+      id: 'demo-doc',
+      name: '需求说明.pdf',
+      size: 1024 * 1024,
+      type: 'application/pdf',
+      status: 'success',
+      progress: 100
+    }
+  ]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        onRemove={(file, index) => {
+          AriMessage.info(\`删除文件: \${file.name}（索引 \${index}）\`);
+        }}
+        onReorder={(nextFileList, fromIndex, toIndex) => {
+          setFileList(nextFileList);
+          AriMessage.info(\`文件从 \${fromIndex + 1} 移动到 \${toIndex + 1}\`);
+        }}
+        onPreview={(file) => {
+          AriMessage.success(\`预览文件: \${file.name}\`);
+        }}
+        listGap="lg"
+        showProgress
+        showFileSize
+        showRemoveButton
+        showPreviewButton
+        uploadText="拖动文件排序，观察列表间距"
+        uploadDescription="当前示例显式覆盖文件列表控制相关 props"
+      />
+
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        multiple={false}
+        dragUpload={false}
+        showFileList={false}
+        uploadIcon="file_upload"
+        uploadText="单文件上传，且关闭拖拽与文件列表"
+        uploadDescription="这里只保留点击选择文件，不显示下方列表"
+      />
+    </AriFlex>
+  );
+};
+
+export const UploadValidationAndEmptyExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        beforeUpload={(file) => {
+          const isAllowed = file.name.endsWith('.md') || file.name.endsWith('.txt');
+          if (!isAllowed) {
+            AriMessage.error('仅允许上传 .md 或 .txt 文件');
+          }
+          return isAllowed;
+        }}
+        renderEmpty={() => (
+          <div style={{ color: '#888', padding: '12px 0' }}>
+            当前没有文件，renderEmpty 正在生效。
+          </div>
+        )}
+        uploadText="上传文档文件"
+        uploadDescription="beforeUpload 会阻止非 .md / .txt 文件"
+      />
+    </AriFlex>
+  );
+};
+`,
     "CustomRenderExample": `export const CustomRenderExample: React.FC = () => {
 const [fileList, setFileList] = useState<AriUploadFile[]>([]);
 
@@ -20556,7 +23643,94 @@ export const FrontendOnlyExample: React.FC = () => {
       </div>
     </AriFlex>
   );
-};`,
+};
+
+export const UploadListControlExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([
+    {
+      id: 'demo-image',
+      name: '封面图.png',
+      size: 512 * 1024,
+      type: 'image/png',
+      status: 'uploading',
+      progress: 64,
+      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+    },
+    {
+      id: 'demo-doc',
+      name: '需求说明.pdf',
+      size: 1024 * 1024,
+      type: 'application/pdf',
+      status: 'success',
+      progress: 100
+    }
+  ]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        onRemove={(file, index) => {
+          AriMessage.info(\`删除文件: \${file.name}（索引 \${index}）\`);
+        }}
+        onReorder={(nextFileList, fromIndex, toIndex) => {
+          setFileList(nextFileList);
+          AriMessage.info(\`文件从 \${fromIndex + 1} 移动到 \${toIndex + 1}\`);
+        }}
+        onPreview={(file) => {
+          AriMessage.success(\`预览文件: \${file.name}\`);
+        }}
+        listGap="lg"
+        showProgress
+        showFileSize
+        showRemoveButton
+        showPreviewButton
+        uploadText="拖动文件排序，观察列表间距"
+        uploadDescription="当前示例显式覆盖文件列表控制相关 props"
+      />
+
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        multiple={false}
+        dragUpload={false}
+        showFileList={false}
+        uploadIcon="file_upload"
+        uploadText="单文件上传，且关闭拖拽与文件列表"
+        uploadDescription="这里只保留点击选择文件，不显示下方列表"
+      />
+    </AriFlex>
+  );
+};
+
+export const UploadValidationAndEmptyExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        beforeUpload={(file) => {
+          const isAllowed = file.name.endsWith('.md') || file.name.endsWith('.txt');
+          if (!isAllowed) {
+            AriMessage.error('仅允许上传 .md 或 .txt 文件');
+          }
+          return isAllowed;
+        }}
+        renderEmpty={() => (
+          <div style={{ color: '#888', padding: '12px 0' }}>
+            当前没有文件，renderEmpty 正在生效。
+          </div>
+        )}
+        uploadText="上传文档文件"
+        uploadDescription="beforeUpload 会阻止非 .md / .txt 文件"
+      />
+    </AriFlex>
+  );
+};
+`,
     "DisabledExample": `export const DisabledExample: React.FC = () => {
 const [fileList, setFileList] = useState<AriUploadFile[]>([
     {
@@ -20755,7 +23929,94 @@ export const FrontendOnlyExample: React.FC = () => {
       </div>
     </AriFlex>
   );
-};`,
+};
+
+export const UploadListControlExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([
+    {
+      id: 'demo-image',
+      name: '封面图.png',
+      size: 512 * 1024,
+      type: 'image/png',
+      status: 'uploading',
+      progress: 64,
+      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+    },
+    {
+      id: 'demo-doc',
+      name: '需求说明.pdf',
+      size: 1024 * 1024,
+      type: 'application/pdf',
+      status: 'success',
+      progress: 100
+    }
+  ]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        onRemove={(file, index) => {
+          AriMessage.info(\`删除文件: \${file.name}（索引 \${index}）\`);
+        }}
+        onReorder={(nextFileList, fromIndex, toIndex) => {
+          setFileList(nextFileList);
+          AriMessage.info(\`文件从 \${fromIndex + 1} 移动到 \${toIndex + 1}\`);
+        }}
+        onPreview={(file) => {
+          AriMessage.success(\`预览文件: \${file.name}\`);
+        }}
+        listGap="lg"
+        showProgress
+        showFileSize
+        showRemoveButton
+        showPreviewButton
+        uploadText="拖动文件排序，观察列表间距"
+        uploadDescription="当前示例显式覆盖文件列表控制相关 props"
+      />
+
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        multiple={false}
+        dragUpload={false}
+        showFileList={false}
+        uploadIcon="file_upload"
+        uploadText="单文件上传，且关闭拖拽与文件列表"
+        uploadDescription="这里只保留点击选择文件，不显示下方列表"
+      />
+    </AriFlex>
+  );
+};
+
+export const UploadValidationAndEmptyExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        beforeUpload={(file) => {
+          const isAllowed = file.name.endsWith('.md') || file.name.endsWith('.txt');
+          if (!isAllowed) {
+            AriMessage.error('仅允许上传 .md 或 .txt 文件');
+          }
+          return isAllowed;
+        }}
+        renderEmpty={() => (
+          <div style={{ color: '#888', padding: '12px 0' }}>
+            当前没有文件，renderEmpty 正在生效。
+          </div>
+        )}
+        uploadText="上传文档文件"
+        uploadDescription="beforeUpload 会阻止非 .md / .txt 文件"
+      />
+    </AriFlex>
+  );
+};
+`,
     "CustomUploadAreaExample": `export const CustomUploadAreaExample: React.FC = () => {
 const [fileList, setFileList] = useState<AriUploadFile[]>([]);
 
@@ -20915,7 +24176,94 @@ export const FrontendOnlyExample: React.FC = () => {
       </div>
     </AriFlex>
   );
-};`,
+};
+
+export const UploadListControlExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([
+    {
+      id: 'demo-image',
+      name: '封面图.png',
+      size: 512 * 1024,
+      type: 'image/png',
+      status: 'uploading',
+      progress: 64,
+      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+    },
+    {
+      id: 'demo-doc',
+      name: '需求说明.pdf',
+      size: 1024 * 1024,
+      type: 'application/pdf',
+      status: 'success',
+      progress: 100
+    }
+  ]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        onRemove={(file, index) => {
+          AriMessage.info(\`删除文件: \${file.name}（索引 \${index}）\`);
+        }}
+        onReorder={(nextFileList, fromIndex, toIndex) => {
+          setFileList(nextFileList);
+          AriMessage.info(\`文件从 \${fromIndex + 1} 移动到 \${toIndex + 1}\`);
+        }}
+        onPreview={(file) => {
+          AriMessage.success(\`预览文件: \${file.name}\`);
+        }}
+        listGap="lg"
+        showProgress
+        showFileSize
+        showRemoveButton
+        showPreviewButton
+        uploadText="拖动文件排序，观察列表间距"
+        uploadDescription="当前示例显式覆盖文件列表控制相关 props"
+      />
+
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        multiple={false}
+        dragUpload={false}
+        showFileList={false}
+        uploadIcon="file_upload"
+        uploadText="单文件上传，且关闭拖拽与文件列表"
+        uploadDescription="这里只保留点击选择文件，不显示下方列表"
+      />
+    </AriFlex>
+  );
+};
+
+export const UploadValidationAndEmptyExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        beforeUpload={(file) => {
+          const isAllowed = file.name.endsWith('.md') || file.name.endsWith('.txt');
+          if (!isAllowed) {
+            AriMessage.error('仅允许上传 .md 或 .txt 文件');
+          }
+          return isAllowed;
+        }}
+        renderEmpty={() => (
+          <div style={{ color: '#888', padding: '12px 0' }}>
+            当前没有文件，renderEmpty 正在生效。
+          </div>
+        )}
+        uploadText="上传文档文件"
+        uploadDescription="beforeUpload 会阻止非 .md / .txt 文件"
+      />
+    </AriFlex>
+  );
+};
+`,
     "ManualUploadExample": `export const ManualUploadExample: React.FC = () => {
 const [fileList, setFileList] = useState<AriUploadFile[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -21040,7 +24388,94 @@ export const FrontendOnlyExample: React.FC = () => {
       </div>
     </AriFlex>
   );
-};`,
+};
+
+export const UploadListControlExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([
+    {
+      id: 'demo-image',
+      name: '封面图.png',
+      size: 512 * 1024,
+      type: 'image/png',
+      status: 'uploading',
+      progress: 64,
+      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+    },
+    {
+      id: 'demo-doc',
+      name: '需求说明.pdf',
+      size: 1024 * 1024,
+      type: 'application/pdf',
+      status: 'success',
+      progress: 100
+    }
+  ]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        onRemove={(file, index) => {
+          AriMessage.info(\`删除文件: \${file.name}（索引 \${index}）\`);
+        }}
+        onReorder={(nextFileList, fromIndex, toIndex) => {
+          setFileList(nextFileList);
+          AriMessage.info(\`文件从 \${fromIndex + 1} 移动到 \${toIndex + 1}\`);
+        }}
+        onPreview={(file) => {
+          AriMessage.success(\`预览文件: \${file.name}\`);
+        }}
+        listGap="lg"
+        showProgress
+        showFileSize
+        showRemoveButton
+        showPreviewButton
+        uploadText="拖动文件排序，观察列表间距"
+        uploadDescription="当前示例显式覆盖文件列表控制相关 props"
+      />
+
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        multiple={false}
+        dragUpload={false}
+        showFileList={false}
+        uploadIcon="file_upload"
+        uploadText="单文件上传，且关闭拖拽与文件列表"
+        uploadDescription="这里只保留点击选择文件，不显示下方列表"
+      />
+    </AriFlex>
+  );
+};
+
+export const UploadValidationAndEmptyExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        beforeUpload={(file) => {
+          const isAllowed = file.name.endsWith('.md') || file.name.endsWith('.txt');
+          if (!isAllowed) {
+            AriMessage.error('仅允许上传 .md 或 .txt 文件');
+          }
+          return isAllowed;
+        }}
+        renderEmpty={() => (
+          <div style={{ color: '#888', padding: '12px 0' }}>
+            当前没有文件，renderEmpty 正在生效。
+          </div>
+        )}
+        uploadText="上传文档文件"
+        uploadDescription="beforeUpload 会阻止非 .md / .txt 文件"
+      />
+    </AriFlex>
+  );
+};
+`,
     "FrontendOnlyExample": `export const FrontendOnlyExample: React.FC = () => {
 const [fileList, setFileList] = useState<AriUploadFile[]>([]);
 
@@ -21083,7 +24518,207 @@ const [fileList, setFileList] = useState<AriUploadFile[]>([]);
       </div>
     </AriFlex>
   );
-};`,
+};
+
+export const UploadListControlExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([
+    {
+      id: 'demo-image',
+      name: '封面图.png',
+      size: 512 * 1024,
+      type: 'image/png',
+      status: 'uploading',
+      progress: 64,
+      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+    },
+    {
+      id: 'demo-doc',
+      name: '需求说明.pdf',
+      size: 1024 * 1024,
+      type: 'application/pdf',
+      status: 'success',
+      progress: 100
+    }
+  ]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        onRemove={(file, index) => {
+          AriMessage.info(\`删除文件: \${file.name}（索引 \${index}）\`);
+        }}
+        onReorder={(nextFileList, fromIndex, toIndex) => {
+          setFileList(nextFileList);
+          AriMessage.info(\`文件从 \${fromIndex + 1} 移动到 \${toIndex + 1}\`);
+        }}
+        onPreview={(file) => {
+          AriMessage.success(\`预览文件: \${file.name}\`);
+        }}
+        listGap="lg"
+        showProgress
+        showFileSize
+        showRemoveButton
+        showPreviewButton
+        uploadText="拖动文件排序，观察列表间距"
+        uploadDescription="当前示例显式覆盖文件列表控制相关 props"
+      />
+
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        multiple={false}
+        dragUpload={false}
+        showFileList={false}
+        uploadIcon="file_upload"
+        uploadText="单文件上传，且关闭拖拽与文件列表"
+        uploadDescription="这里只保留点击选择文件，不显示下方列表"
+      />
+    </AriFlex>
+  );
+};
+
+export const UploadValidationAndEmptyExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        beforeUpload={(file) => {
+          const isAllowed = file.name.endsWith('.md') || file.name.endsWith('.txt');
+          if (!isAllowed) {
+            AriMessage.error('仅允许上传 .md 或 .txt 文件');
+          }
+          return isAllowed;
+        }}
+        renderEmpty={() => (
+          <div style={{ color: '#888', padding: '12px 0' }}>
+            当前没有文件，renderEmpty 正在生效。
+          </div>
+        )}
+        uploadText="上传文档文件"
+        uploadDescription="beforeUpload 会阻止非 .md / .txt 文件"
+      />
+    </AriFlex>
+  );
+};
+`,
+    "UploadListControlExample": `export const UploadListControlExample: React.FC = () => {
+const [fileList, setFileList] = useState<AriUploadFile[]>([
+    {
+      id: 'demo-image',
+      name: '封面图.png',
+      size: 512 * 1024,
+      type: 'image/png',
+      status: 'uploading',
+      progress: 64,
+      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+    },
+    {
+      id: 'demo-doc',
+      name: '需求说明.pdf',
+      size: 1024 * 1024,
+      type: 'application/pdf',
+      status: 'success',
+      progress: 100
+    }
+  ]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        onRemove={(file, index) => {
+          AriMessage.info(\`删除文件: \${file.name}（索引 \${index}）\`);
+        }}
+        onReorder={(nextFileList, fromIndex, toIndex) => {
+          setFileList(nextFileList);
+          AriMessage.info(\`文件从 \${fromIndex + 1} 移动到 \${toIndex + 1}\`);
+        }}
+        onPreview={(file) => {
+          AriMessage.success(\`预览文件: \${file.name}\`);
+        }}
+        listGap="lg"
+        showProgress
+        showFileSize
+        showRemoveButton
+        showPreviewButton
+        uploadText="拖动文件排序，观察列表间距"
+        uploadDescription="当前示例显式覆盖文件列表控制相关 props"
+      />
+
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        multiple={false}
+        dragUpload={false}
+        showFileList={false}
+        uploadIcon="file_upload"
+        uploadText="单文件上传，且关闭拖拽与文件列表"
+        uploadDescription="这里只保留点击选择文件，不显示下方列表"
+      />
+    </AriFlex>
+  );
+};
+
+export const UploadValidationAndEmptyExample: React.FC = () => {
+  const [fileList, setFileList] = useState<AriUploadFile[]>([]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        beforeUpload={(file) => {
+          const isAllowed = file.name.endsWith('.md') || file.name.endsWith('.txt');
+          if (!isAllowed) {
+            AriMessage.error('仅允许上传 .md 或 .txt 文件');
+          }
+          return isAllowed;
+        }}
+        renderEmpty={() => (
+          <div style={{ color: '#888', padding: '12px 0' }}>
+            当前没有文件，renderEmpty 正在生效。
+          </div>
+        )}
+        uploadText="上传文档文件"
+        uploadDescription="beforeUpload 会阻止非 .md / .txt 文件"
+      />
+    </AriFlex>
+  );
+};
+`,
+    "UploadValidationAndEmptyExample": `export const UploadValidationAndEmptyExample: React.FC = () => {
+const [fileList, setFileList] = useState<AriUploadFile[]>([]);
+
+  return (
+    <AriFlex vertical space={24}>
+      <AriUpload
+        fileList={fileList}
+        onChange={setFileList}
+        beforeUpload={(file) => {
+          const isAllowed = file.name.endsWith('.md') || file.name.endsWith('.txt');
+          if (!isAllowed) {
+            AriMessage.error('仅允许上传 .md 或 .txt 文件');
+          }
+          return isAllowed;
+        }}
+        renderEmpty={() => (
+          <div style={{ color: '#888', padding: '12px 0' }}>
+            当前没有文件，renderEmpty 正在生效。
+          </div>
+        )}
+        uploadText="上传文档文件"
+        uploadDescription="beforeUpload 会阻止非 .md / .txt 文件"
+      />
+    </AriFlex>
+  );
+};
+`,
   },
 } as const;
 

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 export const BasicSlider: React.FC = () => {
     const [value, setValue] = useState(30);
+    const [settledValue, setSettledValue] = useState(30);
 
     const handleChange = (value: number) => {
         setValue(value);
@@ -10,8 +11,16 @@ export const BasicSlider: React.FC = () => {
 
     return (
         <AriContainer>
-            <AriSliderComponent value={value} onChange={handleChange} />
+            <AriSliderComponent
+                value={value}
+                min={10}
+                max={90}
+                size={320}
+                onChange={handleChange}
+                onAfterChange={setSettledValue}
+            />
             <div style={{ marginTop: '20px' }}>当前值: {value}</div>
+            <div style={{ marginTop: '8px' }}>拖动结束后的值: {settledValue}</div>
         </AriContainer>
     );
 };

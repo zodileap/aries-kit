@@ -2,11 +2,17 @@ import { AriFlex, AriAvatar, AriTypography } from '@aries-kit/react';
 
 export const BasicAvatar: React.FC = () => (
     <>
+        <style>{`
+            .preview-avatar-outline {
+                outline: 2px dashed var(--z-color-primary);
+                outline-offset: 4px;
+            }
+        `}</style>
         <AriFlex space={16} align="center">
-            <AriAvatar size='xs' src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+            <AriAvatar size='xs' src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" alt="默认图片头像" className="preview-avatar-outline" />
             <AriAvatar icon="person" />
             <AriAvatar text="用户" />
-            <AriAvatar>U</AriAvatar>
+            <AriAvatar children="U" />
         </AriFlex>
     </>
 );

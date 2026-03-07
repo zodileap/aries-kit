@@ -1,7 +1,16 @@
 import React from 'react';
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import { BasicDemo, DisabledDemo, ClearableDemo, CustomStyleDemo, TriggerActionDemo, BorderlessDemo, CustomArrowDemo } from './codes/select';
+import {
+    BasicDemo,
+    BorderlessDemo,
+    ClearableDemo,
+    CustomArrowDemo,
+    CustomStyleDemo,
+    DisabledDemo,
+    MultiSelectDemo,
+    TriggerActionDemo,
+} from './codes/select';
 import { sourceMap } from './codes/source-map';
 
 export const selectExamples: Record<string, DocExample> = {
@@ -66,6 +75,15 @@ export const selectExamples: Record<string, DocExample> = {
         demos: [{
             component: CustomArrowDemo,
             sourceCode: sourceMap['select']['CustomArrowDemo']
+        }]
+    },
+    multi: {
+        title: '多选与搜索排序',
+        key: 'multi',
+        description: '展示多选、搜索、排序以及最大最小选择数量限制。',
+        demos: [{
+            component: MultiSelectDemo,
+            sourceCode: sourceMap['select']['MultiSelectDemo']
         }]
     }
 };

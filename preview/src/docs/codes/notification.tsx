@@ -4,8 +4,14 @@ import { AriButton, AriFlex, AriNotificationProvider, useNotification, AriNotifi
 // 基础用法示例
 export const BasicNotification: React.FC = () => {
   const handleClick = () => {
-    // 基本使用
-    AriNotification.info('这是一条信息通知');
+    AriNotification({
+      type: 'info',
+      title: '基础通知',
+      content: '这是一条带完整配置的通知示例',
+      zIndex: 4000,
+      className: 'preview-notification-basic',
+      onClose: () => console.log('notification closed'),
+    });
   };
 
   return (

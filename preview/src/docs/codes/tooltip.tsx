@@ -9,9 +9,10 @@ import { AriTooltip, AriButton, AriFlex, AriTypography } from '@aries-kit/react'
 export const BasicTooltip: React.FC = () => {
     return (
         <AriFlex space={16}>
-            <AriTooltip content="这是一个简单的提示框">
-                <AriButton>鼠标悬停</AriButton>
-            </AriTooltip>
+            <AriTooltip
+                content="这是一个简单的提示框"
+                children={<AriButton>鼠标悬停</AriButton>}
+            />
         </AriFlex>
     );
 };
@@ -118,5 +119,27 @@ export const RichContentTooltip: React.FC = () => {
         <AriTooltip content={content}>
             <AriButton>富文本提示框</AriButton>
         </AriTooltip>
+    );
+};
+
+export const TooltipBehaviorDemo: React.FC = () => {
+    return (
+        <AriFlex space={16} wrap>
+            <AriTooltip
+                content="延迟显示 / 隐藏，并在显示状态变化时输出日志"
+                showDelay={500}
+                hideDelay={300}
+                minWidth={240}
+                onShow={() => console.log('tooltip shown')}
+                onHide={() => console.log('tooltip hidden')}
+                children={<AriButton>延迟提示</AriButton>}
+            />
+
+            <AriTooltip
+                content="这个提示框已被禁用"
+                disabled
+                children={<AriButton>禁用状态</AriButton>}
+            />
+        </AriFlex>
     );
 };

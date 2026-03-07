@@ -3,6 +3,7 @@ import { AriResult, AriButton, AriFlex } from '@aries-kit/react';
 
 export const BasicResult: React.FC = () => (
   <AriResult
+    className="preview-result-basic"
     title="基础结果"
     subTitle="这是一条基础结果的描述文本"
   />

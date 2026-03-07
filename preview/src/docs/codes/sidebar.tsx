@@ -209,6 +209,9 @@ export const EventHandlingDemo: React.FC = () => {
 };
 
 export const FileTreeDemo: React.FC = () => {
+    const [selectedNode, setSelectedNode] = useState<string>('root');
+    const [expandedKeys, setExpandedKeys] = useState<string[]>(['root', 'src']);
+
     const fileTreeData = [
         {
             key: 'root',
@@ -344,14 +347,23 @@ export const FileTreeDemo: React.FC = () => {
         }
     ];
     return (
-
-        <AriContainer style={{ height: '800px' }}>
-            <AriSidebar.TreeView
-                tree={fileTreeData}
-                width={300}
-                onNodeSelect={(node) => console.log('Selected:', node)}
-            />
-        </AriContainer>
+        <div>
+            <div style={{ marginBottom: '16px' }}>
+                <p><strong>当前选中节点:</strong> {selectedNode || '无'}</p>
+                <p><strong>当前展开节点:</strong> {expandedKeys.join(', ') || '无'}</p>
+            </div>
+            <AriContainer style={{ height: '800px' }}>
+                <AriSidebar.TreeView
+                    tree={fileTreeData}
+                    width={300}
+                    className="preview-sidebar-tree"
+                    selectedKey={selectedNode}
+                    expandedKeys={expandedKeys}
+                    onExpandedKeysChange={setExpandedKeys}
+                    onNodeSelect={(node) => setSelectedNode(node.key)}
+                />
+            </AriContainer>
+        </div>
     );
 }
 
@@ -413,4 +425,3 @@ export const TreeViewComponentDemo: React.FC = () => {
         </div>
     );
 };
-

@@ -1,7 +1,7 @@
 import React from 'react';
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import { BasicDatePicker } from './codes/date-picker';
+import { AdvancedDatePicker, BasicDatePicker } from './codes/date-picker';
 import { sourceMap } from './codes/source-map';
 
 export const datePickerExamples: Record<string, DocExample> = {
@@ -12,6 +12,10 @@ export const datePickerExamples: Record<string, DocExample> = {
         demos: [{
             component: BasicDatePicker,
             sourceCode: sourceMap['date-picker']['BasicDatePicker']
+        }, {
+            title: '高级配置',
+            component: AdvancedDatePicker,
+            sourceCode: sourceMap['date-picker']['AdvancedDatePicker']
         }]
     }
 };
