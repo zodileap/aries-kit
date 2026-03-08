@@ -10,6 +10,12 @@ import svgr from 'vite-plugin-svgr'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+const externalPackages = ['react', 'react-dom', 'react-router-dom']
+const externalSubpaths = ['react-dom/client', 'react-dom/server']
+
+const isExternal = (id: string) =>
+  externalPackages.some((pkg) => id === pkg || id.startsWith(`${pkg}/`)) ||
+  externalSubpaths.includes(id)
 
 export default defineConfig({
   plugins: [
@@ -73,11 +79,13 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react-router-dom'],
+      external: isExternal,
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
+          'react-dom/client': 'ReactDOM',
+          'react-dom/server': 'ReactDOM',
           'react-router-dom': 'ReactRouterDOM',
         },
         assetFileNames: 'assets/[name][extname]',
