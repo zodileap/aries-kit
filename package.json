@@ -1,6 +1,7 @@
 {
   "name": "@aries-kit/react",
-  "version": "0.2.1",
+  "version": "0.2.3",
+  "private": true,
   "description": "Aries Kit React component and hooks library.",
   "license": "MIT",
   "main": "index.umd.js",
@@ -55,6 +56,8 @@
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json && vite build",
     "postbuild": "node -r esbuild-register scripts/resolveCatalogDeps.ts",
     "build:ts": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "release:npm": "pnpm build && npm publish ./dist --access public --cache ./.npm-cache",
+    "release:npm:dry-run": "pnpm build && npm publish ./dist --dry-run --access public --cache ./.npm-cache",
     "audit:preview-props": "node -r esbuild-register scripts/auditPreviewPropCoverage.ts",
     "lint": "eslint .",
     "preview": "vite preview",

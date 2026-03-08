@@ -96,10 +96,11 @@ pnpm build:preview
 
 The publishable package is generated in `dist/`.
 
+Do not publish from the repository root. The root package is marked as private to prevent accidental empty-package releases.
+
 ```bash
-pnpm build
-cd dist
-npm publish --access public
+pnpm release:npm:dry-run
+pnpm release:npm
 ```
 
 ## License
