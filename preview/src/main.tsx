@@ -6,9 +6,12 @@ import Layout from './layout';
 import { menuConfig, routes } from './config';
 import { Navigation } from './layout/header';
 import "@ari/theme/components/index.scss"
+
+const previewBaseName = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const Preview = () => {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename={previewBaseName}>
             <Layout menu={menuConfig}>
                 <Suspense fallback={<div>Loading...</div>}>
                     <Routes>

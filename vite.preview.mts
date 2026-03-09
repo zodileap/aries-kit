@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     port: 5174
   },
-  base: '/',
+  base: '/aries-kit/',
   root: 'preview',
   publicDir: 'public', // 修改为 preview 目录下的 public 文件夹
   css: {
