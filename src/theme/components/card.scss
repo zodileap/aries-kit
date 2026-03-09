@@ -20,6 +20,10 @@
     
     // 交互相关
     transition: all getVar(duration, element-interaction) getVar(transition-timing-function);
+
+    &:not(.#{$namespace}-is-border-radius) {
+        border-radius: 0;
+    }
     
     // 悬停状态
     &:hover {

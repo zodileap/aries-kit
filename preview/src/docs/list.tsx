@@ -92,7 +92,7 @@ export const listAPI: DocAPI = {
     props: [
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: 'undefined'
         },
@@ -122,7 +122,7 @@ export const listAPI: DocAPI = {
         },
         {
             param: 'bordered',
-            desc: '是否显示边框',
+            desc: '控制组件是否渲染外边框',
             type: 'boolean',
             default: 'false'
         },
@@ -168,13 +168,13 @@ export const listAPI: DocAPI = {
     listItemProps: [
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: 'undefined'
         },
         {
             param: 'bordered',
-            desc: '是否显示边框',
+            desc: '控制组件是否渲染外边框',
             type: 'boolean',
             default: 'false'
         },
@@ -198,7 +198,7 @@ export const listAPI: DocAPI = {
         },
         {
             param: 'children',
-            desc: '子元素',
+            desc: '直接渲染在组件内部的 React 节点内容',
             type: 'React.ReactNode',
             default: 'undefined'
         }
@@ -218,12 +218,15 @@ const ListDoc: React.FC = () => {
         <Doc
             title="List 列表"
             description="用于展示一组相关的内容，提供有序的展示形式。列表可以包含文本、图片、操作等多种元素，支持加载状态、空状态和分页等功能。"
+            apiTitle="List API"
+            apiAnchor="list-api"
             examples={listExamples}
             api={listAPI}
             extraProps={[
                 {
                     title: 'ListItem API',
-                    content: "listItemProps"
+                    data: listAPI.listItemProps,
+                    anchor: 'list-item-api'
                 }
             ]}
         />

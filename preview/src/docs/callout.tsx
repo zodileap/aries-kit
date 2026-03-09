@@ -121,7 +121,7 @@ export const calloutAPI: DocAPI = {
     },
     {
       param: 'className',
-      desc: '自定义CSS类名',
+      desc: '附加到组件根节点的自定义 CSS 类名',
       type: 'string',
       default: '-'
     },

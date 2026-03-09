@@ -20,6 +20,37 @@ export const AriTreeView: React.FC<AriTreeViewProps> = ({
     ...sidebarProps
 }) => {
     const cs = useCss('sidebar');
+    const collectTreeKeys = (nodes: AriTreeNode[]): Set<string> => {
+        const keys = new Set<string>();
+
+        const visit = (treeNodes: AriTreeNode[]) => {
+            treeNodes.forEach(node => {
+                keys.add(node.key);
+                if (node.children?.length) {
+                    visit(node.children);
+                }
+            });
+        };
+
+        visit(nodes);
+        return keys;
+    };
+
+    const collectExpandableKeys = (nodes: AriTreeNode[]): Set<string> => {
+        const keys = new Set<string>();
+
+        const visit = (treeNodes: AriTreeNode[]) => {
+            treeNodes.forEach(node => {
+                if (node.children?.length) {
+                    keys.add(node.key);
+                    visit(node.children);
+                }
+            });
+        };
+
+        visit(nodes);
+        return keys;
+    };
 
     const getExpendKeys = (tree: AriTreeNode[]): string[] => {
         const keys: string[] = [];
@@ -42,6 +73,32 @@ export const AriTreeView: React.FC<AriTreeViewProps> = ({
             setInternalExpandedKeys(getExpendKeys(tree));
         }
     }, [tree, controlledExpandedKeys]);
+
+    useEffect(() => {
+        const expandableKeys = collectExpandableKeys(tree);
+
+        if (controlledExpandedKeys === undefined) {
+            setInternalExpandedKeys(prev => prev.filter(key => expandableKeys.has(key)));
+            return;
+        }
+
+        const sanitizedExpandedKeys = controlledExpandedKeys.filter(key => expandableKeys.has(key));
+        if (
+            sanitizedExpandedKeys.length !== controlledExpandedKeys.length ||
+            sanitizedExpandedKeys.some((key, index) => key !== controlledExpandedKeys[index])
+        ) {
+            onExpandedKeysChange?.(sanitizedExpandedKeys);
+        }
+    }, [tree, controlledExpandedKeys, onExpandedKeysChange]);
+
+    useEffect(() => {
+        if (controlledSelectedKey !== undefined) {
+            return;
+        }
+
+        const allKeys = collectTreeKeys(tree);
+        setInternalSelectedKey(prev => (prev && allKeys.has(prev) ? prev : null));
+    }, [tree, controlledSelectedKey]);
 
     const updateExpandedKeys = (nextExpandedKeys: string[]) => {
         if (controlledExpandedKeys === undefined) {
@@ -121,16 +178,18 @@ export const AriTreeNodeComponent: React.FC<AriExtendedTreeNodeProps> = ({
     const isSelected = selectedKey === node.key;
     const contentRef = useRef<HTMLDivElement>(null);
     const [animationReady, setAnimationReady] = useState(false);
+    const children = node.children ?? [];
+    const hasChildren = !!node.children?.length;
 
     // 使用自定义Hook计算全局索引
     const { globalIndex, globalIndexMap, childrenNodeNum, layoutDuration, reset, resetChildrenNode, setChildrenNodeNum } = useCollapseIndexMap(node, expandedKeys, isRoot, onNodeNumChange, indexMap);
 
     const handleClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        const nextExpanded = !!(node.children && node.children.length > 0) && !isExpanded;
+        const nextExpanded = hasChildren && !isExpanded;
 
         // 如果有子节点，处理展开/折叠
-        if (node.children && node.children.length > 0) {
+        if (hasChildren) {
             setIsExpanded(nextExpanded);
         }
 
@@ -164,9 +223,15 @@ export const AriTreeNodeComponent: React.FC<AriExtendedTreeNodeProps> = ({
     // 后续expandedKeys变化的处理
     useEffect(() => {
         if (animationReady) {
-            setIsExpanded(expandedKeys.includes(node.key))
+            setIsExpanded(hasChildren && expandedKeys.includes(node.key))
         }
-    }, [expandedKeys, animationReady, parentExpanded]);
+    }, [expandedKeys, animationReady, hasChildren, node.key, parentExpanded]);
+
+    useEffect(() => {
+        if (!hasChildren) {
+            setIsExpanded(false);
+        }
+    }, [hasChildren]);
 
 
     // 使用自定义hook计算高度
@@ -203,14 +268,14 @@ export const AriTreeNodeComponent: React.FC<AriExtendedTreeNodeProps> = ({
                 {node.icon && <AriIcon name={node.icon} />}
                 {node.prefix}
                 <span className={cs.e('node-name')}>{node.name}</span>
-                {node.children && node.children.length > 0 && (
+                {hasChildren && (
                     <AriIcon
                         className={cs.e('node-toggle')}
                         name="chevron_right"
                     />
                 )}
             </div>
-            {node.children && (
+            {hasChildren && (
                 <div
                     ref={containerRef}
                     className={cs.gen(cs.e('node-children'))}
@@ -220,7 +285,7 @@ export const AriTreeNodeComponent: React.FC<AriExtendedTreeNodeProps> = ({
                         ["--z-collapse-height" as string]: `${containerHeight}px`
                     }}
                 >
-                    {node.children.map((child, index) => (
+                    {children.map((child, index) => (
                         <AriTreeNodeComponent
                             z-collapse-node="true"
                             key={child.key}

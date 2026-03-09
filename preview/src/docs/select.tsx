@@ -92,61 +92,61 @@ export const selectAPI: DocAPI = {
     props: [
         {
             param: 'value',
-            desc: '当前选中的值',
+            desc: '受控模式下当前选中的值；多选时传入数组',
             type: 'string | number | (string | number)[]',
             default: '-'
         },
         {
             param: 'options',
-            desc: '可选项数据源',
+            desc: '下拉面板渲染使用的选项数组',
             type: 'SelectOption[]',
             default: '[]'
         },
         {
             param: 'defaultValue',
-            desc: '默认选中的值',
+            desc: '非受控模式下的初始选中值，仅首次渲染生效',
             type: 'string | number | (string | number)[]',
             default: '-'
         },
         {
             param: 'placeholder',
-            desc: '选择框默认文本',
+            desc: '未选择任何值时触发器中显示的占位文本',
             type: 'string',
             default: '请选择'
         },
         {
             param: 'disabled',
-            desc: '是否禁用',
+            desc: '禁用后组件不可交互',
             type: 'boolean',
             default: 'false'
         },
         {
             param: 'bordered',
-            desc: '是否显示边框',
+            desc: '控制组件是否渲染外边框',
             type: 'boolean',
             default: 'true'
         },
         {
             param: 'allowClear',
-            desc: '是否显示清除按钮',
+            desc: '有选中值时是否显示一键清除按钮',
             type: 'boolean',
             default: 'false'
         },
         {
             param: 'multiple',
-            desc: '是否多选模式',
+            desc: '开启后允许一次选择多个选项',
             type: 'boolean',
             default: 'false'
         },
         {
             param: 'searchable',
-            desc: '是否可搜索',
+            desc: '开启后在下拉面板顶部显示搜索输入框',
             type: 'boolean',
             default: 'false'
         },
         {
             param: 'sortable',
-            desc: '是否可排序（多选模式下有效）',
+            desc: '多选模式下是否允许拖拽调整已选项顺序',
             type: 'boolean',
             default: 'false'
         },
@@ -164,13 +164,13 @@ export const selectAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         },
         {
             param: 'arrowIcon',
-            desc: '自定义箭头图标名称',
+            desc: '替换默认下拉箭头的内置图标名称',
             type: 'string',
             default: '-'
         },
@@ -182,7 +182,7 @@ export const selectAPI: DocAPI = {
         },
         {
             param: 'style',
-            desc: '自定义样式',
+            desc: '直接作用于组件根节点的内联样式对象',
             type: 'React.CSSProperties',
             default: '-'
         }
@@ -190,22 +190,22 @@ export const selectAPI: DocAPI = {
     events: [
         {
             event: 'onChange',
-            desc: '选中值变化时的回调',
+            desc: '选中值变化后触发，返回新值与变更前的旧值',
             type: '(value: string | number | (string | number)[] | undefined, oldValue?: string | number | (string | number)[] | undefined) => void'
         },
         {
             event: 'onSortChange',
-            desc: '多选排序变化时的回调（sortable模式下有效）',
+            desc: '拖拽调整多选顺序后触发',
             type: '(newValues: (string | number)[], fromIndex: number, toIndex: number) => void'
         },
         {
             event: 'onTriggerClick',
-            desc: '点击触发器时的回调，可用于执行自定义行为',
+            desc: '点击触发器时触发，可结合 context 接管展开状态或执行自定义逻辑',
             type: '(event: React.MouseEvent<HTMLDivElement>, context: { value; open; setOpen; toggleDropdown; }) => void'
         },
         {
             event: 'onItemClick',
-            desc: '选项点击事件',
+            desc: '点击下拉选项时触发，返回被点击的原始选项对象',
             type: '(option: AriSelectOption) => void'
         }
     ],

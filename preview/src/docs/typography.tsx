@@ -83,7 +83,7 @@ export const typographyAPI: DocAPI = {
         { param: 'value', desc: '文本内容', type: 'string | number | React.ReactNode', default: '-' },
         { param: 'variant', desc: '文本变体样式', type: "'h1' | 'h2' | 'h3' | 'h4' | 'body' | 'caption' | 'overline'", default: "'body'" },
         { param: 'color', desc: '文本颜色', type: "'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success' | 'inherit'", default: "'inherit'" },
-        { param: 'align', desc: '文本对齐方式', type: "'inherit' | 'left' | 'center' | 'right' | 'justify'", default: "'inherit'" },
+        { param: 'align', desc: '控制文本在容器内的水平对齐方式', type: "'inherit' | 'left' | 'center' | 'right' | 'justify'", default: "'inherit'" },
         { param: 'gutterBottom', desc: '是否在底部添加间距', type: 'boolean', default: 'false' },
         { param: 'whiteSpace', desc: '文本换行方式', type: "'normal' | 'nowrap' | 'pre' | 'pre-wrap' | 'pre-line'", default: "'normal'" },
         { param: 'overflow', desc: '超出容器的处理方式', type: "'visible' | 'hidden' | 'scroll' | 'auto'", default: "'visible'" },
@@ -93,15 +93,15 @@ export const typographyAPI: DocAPI = {
         { param: 'bold', desc: '是否加粗文本', type: 'boolean', default: 'false' },
         { param: 'italic', desc: '是否使用斜体文本', type: 'boolean', default: 'false' },
         { param: 'className', desc: '额外的 CSS 类名', type: 'string', default: '-' },
-        { param: 'style', desc: '内联样式', type: 'React.CSSProperties', default: '-' },
+        { param: 'style', desc: '直接作用于组件根节点的内联样式对象', type: 'React.CSSProperties', default: '-' },
         { param: 'children', desc: '子元素，通常是文本内容', type: 'React.ReactNode', default: '-' }
     ],
     events: [
-        { event: 'onClick', desc: '点击事件', type: '(e: React.MouseEvent) => void' },
-        { event: 'onMouseEnter', desc: '鼠标进入事件', type: '(e: React.MouseEvent) => void' },
-        { event: 'onMouseLeave', desc: '鼠标离开事件', type: '(e: React.MouseEvent) => void' },
-        { event: 'onMouseDown', desc: '鼠标按下事件', type: '(e: React.MouseEvent) => void' },
-        { event: 'onMouseUp', desc: '鼠标松开事件', type: '(e: React.MouseEvent) => void' }
+        { event: 'onClick', desc: '点击组件根节点时触发', type: '(e: React.MouseEvent) => void' },
+        { event: 'onMouseEnter', desc: '鼠标移入组件根节点时触发', type: '(e: React.MouseEvent) => void' },
+        { event: 'onMouseLeave', desc: '鼠标移出组件根节点时触发', type: '(e: React.MouseEvent) => void' },
+        { event: 'onMouseDown', desc: '在组件根节点按下鼠标时触发', type: '(e: React.MouseEvent) => void' },
+        { event: 'onMouseUp', desc: '在组件根节点松开鼠标时触发', type: '(e: React.MouseEvent) => void' }
     ],
     slots: []
 };

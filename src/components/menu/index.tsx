@@ -1,6 +1,6 @@
 // @ari/components/menu/Menu.tsx
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useCollapseHeight, useCss, useCollapseIndexMap, getCssVarName } from '@ari/utils';
 import { AriIcon } from '../icon';
 import { AriTypography } from '../typography';
@@ -51,11 +51,13 @@ const AriMenuItem: React.FC<{
         const [isOpen, setIsOpen] = useState(false);
         const [animationReady, setAnimationReady] = useState(false);
         const contentRef = useRef<HTMLDivElement>(null);
+        const children = item.children ?? [];
+        const hasChildren = !!item.children?.length;
 
         const handleClick = useCallback(() => {
             if (item.disabled || item.isGroup) return;
 
-            if (item.children) {
+            if (hasChildren) {
                 // 不依赖 isOpen.current，而是直接检查当前项是否在 expandedKeys 中
                 const currentlyExpanded = expandedKeys.includes(item.key);
                 onExpand(item.key, !currentlyExpanded);
@@ -63,7 +65,7 @@ const AriMenuItem: React.FC<{
                 onSelect(item.key, item);
                 item.onClick?.();
             }
-        }, [item, isOpen, onExpand, onSelect, expandedKeys]);
+        }, [item, hasChildren, onExpand, onSelect, expandedKeys]);
 
 
         // 在组件加载后延迟设置真实展开状态
@@ -88,9 +90,18 @@ const AriMenuItem: React.FC<{
         // 后续expandedKeys变化的处理
         useEffect(() => {
             if (animationReady) {
-                setIsOpen(expandedKeys.includes(item.key));
+                setIsOpen(hasChildren && expandedKeys.includes(item.key));
             }
-        }, [expandedKeys, animationReady]);
+        }, [expandedKeys, animationReady, hasChildren, item.key]);
+
+        useEffect(() => {
+            if (!hasChildren) {
+                setIsOpen(false);
+                if (expandedKeys.includes(item.key)) {
+                    onExpand(item.key, false);
+                }
+            }
+        }, [expandedKeys, hasChildren, item.key, onExpand]);
 
         // 使用自定义Hook计算全局索引
         const { globalIndex, globalIndexMap, childrenNodeNum, layoutDuration, reset, resetChildrenNode, setChildrenNodeNum } = useCollapseIndexMap(item, expandedKeys, isRoot, onNodeNumChange, indexMap);
@@ -114,7 +125,7 @@ const AriMenuItem: React.FC<{
                     cs.is('group', item.isGroup),
                     cs.is('selected', !item.isGroup && item.key === selectedKey),
                     cs.is('disabled', item.disabled),
-                    cs.is('has-children', !!item.children && !item.isGroup),
+                    cs.is('has-children', hasChildren && !item.isGroup),
                     cs.is('open', isOpen),
                     cs.is('parent-expanded', parentExpanded)
                 )}
@@ -174,7 +185,7 @@ const AriMenuItem: React.FC<{
                             {item.actions}
                         </div>
                     ) : null}
-                    {item.children && !item.isGroup && expandIconPosition !== 'none' && (
+                    {hasChildren && !item.isGroup && expandIconPosition !== 'none' && (
                         <AriIcon
                             name="chevron_right"
                             className={cs.e('arrow')}
@@ -182,7 +193,7 @@ const AriMenuItem: React.FC<{
                     )}
                 </div>
 
-                {item.children && mode === "vertical" && (
+                {hasChildren && mode === "vertical" && (
                     <div
                         ref={containerRef}
                         className={cs.e('children')}
@@ -192,7 +203,7 @@ const AriMenuItem: React.FC<{
                             ["--z-collapse-height" as string]: `${containerHeight}px`
                         }}
                     >
-                        {item.children.map((child, index) => (
+                        {children.map((child, index) => (
                             <AriMenuItem
                                 mode='vertical'
                                 key={child.key}
@@ -241,16 +252,52 @@ export const AriMenu: React.FC<AriMenuProps> = ({
     const [internalSelectedKey, setInternalSelectedKey] = useState(defaultSelectedKey);
     const [internalExpandedKeys, setInternalExpandedKeys] = useState<string[]>(defaultExpandedKeys);
     const cs = useCss('menu');
+    const getAllKeys = useCallback((menuItems: AriMenuItemProps[]): Set<string> => {
+        const keys = new Set<string>();
+
+        const visit = (nodes: AriMenuItemProps[]) => {
+            nodes.forEach(node => {
+                keys.add(node.key);
+                if (node.children?.length) {
+                    visit(node.children);
+                }
+            });
+        };
+
+        visit(menuItems);
+        return keys;
+    }, []);
+
+    const getExpandableKeys = useCallback((menuItems: AriMenuItemProps[]): Set<string> => {
+        const keys = new Set<string>();
+
+        const visit = (nodes: AriMenuItemProps[]) => {
+            nodes.forEach(node => {
+                if (node.children?.length) {
+                    keys.add(node.key);
+                    visit(node.children);
+                }
+            });
+        };
+
+        visit(menuItems);
+        return keys;
+    }, []);
+
+    const allKeys = useMemo(() => getAllKeys(items), [getAllKeys, items]);
+    const expandableKeys = useMemo(() => getExpandableKeys(items), [getExpandableKeys, items]);
 
 
     const handleExpand = useCallback((key: string, expanded: boolean) => {
-        const newExpandedKeys = expanded
-            ? [...internalExpandedKeys, key]
+        const nextExpandedKeys = expanded
+            ? [...new Set([...internalExpandedKeys, key])]
             : internalExpandedKeys.filter(k => k !== key);
+
+        const newExpandedKeys = nextExpandedKeys.filter(currentKey => expandableKeys.has(currentKey));
 
         setInternalExpandedKeys(newExpandedKeys);
         onExpand?.(newExpandedKeys);
-    }, [internalExpandedKeys, onExpand]);
+    }, [expandableKeys, internalExpandedKeys, onExpand]);
 
     const handleSelect = useCallback((key: string, item: AriMenuItemProps) => {
         setInternalSelectedKey(key);
@@ -263,9 +310,29 @@ export const AriMenu: React.FC<AriMenuProps> = ({
 
     useEffect(() => {
         if (expandedKeys) {
-            setInternalExpandedKeys(expandedKeys);
+            setInternalExpandedKeys(expandedKeys.filter(key => expandableKeys.has(key)));
         }
-    }, [expandedKeys]);
+    }, [expandedKeys, expandableKeys]);
+
+    useEffect(() => {
+        if (expandedKeys === undefined) {
+            setInternalExpandedKeys(prev => prev.filter(key => expandableKeys.has(key)));
+        } else {
+            const sanitizedExpandedKeys = expandedKeys.filter(key => expandableKeys.has(key));
+            if (
+                sanitizedExpandedKeys.length !== expandedKeys.length ||
+                sanitizedExpandedKeys.some((key, index) => key !== expandedKeys[index])
+            ) {
+                onExpand?.(sanitizedExpandedKeys);
+            }
+        }
+    }, [expandedKeys, expandableKeys, onExpand]);
+
+    useEffect(() => {
+        if (selectedKey === undefined) {
+            setInternalSelectedKey(prev => (prev && allKeys.has(prev) ? prev : undefined));
+        }
+    }, [allKeys, selectedKey]);
 
     return (
         <div className={cs.gen(cs.b(), cs.m(mode), className)} {...props}>

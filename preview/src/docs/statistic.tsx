@@ -92,25 +92,25 @@ export const statisticAPI: DocAPI = {
     props: [
         {
             param: 'title',
-            desc: '数值的标题',
+            desc: '显示在数值上方或左侧的标题内容',
             type: 'React.ReactNode',
             default: '-'
         },
         {
             param: 'value',
-            desc: '数值的内容',
+            desc: '需要展示的统计值或自定义数值节点',
             type: 'React.ReactNode',
             default: '-'
         },
         {
             param: 'prefix',
-            desc: '设置数值的前缀',
+            desc: '渲染在数值前方的前缀内容',
             type: 'React.ReactNode',
             default: '-'
         },
         {
             param: 'suffix',
-            desc: '设置数值的后缀',
+            desc: '渲染在数值后方的后缀内容',
             type: 'React.ReactNode',
             default: '-'
         },
@@ -122,19 +122,19 @@ export const statisticAPI: DocAPI = {
         },
         {
             param: 'loading',
-            desc: '是否将数值加载为动画形式',
+            desc: '为数值区域显示加载中的占位状态',
             type: 'boolean',
             default: 'false'
         },
         {
             param: 'valueStyle',
-            desc: '自定义数值样式',
+            desc: '直接作用于数值节点的内联样式对象',
             type: 'React.CSSProperties',
             default: '-'
         },
         {
             param: 'groupSeparator',
-            desc: '千分位分隔符',
+            desc: '数字千分位使用的分隔符字符',
             type: 'string',
             default: ','
         },
@@ -146,31 +146,31 @@ export const statisticAPI: DocAPI = {
         },
         {
             param: 'formatter',
-            desc: '自定义格式化函数',
+            desc: '接管最终数值展示结果的格式化函数',
             type: '(value: any) => React.ReactNode',
             default: '-'
         },
         {
             param: 'size',
-            desc: '尺寸大小',
+            desc: '控制组件的视觉尺寸规格',
             type: "'small' | 'default' | 'large'",
             default: 'default'
         },
         {
             param: 'color',
-            desc: '颜色主题',
+            desc: '控制组件使用的主题色方案',
             type: "'primary' | 'success' | 'warning' | 'danger' | 'info'",
             default: '-'
         },
         {
             param: 'layout',
-            desc: '布局方式',
+            desc: '控制内容的排列方式',
             type: "'vertical' | 'inline'",
             default: 'vertical'
         },
         {
             param: 'align',
-            desc: '对齐方式',
+            desc: '控制标题与数值内容的整体对齐方式',
             type: "'left' | 'center' | 'right'",
             default: 'left'
         }
@@ -218,12 +218,15 @@ const StatisticDoc: React.FC = () => {
         <Doc
             title="Statistic 统计数值"
             description="用于展示统计数据、指标等数值信息，具有数字格式化、前缀/后缀、千分位分隔、精度控制等功能。"
+            apiTitle="Statistic API"
+            apiAnchor="statistic-api"
             examples={statisticExamples}
             api={statisticAPI}
             extraProps={[
                 {
                     title: 'Countdown API',
-                    content: "countdownProps"
+                    data: statisticAPI.countdownProps,
+                    anchor: 'countdown-api'
                 }
             ]}
         />

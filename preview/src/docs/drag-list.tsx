@@ -149,7 +149,7 @@ export const dragListAPI: DocAPI = {
         },
         {
             param: 'style',
-            desc: '内联样式',
+            desc: '直接作用于组件根节点的内联样式对象',
             type: 'React.CSSProperties',
             default: '-'
         }

@@ -65,25 +65,25 @@ export const sidebarAPI: DocAPI = {
     props: [
         {
             param: 'direction',
-            desc: '侧边栏方向',
+            desc: '控制侧边栏贴靠页面左侧或右侧',
             type: "'left' | 'right'",
             default: "'left'"
         },
         {
             param: 'activityBarPosition',
-            desc: '活动栏位置',
+            desc: '控制活动栏显示在顶部、底部或侧边',
             type: "'top' | 'bottom' | 'side'",
             default: "'side'"
         },
         {
             param: 'activityBarItems',
-            desc: '活动栏项目列表',
+            desc: '活动栏按钮配置数组，用于切换不同内容视图',
             type: 'AriActivityBarItem[]',
             default: '-'
         },
         {
             param: 'content',
-            desc: '自定义内容',
+            desc: '侧边栏主内容区域渲染的自定义节点',
             type: 'React.ReactNode',
             default: '-'
         },
@@ -95,7 +95,7 @@ export const sidebarAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -103,12 +103,12 @@ export const sidebarAPI: DocAPI = {
     events: [
         {
             event: 'onNodeSelect',
-            desc: '节点选中回调',
+            desc: '树节点被点击并选中后触发，返回当前节点数据',
             type: '(node: AriTreeNode) => void'
         },
         {
             event: 'onActivityChange',
-            desc: '活动栏项目切换回调',
+            desc: '活动栏切换后触发，返回当前激活的活动项',
             type: '(item: AriActivityBarItem) => void'
         }
     ],
@@ -119,25 +119,25 @@ export const treeViewAPI: DocAPI = {
     props: [
         {
             param: 'tree',
-            desc: '树结构数据',
+            desc: 'TreeView 渲染使用的树节点数组',
             type: 'AriTreeNode[]',
             default: '[]'
         },
         {
             param: 'selectedKey',
-            desc: '当前选中的节点键值',
+            desc: '受控模式下当前选中的节点 key',
             type: 'string',
             default: '-'
         },
         {
             param: 'expandedKeys',
-            desc: '展开的节点键值数组',
+            desc: '受控模式下当前展开的节点 key 数组',
             type: 'string[]',
             default: '[]'
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -145,17 +145,17 @@ export const treeViewAPI: DocAPI = {
     events: [
         {
             event: 'onNodeSelect',
-            desc: '节点选中回调',
+            desc: '树节点被点击并选中后触发，返回当前节点数据',
             type: '(node: AriTreeNode) => void'
         },
         {
             event: 'onHeightChange',
-            desc: '高度变化回调',
+            desc: '树视图内容高度重新计算后触发',
             type: '(height: number) => void'
         },
         {
             event: 'onExpandedKeysChange',
-            desc: '展开状态变化回调',
+            desc: '展开状态变化后返回最新的节点 key 数组',
             type: '(expandedKeys: string[]) => void'
         }
     ],
@@ -166,25 +166,25 @@ export const treeNodeAPI: DocAPI = {
     props: [
         {
             param: 'node',
-            desc: '节点数据',
+            desc: '当前 TreeNode 对应的节点数据，包含标题、key 与子节点',
             type: 'AriTreeNode',
             default: '-'
         },
         {
             param: 'selectedKey',
-            desc: '当前选中的节点键值',
+            desc: '受控模式下当前选中的节点 key',
             type: 'string',
             default: '-'
         },
         {
             param: 'expandedKeys',
-            desc: '展开的节点键值数组',
+            desc: '受控模式下当前展开的节点 key 数组',
             type: 'string[]',
             default: '[]'
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -192,12 +192,12 @@ export const treeNodeAPI: DocAPI = {
     events: [
         {
             event: 'onNodeSelect',
-            desc: '节点选中回调',
+            desc: '树节点被点击并选中后触发，返回当前节点数据',
             type: '(node: AriTreeNode) => void'
         },
         {
             event: 'onExpandedKeysChange',
-            desc: '展开状态变化回调',
+            desc: '展开状态变化后返回最新的节点 key 数组',
             type: '(expandedKeys: string[]) => void'
         }
     ],
@@ -223,11 +223,23 @@ const SidebarDoc: React.FC = () => {
             extraProps={[
                 {
                     title: 'TreeView API',
-                    content: 'treeViewAPI'
+                    data: treeViewAPI.props,
+                    anchor: 'tree-view-api'
                 },
                 {
                     title: 'TreeNode API',
-                    content: 'treeNodeAPI'
+                    data: treeNodeAPI.props,
+                    anchor: 'tree-node-api'
+                }
+            ]}
+            extraEvents={[
+                {
+                    title: 'TreeView API',
+                    data: treeViewAPI.events
+                },
+                {
+                    title: 'TreeNode API',
+                    data: treeNodeAPI.events
                 }
             ]}
         />

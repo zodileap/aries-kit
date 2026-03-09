@@ -58,19 +58,19 @@ export const timelineAPI: DocAPI = {
     props: [
         {
             param: 'items',
-            desc: '时间轴节点数组',
+            desc: '按时间顺序渲染的时间轴节点配置数组',
             type: 'TimelineItemProps[]',
             default: '-'
         },
         {
             param: 'direction',
-            desc: '时间轴方向',
+            desc: '控制时间轴按垂直或水平方向排列',
             type: "'vertical' | 'horizontal'",
             default: 'vertical'
         },
         {
             param: 'mode',
-            desc: '时间轴位置',
+            desc: '控制时间轴节点相对时间线显示在左侧、右侧或居中',
             type: "'left' | 'right' | 'center'",
             default: 'left'
         },
@@ -88,7 +88,7 @@ export const timelineAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -98,13 +98,13 @@ export const timelineAPI: DocAPI = {
     itemProps: [
         {
             param: 'children',
-            desc: '节点内容',
+            desc: '当前时间轴节点对应的主体内容',
             type: 'ReactNode',
             default: '-'
         },
         {
             param: 'label',
-            desc: '时间节点的标签',
+            desc: '显示在时间节点旁的标签内容，常用于时间文本',
             type: 'ReactNode',
             default: '-'
         },
@@ -116,7 +116,7 @@ export const timelineAPI: DocAPI = {
         },
         {
             param: 'color',
-            desc: '节点颜色',
+            desc: '设置节点圆点和连线的颜色，可使用内置语义色或自定义颜色值',
             type: "'primary' | 'success' | 'warning' | 'danger' | 'info' | string",
             default: 'primary'
         },
@@ -128,13 +128,13 @@ export const timelineAPI: DocAPI = {
         },
         {
             param: 'type',
-            desc: '节点类型',
+            desc: '控制节点圆点的外观样式',
             type: "'filled' | 'hollow' | 'borderless'",
             default: 'filled'
         },
         {
             param: 'key',
-            desc: '唯一标识',
+            desc: '用于区分当前项并作为渲染 key 的唯一标识',
             type: 'string | number',
             default: '-'
         }
@@ -154,12 +154,15 @@ const TimelineDoc: React.FC = () => {
         <Doc
             title="Timeline 时间轴"
             description="时间轴组件，用于展示一系列按时间顺序排列的活动或事件，常用于垂直展示时间流信息，如项目进度、工作计划等。"
+            apiTitle="Timeline API"
+            apiAnchor="timeline-api"
             examples={timelineExamples}
             api={timelineAPI}
             extraProps={[
                 {
                     title: 'TimelineItem API',
-                    content: "itemProps"
+                    data: timelineAPI.itemProps,
+                    anchor: 'timeline-item-api'
                 }
             ]}
         />

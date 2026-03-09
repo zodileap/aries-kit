@@ -85,27 +85,27 @@ export const textAPI: DocAPI = {
     events: [
         {
             event: 'onClick',
-            desc: '点击事件',
+            desc: '点击组件根节点时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseEnter',
-            desc: '鼠标进入事件',
+            desc: '鼠标移入组件根节点时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseLeave',
-            desc: '鼠标离开事件',
+            desc: '鼠标移出组件根节点时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseDown',
-            desc: '鼠标按下事件',
+            desc: '在组件根节点按下鼠标时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseUp',
-            desc: '鼠标松开事件',
+            desc: '在组件根节点松开鼠标时触发',
             type: '(e: React.MouseEvent) => void'
         }
     ],

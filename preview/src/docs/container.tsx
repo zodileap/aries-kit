@@ -126,7 +126,7 @@ export const containerAPI: DocAPI = {
         },
         {
             param: 'showBorder',
-            desc: '是否显示边框',
+            desc: '控制组件是否渲染外边框',
             type: 'boolean',
             default: 'false'
         },
@@ -228,7 +228,7 @@ export const containerAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -236,42 +236,42 @@ export const containerAPI: DocAPI = {
     events: [
         {
             event: 'onClick',
-            desc: '点击事件',
+            desc: '点击组件根节点时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseEnter',
-            desc: '鼠标进入事件',
+            desc: '鼠标移入组件根节点时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseLeave',
-            desc: '鼠标离开事件',
+            desc: '鼠标移出组件根节点时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseDown',
-            desc: '鼠标按下事件',
+            desc: '在组件根节点按下鼠标时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseUp',
-            desc: '鼠标松开事件',
+            desc: '在组件根节点松开鼠标时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onTouchStart',
-            desc: '触摸开始事件',
+            desc: '触摸开始作用于组件根节点时触发',
             type: '(e: React.TouchEvent) => void'
         },
         {
             event: 'onTouchMove',
-            desc: '触摸移动事件',
+            desc: '触摸在组件根节点上移动时触发',
             type: '(e: React.TouchEvent) => void'
         },
         {
             event: 'onTouchEnd',
-            desc: '触摸结束事件',
+            desc: '触摸在组件根节点上结束时触发',
             type: '(e: React.TouchEvent) => void'
         }
     ],

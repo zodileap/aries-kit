@@ -114,7 +114,7 @@ export const radioAPI: DocAPI = {
         },
         {
             param: 'defaultValue',
-            desc: '默认选中的值，非受控组件的默认值',
+            desc: '非受控模式下默认选中的值，仅首次渲染生效',
             type: 'string | number',
             default: '-'
         },
@@ -163,7 +163,8 @@ export const anchors = Object.values(radioExamples).map(example => ({
     label: example.title
 })).concat([
     { key: 'radio-api', label: 'Radio API' },
-    { key: 'radio-group-api', label: 'Radio.Group API' }
+    { key: 'radio-group-api', label: 'Radio.Group API' },
+    { key: 'radio-group-slots', label: 'Radio.Group Slots' }
 ]);
 
 const RadioDoc: React.FC = () => {
@@ -171,19 +172,23 @@ const RadioDoc: React.FC = () => {
         <Doc
             title="Radio 单选框"
             description="单选框允许用户从一组选项中选择一个选项，用于在有限数量的选择中进行单选。"
+            apiTitle="Radio API"
+            apiAnchor="radio-api"
             examples={radioExamples}
             api={radioAPI}
             extraProps={[
                 {
                     title: 'Radio.Group API',
-                    content: "groupProps"
+                    data: radioAPI.groupProps,
+                    anchor: 'radio-group-api'
                 }
             ]}
             extraSlots={
                 [
                     {
                         title: 'Radio.Group Slots',
-                        content: "groupSlots"
+                        data: radioAPI.groupSlots,
+                        anchor: 'radio-group-slots'
                     }
                 ]
             }

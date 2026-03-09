@@ -46,17 +46,21 @@ export const useCollapseHeight = ({
     // 计算容器总高度
     const calculateContainerHeight = useCallback((heights: Record<string, number> = childHeights) => {
         if (!containerRef.current || childrenCount === 0) {
-            return contentHeight?.current?.offsetHeight || 0;
+            return 0;
         }
 
         let totalHeight = 0;
+        const childElements = Array.from(containerRef.current.children);
+        const recordedHeights = Object.values(heights);
+        const canUseRecordedHeights =
+            recordedHeights.length === childrenCount &&
+            childElements.length === childrenCount;
 
         // 如果有记录的子节点高度，则使用它们
-        if (Object.keys(heights).length > 0) {
-            totalHeight = Object.values(heights).reduce((sum, height) => sum + height, 0);
+        if (canUseRecordedHeights) {
+            totalHeight = recordedHeights.reduce((sum, height) => sum + height, 0);
         } else {
             // 否则，从DOM元素获取高度
-            const childElements = Array.from(containerRef.current.children);
             totalHeight = childElements.reduce((sum, child) => {
                 return sum + (child as HTMLElement).offsetHeight;
             }, 0);
@@ -85,12 +89,17 @@ export const useCollapseHeight = ({
         // 使用 setTimeout + requestAnimationFrame 实现顺序动画
         setTimeout(() => {
             requestAnimationFrame(() => {
-                const height = calculateContainerHeight(heights);
-                setContainerHeight(height);
+                const childContainerHeight = calculateContainerHeight(heights);
+                const contentOffsetHeight = contentHeight?.current?.offsetHeight || 0;
+                const totalNodeHeight = childContainerHeight > 0
+                    ? childContainerHeight + contentOffsetHeight + gapSize
+                    : contentOffsetHeight;
+
+                setContainerHeight(childContainerHeight);
 
                 // 通知父组件高度变化
                 if (onHeightChange) {
-                    onHeightChange(nodeKey, height + (contentHeight?.current?.offsetHeight || 0) + gapSize);
+                    onHeightChange(nodeKey, totalNodeHeight);
                 }
             });
         }, baseDelay);
@@ -107,12 +116,18 @@ export const useCollapseHeight = ({
         return () => clearTimeout(timer);
     }, [isExpanded, childrenCount, updateHeight]);
 
+    useEffect(() => {
+        if (Object.keys(childHeights).length > childrenCount) {
+            setChildHeights({});
+        }
+    }, [childHeights, childrenCount]);
+
     // 监听DOM变化
     useEffect(() => {
         if (!containerRef.current || (!isExpanded && !defaultExpanded)) return;
 
         const observer = new MutationObserver(() => {
-            // 使用延迟以减少频繁更新
+            updateHeight();
         });
 
         // 观察容器及其所有子元素的变化
@@ -135,6 +150,7 @@ export const useCollapseHeight = ({
 
         const resizeObserver = new ResizeObserver(() => {
             if (isExpanded || defaultExpanded) {
+                updateHeight();
             }
         });
 

@@ -59,7 +59,7 @@ export const checkboxAPI: DocAPI = {
         },
         {
             param: 'disabled',
-            desc: '是否禁用',
+            desc: '禁用后组件不可交互',
             type: 'boolean',
             default: 'false'
         },
@@ -77,7 +77,7 @@ export const checkboxAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -99,13 +99,13 @@ export const checkboxAPI: DocAPI = {
     checkboxGroupProps: [
         {
             param: 'value',
-            desc: '当前选中的值数组',
+            desc: '受控模式下当前选中的复选框值数组',
             type: 'Array<string | number>',
             default: '[]'
         },
         {
             param: 'defaultValue',
-            desc: '默认选中的值数组（非受控模式）',
+            desc: '非受控模式下默认选中的值数组，仅首次渲染生效',
             type: 'Array<string | number>',
             default: '[]'
         },
@@ -117,7 +117,7 @@ export const checkboxAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -141,7 +141,12 @@ export const checkboxAPI: DocAPI = {
 export const anchors = Object.values(checkboxExamples).map(example => ({
     key: example.key,
     label: example.title
-})).concat([{ key: 'api', label: 'API' }]);
+})).concat([
+    { key: 'api', label: 'API' },
+    { key: 'checkbox-group-props', label: 'CheckboxGroup Props' },
+    { key: 'checkbox-group-events', label: 'CheckboxGroup Events' },
+    { key: 'checkbox-group-slots', label: 'CheckboxGroup Slots' }
+]);
 
 const CheckboxDoc: React.FC = () => {
     return (
@@ -153,13 +158,22 @@ const CheckboxDoc: React.FC = () => {
             extraProps={[
                 {
                     title: 'CheckboxGroup Props',
-                    content: 'checkboxGroupProps'
+                    data: checkboxAPI.checkboxGroupProps,
+                    anchor: 'checkbox-group-props'
+                }
+            ]}
+            extraEvents={[
+                {
+                    title: 'CheckboxGroup Events',
+                    data: checkboxAPI.checkboxGroupEvents,
+                    anchor: 'checkbox-group-events'
                 }
             ]}
             extraSlots={[
                 {
                     title: 'CheckboxGroup Slots',
-                    content: 'checkboxGroupSlots'
+                    data: checkboxAPI.checkboxGroupSlots,
+                    anchor: 'checkbox-group-slots'
                 }
             ]}
         />

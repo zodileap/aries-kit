@@ -152,7 +152,7 @@ export const tableAPI: DocAPI = {
     props: [
         {
             param: 'data',
-            desc: '表格数据',
+            desc: '表格渲染使用的数据数组，每一项对应一行',
             type: 'T[]',
             default: '[]'
         },
@@ -164,13 +164,13 @@ export const tableAPI: DocAPI = {
         },
         {
             param: 'title',
-            desc: '表格标题',
+            desc: '显示在表格顶部标题区域的文本',
             type: 'string',
             default: '-'
         },
         {
             param: 'bordered',
-            desc: '是否显示边框',
+            desc: '控制组件是否渲染外边框',
             type: 'boolean',
             default: 'true'
         },
@@ -188,19 +188,19 @@ export const tableAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         },
         {
             param: 'onSelectionChange',
-            desc: '选中行变化时的回调',
+            desc: '勾选行集合变化后触发，返回当前选中的完整数据项',
             type: '(selectedItems: T[]) => void',
             default: '-'
         },
         {
             param: 'size',
-            desc: '表格尺寸',
+            desc: '控制表格单元格的垂直间距和字号规格',
             type: "'xs' | 'default' | 'xl'",
             default: 'default'
         },
@@ -260,7 +260,7 @@ export const tableAPI: DocAPI = {
         },
         {
             param: 'paginationPosition',
-            desc: '分页器位置',
+            desc: '控制分页器显示在表格顶部、底部或两端',
             type: "'top' | 'bottom' | 'both'",
             default: "'bottom'"
         },
@@ -284,7 +284,7 @@ export const tableAPI: DocAPI = {
         },
         {
             param: 'showTotal',
-            desc: '是否显示总数',
+            desc: '自定义分页器总数区域的渲染内容，参数为总条数和当前页数据范围',
             type: '(total: number, range: [number, number]) => React.ReactNode',
             default: '-'
         },
@@ -314,13 +314,13 @@ export const tableAPI: DocAPI = {
         },
         {
             param: 'loadingText',
-            desc: '加载中显示的文本',
+            desc: '滚动分页加载中时在底部提示区显示的文本',
             type: 'string',
             default: '加载中...'
         },
         {
             param: 'noMoreText',
-            desc: '没有更多数据时显示的文本',
+            desc: '滚动分页结束后在底部提示区显示的文本',
             type: 'string',
             default: '没有更多数据'
         },
@@ -348,7 +348,7 @@ export const tableAPI: DocAPI = {
         },
         {
             event: 'onRow',
-            desc: '自定义行属性，可以为表格行设置额外的属性',
+            desc: '为每一行返回额外的 DOM 属性和事件处理器',
             type: '(record: T, index: number) => React.HTMLAttributes<HTMLTableRowElement>'
         },
         {
@@ -361,19 +361,19 @@ export const tableAPI: DocAPI = {
     columnProps: [
         {
             param: 'title',
-            desc: '列标题',
+            desc: '表头单元格中展示的标题内容',
             type: 'string',
             default: '-'
         },
         {
             param: 'key',
-            desc: '列数据对应的键值',
+            desc: '从行数据 record 中读取当前列值时使用的字段名',
             type: 'keyof T | K',
             default: '-'
         },
         {
             param: 'width',
-            desc: '列宽度',
+            desc: '当前列的固定宽度；可传数字像素或 CSS 宽度字符串',
             type: 'number | string',
             default: '-'
         },
@@ -385,7 +385,7 @@ export const tableAPI: DocAPI = {
         },
         {
             param: 'align',
-            desc: '列内容对齐方式',
+            desc: '当前列单元格与表头内容的水平对齐方式',
             type: '"left" | "center" | "right"',
             default: '"left"'
         },
@@ -403,7 +403,7 @@ export const tableAPI: DocAPI = {
         },
         {
             param: 'render',
-            desc: '自定义列渲染函数',
+            desc: '自定义单元格渲染函数，参数为当前值、整行记录和行索引',
             type: '(value: any, record: T, index: number) => React.ReactNode',
             default: '-'
         }
@@ -413,7 +413,10 @@ export const tableAPI: DocAPI = {
 export const anchors = Object.values(tableExamples).map(example => ({
     key: example.key,
     label: example.title
-})).concat({ key: 'api', label: 'API' });
+})).concat([
+    { key: 'api', label: 'API' },
+    { key: 'table-column-api', label: '列属性' }
+]);
 
 const TableDoc: React.FC = () => {
     return (
@@ -425,7 +428,8 @@ const TableDoc: React.FC = () => {
             extraProps={[
                 {
                     title: '列属性',
-                    content: 'columnProps'
+                    data: tableAPI.columnProps,
+                    anchor: 'table-column-api'
                 }
             ]}
         />

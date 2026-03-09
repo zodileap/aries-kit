@@ -80,7 +80,7 @@ export const switchAPI: DocAPI = {
         },
         {
             param: 'size',
-            desc: '尺寸大小',
+            desc: '控制组件的视觉尺寸规格',
             type: "'sm' | 'default' | 'lg'",
             default: "'default'"
         },

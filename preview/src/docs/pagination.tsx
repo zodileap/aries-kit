@@ -95,7 +95,7 @@ export const paginationAPI: DocAPI = {
         },
         {
             param: 'disabled',
-            desc: '是否禁用',
+            desc: '禁用后组件不可交互',
             type: 'boolean',
             default: 'false'
         },
@@ -125,7 +125,7 @@ export const paginationAPI: DocAPI = {
         },
         {
             param: 'showTotal',
-            desc: '是否显示总数',
+            desc: '自定义总数区域的渲染内容，参数为总条数和当前页数据范围',
             type: '(total: number, range: [number, number]) => React.ReactNode',
             default: '-'
         }

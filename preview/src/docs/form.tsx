@@ -101,7 +101,7 @@ export const formAPI: DocAPI = {
         },
         {
             param: 'labelAlign',
-            desc: '标签对齐方式',
+            desc: '控制标签文本在标签区域内左对齐或右对齐',
             type: "'left' | 'right'",
             default: 'right'
         },
@@ -143,13 +143,13 @@ export const formAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         },
         {
             param: 'style',
-            desc: '自定义样式',
+            desc: '直接作用于组件根节点的内联样式对象',
             type: 'React.CSSProperties',
             default: '-'
         }
@@ -237,7 +237,7 @@ export const formAPI: DocAPI = {
             },
             {
                 param: 'labelAlign',
-                desc: '标签对齐方式',
+                desc: '控制标签文本在标签区域内左对齐或右对齐',
                 type: "'left' | 'right'",
                 default: '继承Form的设置'
             },
@@ -249,13 +249,13 @@ export const formAPI: DocAPI = {
             },
             {
                 param: 'className',
-                desc: '自定义类名',
+                desc: '附加到组件根节点的自定义 CSS 类名',
                 type: 'string',
                 default: '-'
             },
             {
                 param: 'style',
-                desc: '自定义样式',
+                desc: '直接作用于组件根节点的内联样式对象',
                 type: 'React.CSSProperties',
                 default: '-'
             }
@@ -270,6 +270,7 @@ export const formAPI: DocAPI = {
     },
     hooks: {
         title: '表单Hooks',
+        anchor: 'hooks',
         apis: [
             {
                 name: 'useFormInstance',
@@ -285,6 +286,7 @@ export const formAPI: DocAPI = {
     },
     methods: {
         title: '表单方法',
+        anchor: 'methods',
         apis: [
             {
                 name: 'getFieldValue',
@@ -333,7 +335,11 @@ export const formAPI: DocAPI = {
 export const anchors = Object.values(formExamples).map(example => ({
     key: example.key,
     label: example.title
-})).concat({ key: 'api', label: 'API' });
+})).concat([
+    { key: 'api', label: 'API' },
+    { key: 'hooks', label: '表单 Hooks' },
+    { key: 'methods', label: '表单方法' }
+]);
 
 const FormDoc: React.FC = () => {
     return (

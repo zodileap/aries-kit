@@ -104,7 +104,7 @@ export const notificationAPI: DocAPI = {
     },
     {
       param: 'className',
-      desc: '自定义类名',
+      desc: '附加到组件根节点的自定义 CSS 类名',
       type: 'string',
       default: '-'
     },
@@ -170,7 +170,8 @@ export const anchors = Object.values(notificationExamples).map(example => ({
   label: example.title
 })).concat([
   { key: 'api', label: 'API' },
-  { key: 'provider-api', label: 'NotificationProvider API' }
+  { key: 'provider-api', label: 'NotificationProvider API' },
+  { key: 'methods', label: '方法' }
 ]);
 
 const NotificationDoc: React.FC = () => {
@@ -183,7 +184,8 @@ const NotificationDoc: React.FC = () => {
       extraProps={[
         {
           title: 'NotificationProvider API',
-          content: "contextProps"
+          data: notificationAPI.contextProps,
+          anchor: 'provider-api'
         }
       ]}
     />

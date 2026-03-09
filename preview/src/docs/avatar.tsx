@@ -56,13 +56,13 @@ export const avatarAPI: DocAPI = {
     props: [
         {
             param: 'src',
-            desc: '头像图片地址',
+            desc: '头像图片的完整地址；加载成功时优先显示图片',
             type: 'string',
             default: '-'
         },
         {
             param: 'alt',
-            desc: '图片的替代文本',
+            desc: '头像图片不可见时提供给浏览器和辅助技术的替代文本',
             type: 'string',
             default: '-'
         },
@@ -80,25 +80,25 @@ export const avatarAPI: DocAPI = {
         },
         {
             param: 'shape',
-            desc: '头像的形状',
+            desc: '控制头像外轮廓为圆形或方形',
             type: "'circle' | 'square'",
             default: 'circle'
         },
         {
             param: 'size',
-            desc: '头像的尺寸',
+            desc: '控制头像容器以及内部图标或文字的尺寸规格',
             type: "'xs' | 'sm' | 'default' | 'lg' | 'xl' | 'xxl'",
             default: 'default'
         },
         {
             param: 'backgroundColor',
-            desc: '自定义背景颜色',
+            desc: '直接覆盖头像容器的背景色',
             type: 'string',
             default: '-'
         },
         {
             param: 'textColor',
-            desc: '自定义文字颜色',
+            desc: '直接覆盖头像文字或图标的前景色',
             type: 'string',
             default: '-'
         },
@@ -110,13 +110,13 @@ export const avatarAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         },
         {
             param: 'style',
-            desc: '自定义样式',
+            desc: '直接作用于组件根节点的内联样式对象',
             type: 'React.CSSProperties',
             default: '-'
         }

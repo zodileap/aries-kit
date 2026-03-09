@@ -192,7 +192,7 @@ export const richEditorAPI: DocAPI = {
         },
         {
             param: 'disabled',
-            desc: '是否禁用',
+            desc: '禁用后组件不可交互',
             type: 'boolean',
             default: 'false'
         },

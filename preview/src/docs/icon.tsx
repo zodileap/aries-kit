@@ -84,7 +84,7 @@ export const iconAPI: DocAPI = {
     props: [
         {
             param: 'name',
-            desc: '图标名称',
+            desc: '使用的内置图标名称',
             type: 'string',
             default: '-'
         },
@@ -132,13 +132,13 @@ export const iconAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         },
         {
             param: 'style',
-            desc: '内联样式',
+            desc: '直接作用于组件根节点的内联样式对象',
             type: 'React.CSSProperties',
             default: '-'
         }
@@ -146,7 +146,7 @@ export const iconAPI: DocAPI = {
     events: [
         {
             event: 'onClick',
-            desc: '点击事件',
+            desc: '点击组件根节点时触发',
             type: '(e: React.MouseEvent) => void'
         }
     ],

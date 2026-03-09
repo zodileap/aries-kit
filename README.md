@@ -81,8 +81,9 @@ addI18nResources({
 
 ## Styling
 
-- For plain usage, import `@aries-kit/react/style.css`
-- For Sass-based customization, import `@aries-kit/react/theme/index.scss`
+- For compiled component styles, import `@aries-kit/react/style.css`
+- `@aries-kit/react/theme/index.scss` only exposes Sass globals, variables, and mixins
+- For the full Sass theme source, import `@aries-kit/react/theme/style.scss`
 
 ## Development
 

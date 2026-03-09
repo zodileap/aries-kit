@@ -92,7 +92,7 @@ export const timePickerAPI: DocAPI = {
         },
         {
             param: 'disabled',
-            desc: '是否禁用',
+            desc: '禁用后组件不可交互',
             type: 'boolean',
             default: 'false'
         },
@@ -158,13 +158,13 @@ export const timePickerAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         },
         {
             param: 'style',
-            desc: '自定义内联样式',
+            desc: '直接作用于组件根节点的内联样式对象',
             type: 'React.CSSProperties',
             default: '-'
         }

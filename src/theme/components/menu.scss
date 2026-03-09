@@ -161,6 +161,16 @@
             }
         }
 
+        &.text-top,
+        &.text-bottom {
+            align-items: flex-start;
+
+            .#{$namespace}-menu-item__main,
+            .#{$namespace}-menu-item__label {
+                width: 100%;
+            }
+        }
+
         &::after {
             z-index: -1;
         }

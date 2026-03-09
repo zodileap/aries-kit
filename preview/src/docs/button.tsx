@@ -57,25 +57,25 @@ export const buttonAPI: DocAPI = {
     props: [
         {
             param: 'label',
-            desc: '按钮文本',
+            desc: '未传 children 时显示的文案内容',
             type: 'string',
             default: '-'
         },
         {
             param: 'icon',
-            desc: '按钮图标',
+            desc: '显示在按钮内容前的内置图标名称',
             type: 'string',
             default: '-'
         },
         {
             param: 'shape',
-            desc: '按钮形状',
+            desc: '控制按钮外轮廓为默认、圆形或圆角样式',
             type: "'default' | 'circle' | 'round'",
             default: 'default'
         },
         {
             param: 'size',
-            desc: '按钮尺寸',
+            desc: '控制按钮高度、内边距和图标字号规格',
             type: "'xs' | 'sm' | 'default' | 'lg' | 'xl' | 'xxl'",
             default: 'default'
         },
@@ -93,31 +93,31 @@ export const buttonAPI: DocAPI = {
         },
         {
             param: 'htmlType',
-            desc: 'HTML按钮类型',
+            desc: '原生 button 元素的 type 属性，影响表单提交与重置行为',
             type: "'button' | 'submit' | 'reset'",
             default: 'button'
         },
         {
             param: 'disabled',
-            desc: '是否禁用按钮',
+            desc: '禁用后按钮不可点击，也不会触发交互状态',
             type: 'boolean',
             default: 'false'
         },
         {
             param: 'loading',
-            desc: '是否显示加载状态',
+            desc: '进入加载态后显示 loading 图标，并阻止重复触发',
             type: 'boolean',
             default: 'false'
         },
         {
             param: "ghost",
-            desc: "幽灵按钮（透明背景）",
+            desc: "启用透明背景样式，颜色主要作用于边框、文字和图标",
             type: "boolean",
             default: "false"
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -125,14 +125,14 @@ export const buttonAPI: DocAPI = {
     events: [
         {
             event: 'onClick',
-            desc: '点击事件',
+            desc: '点击组件根节点时触发',
             type: '(e: React.MouseEvent<HTMLButtonElement>) => void'
         }
     ],
     slots: [
         {
             name: 'children',
-            desc: '按钮内容',
+            desc: '直接渲染到按钮内部的自定义内容',
             type: 'React.ReactNode'
         }
     ]

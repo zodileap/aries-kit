@@ -44,8 +44,8 @@
 
 .icon-collection__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
+    gap: 12px;
 }
 
 .icon-collection__item {
@@ -53,10 +53,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 68px;
-    padding: 16px 12px;
+    min-height: 96px;
+    padding: 14px 10px 12px;
     border: 1px solid var(--z-color-border-glass);
-    border-radius: 8px;
+    border-radius: 10px;
     background-color: var(--z-color-bg-solid);
     color: var(--z-color-text);
     transition: all 0.3s ease;
@@ -71,19 +71,39 @@
 }
 
 .icon-collection__item-icon {
+    --z-icon-size: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 16px;
+    min-height: 48px;
     margin-bottom: 8px;
+    line-height: 1;
 }
 
 .icon-collection__item-name {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.4;
     color: var(--z-color-text-secondary);
     text-align: center;
     word-break: break-word;
+}
+
+@media (max-width: 768px) {
+    .icon-collection__grid {
+        grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+        gap: 10px;
+    }
+
+    .icon-collection__item {
+        min-height: 88px;
+        padding: 12px 8px 10px;
+    }
+
+    .icon-collection__item-icon {
+        --z-icon-size: 44px;
+        min-height: 44px;
+        margin-bottom: 6px;
+    }
 }
 
 .icon-collection__item--error {

@@ -1,6 +1,6 @@
 {
   "name": "@aries-kit/react",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": true,
   "description": "Aries Kit React component and hooks library.",
   "license": "MIT",
@@ -40,6 +40,7 @@
     },
     "./style.css": "./assets/style.css",
     "./theme/index.scss": "./theme/index.scss",
+    "./theme/style.scss": "./theme/style.scss",
     "./package.json": "./package.json"
   },
   "files": [

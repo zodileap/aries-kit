@@ -39,7 +39,7 @@ export const navAPI: DocAPI = {
     props: [
         {
             param: 'items',
-            desc: '导航项目列表',
+            desc: '按展示顺序渲染的导航项数组',
             type: 'AriNavItem[]',
             default: '[]'
         },

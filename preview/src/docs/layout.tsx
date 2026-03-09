@@ -122,12 +122,15 @@ const LayoutDoc: React.FC = () => {
         <Doc
             title="Layout 布局"
             description="Layout布局组件提供了左中右三区域的布局方式，可以灵活控制各区域的显示和隐藏。适用于需要动态调整页面布局结构的场景。"
+            apiTitle="Layout API"
+            apiAnchor="layout-api"
             examples={layoutExamples}
             api={layoutAPI}
             extraProps={[
                 {
                     title: 'Context API',
-                    content: "contextAPI"
+                    data: layoutAPI.contextAPI,
+                    anchor: 'context-api'
                 }
             ]}
         />

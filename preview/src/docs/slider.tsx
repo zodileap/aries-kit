@@ -142,7 +142,7 @@ export const sliderAPI: DocAPI = {
         },
         {
             param: 'disabled',
-            desc: '是否禁用',
+            desc: '禁用后组件不可交互',
             type: 'boolean',
             default: 'false'
         },
@@ -242,21 +242,20 @@ export const rangeSliderAPI: DocAPI = {
             desc: '范围滑动条的默认值（非受控组件）',
             type: '[number, number]',
             default: '[0, 0]'
-        },
-        {
-            param: 'onChange',
-            desc: '范围滑动条值变化时的回调函数',
-            type: '(value: [number, number]) => void',
-            default: '-'
-        },
-        {
-            param: 'onAfterChange',
-            desc: '范围滑动条拖动结束时的回调函数',
-            type: '(value: [number, number]) => void',
-            default: '-'
         }
     ],
-    events: [],
+    events: [
+        {
+            event: 'onChange',
+            desc: '范围滑动条值变化时的回调函数',
+            type: '(value: [number, number]) => void'
+        },
+        {
+            event: 'onAfterChange',
+            desc: '范围滑动条拖动结束时的回调函数',
+            type: '(value: [number, number]) => void'
+        }
+    ],
     slots: []
 };
 
@@ -274,12 +273,21 @@ const SliderDoc: React.FC = () => {
         <Doc
             title="Slider 滑动输入条"
             description="滑动输入条组件，通过滑动来选择一个或一段连续的值。包含基础滑动条 (AriSlider) 和范围滑动条 (AriSlider.Range)。"
+            apiTitle="Slider API"
+            apiAnchor="slider-api"
             examples={sliderExamples}
             api={sliderAPI} // 使用基础 Slider API
             extraProps={[ // 使用 extraProps 传递 Range Slider 的特定 API
                 {
                     title: 'Range Slider API',
-                    content: "rangeSliderAPI" // 引用 rangeSliderAPI
+                    data: rangeSliderAPI.props,
+                    anchor: 'range-slider-api'
+                }
+            ]}
+            extraEvents={[
+                {
+                    title: 'Range Slider API',
+                    data: rangeSliderAPI.events
                 }
             ]}
             // 移除 extraSlots，因为 Range Slider 没有额外的 slots

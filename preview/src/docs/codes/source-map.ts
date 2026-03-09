@@ -7540,7 +7540,7 @@ export const ComplexList: React.FC = () => {
   "menu": {
     "BasicMenu": `export const BasicMenu: React.FC = () => {
   const items = [
-        { key: '1', label: '菜单项1', icon: 'home', textPosition: 'top' as const },
+        { key: '1', label: '菜单项1', icon: 'home' },
         { key: '2', label: '菜单项2', icon: 'person', disabled: true },
         { key: '3', label: '菜单项3', icon: 'settings' }
     ];

@@ -31,7 +31,7 @@ export const AriTooltip: React.FC<AriTooltipProps> = ({
 }) => {
     // 1. 状态管理
     const [isVisible, setIsVisible] = useState(false);
-    const [tooltipPosition, setTooltipPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+    const [tooltipPosition, setTooltipPosition] = useState<Pick<React.CSSProperties, 'top' | 'left' | 'right' | 'bottom'>>({ top: 0, left: 0 });
     const [isPositioned, setIsPositioned] = useState(false); // 标记位置是否已计算
     
     // 2. Refs
@@ -39,6 +39,7 @@ export const AriTooltip: React.FC<AriTooltipProps> = ({
     const tooltipRef = useRef<HTMLDivElement>(null);
     const showTimerRef = useRef<number | null>(null);
     const hideTimerRef = useRef<number | null>(null);
+    const positionFrameRef = useRef<number | null>(null);
     const isMouseInTooltip = useRef(false);
     const isMouseInTrigger = useRef(false);
 
@@ -56,11 +57,19 @@ export const AriTooltip: React.FC<AriTooltipProps> = ({
         }
     }, []);
 
+    const cancelPositionFrame = useCallback(() => {
+        if (positionFrameRef.current !== null) {
+            cancelAnimationFrame(positionFrameRef.current);
+            positionFrameRef.current = null;
+        }
+    }, []);
+
     // 4. 位置计算函数 - 简化版本
     const calculatePosition = useCallback(() => {
         if (!triggerRef.current || !tooltipRef.current) {
             // 如果元素不存在，稍后重试
-            requestAnimationFrame(() => {
+            positionFrameRef.current = requestAnimationFrame(() => {
+                positionFrameRef.current = null;
                 calculatePosition();
             });
             return;
@@ -71,7 +80,8 @@ export const AriTooltip: React.FC<AriTooltipProps> = ({
         
         // 如果tooltip尺寸为0，稍后重试
         if (tooltipRect.width === 0 || tooltipRect.height === 0) {
-            requestAnimationFrame(() => {
+            positionFrameRef.current = requestAnimationFrame(() => {
+                positionFrameRef.current = null;
                 calculatePosition();
             });
             return;
@@ -80,6 +90,8 @@ export const AriTooltip: React.FC<AriTooltipProps> = ({
 
         let top = 0;
         let left = 0;
+        let right: number | undefined;
+        let bottom: number | undefined;
 
         // 根据position计算初始位置
         switch (position) {
@@ -118,9 +130,43 @@ export const AriTooltip: React.FC<AriTooltipProps> = ({
             top = viewportHeight - tooltipRect.height - margin;
         }
 
-        setTooltipPosition({ top, left });
+        let resolvedTop: number | undefined = top;
+        let resolvedLeft: number | undefined = left;
+
+        if (position === 'top') {
+            const anchoredBottom = viewportHeight - triggerRect.top + gap;
+            const anchoredTop = viewportHeight - anchoredBottom - tooltipRect.height;
+
+            if (anchoredTop >= margin) {
+                bottom = anchoredBottom;
+                resolvedTop = undefined;
+            }
+        } else if (position === 'left') {
+            const anchoredRight = viewportWidth - triggerRect.left + gap;
+            const anchoredLeft = viewportWidth - anchoredRight - tooltipRect.width;
+
+            if (anchoredLeft >= margin) {
+                right = anchoredRight;
+                resolvedLeft = undefined;
+            }
+        }
+
+        setTooltipPosition({
+            top: resolvedTop,
+            left: resolvedLeft,
+            right,
+            bottom,
+        });
         setIsPositioned(true);
     }, [position]);
+
+    const schedulePositionUpdate = useCallback(() => {
+        cancelPositionFrame();
+        positionFrameRef.current = requestAnimationFrame(() => {
+            positionFrameRef.current = null;
+            calculatePosition();
+        });
+    }, [calculatePosition, cancelPositionFrame]);
 
     // 5. 显示函数
     const show = useCallback(() => {
@@ -133,11 +179,9 @@ export const AriTooltip: React.FC<AriTooltipProps> = ({
             setIsPositioned(false); // 重置位置状态
             onShow?.();
             // 显示后立即计算位置
-            requestAnimationFrame(() => {
-                calculatePosition();
-            });
+            schedulePositionUpdate();
         }, showDelay);
-    }, [disabled, showDelay, onShow, clearTimers, calculatePosition]);
+    }, [disabled, showDelay, onShow, clearTimers, schedulePositionUpdate]);
 
     // 6. 隐藏函数
     const hide = useCallback(() => {
@@ -211,41 +255,81 @@ export const AriTooltip: React.FC<AriTooltipProps> = ({
                 setIsVisible(true);
                 setIsPositioned(false); // 重置位置状态
                 onShow?.();
-                requestAnimationFrame(() => {
-                    calculatePosition();
-                });
+                schedulePositionUpdate();
             } else {
                 setIsVisible(false);
                 setIsPositioned(false); // 重置位置状态
                 onHide?.();
             }
         }
-    }, [trigger, visible, onShow, onHide, calculatePosition]);
+    }, [trigger, visible, onShow, onHide, schedulePositionUpdate]);
 
     // 10. 位置更新监听
     useEffect(() => {
         if (!isVisible) return;
 
-        const updatePosition = () => {
-            calculatePosition();
-        };
+        schedulePositionUpdate();
 
         // 监听滚动和窗口大小变化
-        window.addEventListener('scroll', updatePosition, true);
-        window.addEventListener('resize', updatePosition);
+        window.addEventListener('scroll', schedulePositionUpdate, true);
+        window.addEventListener('resize', schedulePositionUpdate);
+
+        const tooltipElement = tooltipRef.current;
+        const tooltipContentElement = tooltipElement?.querySelector(`.${cs.e('content')}`) as HTMLDivElement | null;
+        const triggerElement = triggerRef.current;
+        const resizeObservers: ResizeObserver[] = [];
+        const mutationObservers: MutationObserver[] = [];
+
+        if (typeof ResizeObserver !== 'undefined') {
+            const resizeObserver = new ResizeObserver(() => {
+                schedulePositionUpdate();
+            });
+
+            if (tooltipElement) {
+                resizeObserver.observe(tooltipElement);
+            }
+
+            if (tooltipContentElement) {
+                resizeObserver.observe(tooltipContentElement);
+            }
+
+            if (triggerElement) {
+                resizeObserver.observe(triggerElement);
+            }
+
+            resizeObservers.push(resizeObserver);
+        }
+
+        if (tooltipContentElement && typeof MutationObserver !== 'undefined') {
+            const mutationObserver = new MutationObserver(() => {
+                schedulePositionUpdate();
+            });
+            mutationObserver.observe(tooltipContentElement, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style', 'class'],
+                characterData: true,
+            });
+            mutationObservers.push(mutationObserver);
+        }
 
         return () => {
-            window.removeEventListener('scroll', updatePosition, true);
-            window.removeEventListener('resize', updatePosition);
+            window.removeEventListener('scroll', schedulePositionUpdate, true);
+            window.removeEventListener('resize', schedulePositionUpdate);
+            resizeObservers.forEach((observer) => observer.disconnect());
+            mutationObservers.forEach((observer) => observer.disconnect());
+            cancelPositionFrame();
         };
-    }, [isVisible, calculatePosition]);
+    }, [isVisible, schedulePositionUpdate, cancelPositionFrame]);
 
     // 11. 清理定时器
     useEffect(() => {
         return () => {
             clearTimers();
+            cancelPositionFrame();
         };
-    }, [clearTimers]);
+    }, [clearTimers, cancelPositionFrame]);
 
     // 12. Trigger事件对象
     const triggerEvents = useMemo(() => {
@@ -304,8 +388,10 @@ export const AriTooltip: React.FC<AriTooltipProps> = ({
                         )}
                         style={{
                             position: 'fixed',
-                            top: `${tooltipPosition.top}px`,
-                            left: `${tooltipPosition.left}px`,
+                            top: tooltipPosition.top,
+                            left: tooltipPosition.left,
+                            right: tooltipPosition.right,
+                            bottom: tooltipPosition.bottom,
                             width: triggerWidth ? `${triggerWidth}px` : undefined,
                             minWidth: triggerWidth ? `${triggerWidth}px` : normalizedMinWidth,
                             maxWidth: triggerWidth ? `${triggerWidth}px` : undefined,

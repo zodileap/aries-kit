@@ -101,7 +101,7 @@ export const imageAPI: DocAPI = {
         },
         {
             param: 'alt',
-            desc: '图片的替代文本',
+            desc: '图片无法加载时提供给浏览器和辅助技术的替代文本',
             type: 'string',
             default: '-'
         },
@@ -119,13 +119,13 @@ export const imageAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         },
         {
             param: 'style',
-            desc: '自定义样式',
+            desc: '直接作用于组件根节点的内联样式对象',
             type: 'React.CSSProperties',
             default: '-'
         }
@@ -133,7 +133,7 @@ export const imageAPI: DocAPI = {
     events: [
         {
             event: 'onClick',
-            desc: '点击事件',
+            desc: '点击组件根节点时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {

@@ -20,19 +20,19 @@ export const appLayoutAPI: DocAPI = {
     props: [
         {
             param: 'children',
-            desc: '子元素内容',
+            desc: '渲染在组件内部的 React 节点内容',
             type: 'React.ReactNode',
             default: '-'
         },
         {
             param: 'className',
-            desc: '自定义CSS类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         },
         {
             param: 'style',
-            desc: '自定义样式',
+            desc: '直接作用于组件根节点的内联样式对象',
             type: 'React.CSSProperties',
             default: '-'
         }
@@ -45,13 +45,13 @@ export const appLayoutProviderAPI: DocAPI = {
     props: [
         {
             param: 'children',
-            desc: '子元素内容',
+            desc: '渲染在组件内部的 React 节点内容',
             type: 'React.ReactNode',
             default: '-'
         },
         {
             param: 'appConfig',
-            desc: '应用配置信息',
+            desc: '向 AppLayout 及其子组件提供应用级配置的上下文对象',
             type: 'AppConfig',
             default: '-'
         }
@@ -75,13 +75,13 @@ const AppLayoutDoc: React.FC = () => {
             description="用于构建应用程序的基础布局框架，提供统一的布局结构和配置管理。AppLayout组件需要在AppLayoutProvider包裹下使用。"
             examples={appLayoutExamples}
             api={{
-                ...appLayoutAPI,
-                providerProps: appLayoutProviderAPI.props
+                ...appLayoutAPI
             }}
             extraProps={[
                 {
                     title: 'AppLayoutProvider Props',
-                    content: 'providerProps'
+                    data: appLayoutProviderAPI.props,
+                    anchor: 'provider-api'
                 }
             ]}
         />

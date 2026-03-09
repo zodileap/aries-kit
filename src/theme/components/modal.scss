@@ -36,7 +36,7 @@
     background: getVar(color, bg-opacity);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-radius: getVar(border-radius, lg);
+    border-radius: getVar(border-radius, container);
     box-shadow: getVar(color, box-shadow-popover);
     @include flex(flex-start, stretch, column);
     max-height: 85vh;
@@ -185,7 +185,6 @@
   // 头部
   &__header {
     padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
-    border-bottom: 1px solid getVar(color, border);
     @include flex(space-between, center);
     flex-shrink: 0;
     background-color: getVar(color, bg);
@@ -245,7 +244,6 @@
   // 底部
   &__footer {
     padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
-    border-top: 1px solid getVar(color, border);
     @include flex(flex-end);
     gap: getVar(inset, sm);
     flex-shrink: 0;

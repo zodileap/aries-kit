@@ -671,7 +671,12 @@ export const AriSelect: React.FC<AriSelectProps> = ({
                         </div>
                     ) : (
                         // 单选或未选中任何项
-                        <AriTypography variant='body' className={cs.e('value')} value={selectedOptions.length ? selectedOptions[0].label : placeholder} />
+                        <AriTypography
+                            variant='body'
+                            className={cs.e('value')}
+                            value={selectedOptions.length ? selectedOptions[0].label : placeholder}
+                            noWrap
+                        />
                     )}
                 </div>
                 <div className={cs.e('suffix')}>

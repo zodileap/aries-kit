@@ -49,7 +49,7 @@ export const cardAPI: DocAPI = {
         },
         {
             param: 'alignment',
-            desc: '对齐方式',
+            desc: '在启用定位相关布局时，控制卡片相对父容器的停靠位置',
             type: "'center' | 'topLeft' | 'top' | 'topRight' | 'left' | 'right' | 'bottomLeft' | 'bottom' | 'bottomRight'",
             default: '-'
         },
@@ -67,7 +67,7 @@ export const cardAPI: DocAPI = {
         },
         {
             param: 'showBorder',
-            desc: '是否显示边框',
+            desc: '控制组件是否渲染外边框',
             type: 'boolean',
             default: 'false'
         },
@@ -169,13 +169,13 @@ export const cardAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         },
         {
             param: 'style',
-            desc: '内联样式',
+            desc: '直接作用于组件根节点的内联样式对象',
             type: 'React.CSSProperties',
             default: '-'
         }
@@ -183,42 +183,42 @@ export const cardAPI: DocAPI = {
     events: [
         {
             event: 'onClick',
-            desc: '点击事件',
+            desc: '点击组件根节点时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseEnter',
-            desc: '鼠标进入事件',
+            desc: '鼠标移入组件根节点时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseLeave',
-            desc: '鼠标离开事件',
+            desc: '鼠标移出组件根节点时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseDown',
-            desc: '鼠标按下事件',
+            desc: '在组件根节点按下鼠标时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onMouseUp',
-            desc: '鼠标抬起事件',
+            desc: '在组件根节点松开鼠标时触发',
             type: '(e: React.MouseEvent) => void'
         },
         {
             event: 'onTouchStart',
-            desc: '触摸开始事件',
+            desc: '触摸开始作用于组件根节点时触发',
             type: '(e: React.TouchEvent) => void'
         },
         {
             event: 'onTouchMove',
-            desc: '触摸移动事件',
+            desc: '触摸在组件根节点上移动时触发',
             type: '(e: React.TouchEvent) => void'
         },
         {
             event: 'onTouchEnd',
-            desc: '触摸结束事件',
+            desc: '触摸在组件根节点上结束时触发',
             type: '(e: React.TouchEvent) => void'
         }
     ],

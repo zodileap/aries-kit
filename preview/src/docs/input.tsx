@@ -409,7 +409,7 @@ export const inputAPI: DocAPI = {
         },
         {
             param: 'size',
-            desc: '尺寸大小',
+            desc: '控制组件的视觉尺寸规格',
             type: "'small' | 'default' | 'large'",
             default: 'default'
         },
@@ -421,7 +421,7 @@ export const inputAPI: DocAPI = {
         },
         {
             param: 'bordered',
-            desc: '是否显示边框',
+            desc: '控制组件是否渲染外边框',
             type: 'boolean',
             default: 'true'
         }
@@ -509,7 +509,7 @@ export const inputAPI: DocAPI = {
         },
         {
             param: 'addText',
-            desc: '新增按钮文本',
+            desc: '添加新条目按钮显示的文本',
             type: 'string',
             default: '"添加"'
         },
@@ -557,7 +557,7 @@ export const inputAPI: DocAPI = {
         },
         {
             param: 'size',
-            desc: '尺寸大小',
+            desc: '控制组件的视觉尺寸规格',
             type: "'sm' | 'default' | 'lg'",
             default: 'default'
         },
@@ -596,15 +596,18 @@ const InputDoc: React.FC = () => {
             extraProps={[
                 {
                     title: 'TextArea API',
-                    content: "textArea"
+                    data: inputAPI.textArea,
+                    anchor: 'textarea-api'
                 },
                 {
                     title: 'SearchInput API',
-                    content: "searchInput"
+                    data: inputAPI.searchInput,
+                    anchor: 'search-api'
                 },
                 {
                     title: 'InputNumber API',
-                    content: "inputNumber"
+                    data: inputAPI.inputNumber,
+                    anchor: 'number-api'
                 }
             ]}
         />

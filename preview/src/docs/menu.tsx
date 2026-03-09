@@ -81,43 +81,43 @@ export const menuAPI: DocAPI = {
         },
         {
             param: 'defaultSelectedKey',
-            desc: '默认选中的菜单项key',
+            desc: '非受控模式下默认选中的菜单项 key，仅初始化时生效',
             type: 'string',
             default: '-'
         },
         {
             param: 'selectedKey',
-            desc: '当前选中的菜单项key（受控）',
+            desc: '受控模式下当前选中的菜单项 key',
             type: 'string',
             default: '-'
         },
         {
             param: 'mode',
-            desc: '菜单展开方式',
+            desc: '控制菜单按纵向列表或横向导航栏方式布局',
             type: "'vertical' | 'horizontal'",
             default: 'vertical'
         },
         {
             param: 'expandIconPosition',
-            desc: '子菜单展开箭头位置',
+            desc: '控制含子菜单项的展开箭头显示在左侧、右侧或隐藏',
             type: "'right' | 'left' | 'none'",
             default: 'right'
         },
         {
             param: 'defaultExpandedKeys',
-            desc: '默认展开的子菜单key数组',
+            desc: '非受控模式下默认展开的子菜单 key 数组，仅初始化时生效',
             type: 'string[]',
             default: '[]'
         },
         {
             param: 'expandedKeys',
-            desc: '展开的子菜单key数组（受控）',
+            desc: '受控模式下当前展开的子菜单 key 数组',
             type: 'string[]',
             default: '-'
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -125,12 +125,12 @@ export const menuAPI: DocAPI = {
     events: [
         {
             event: 'onSelect',
-            desc: '菜单项选中回调',
+            desc: '点击可选菜单项并完成选中后触发',
             type: '(key: string, item: AriMenuItemProps) => void'
         },
         {
             event: 'onExpand',
-            desc: '子菜单展开/收起回调',
+            desc: '子菜单展开状态变化后返回最新展开 key 数组',
             type: '(expandedKeys: string[]) => void'
         }
     ]
@@ -141,79 +141,79 @@ export const menuItemAPI: DocAPI = {
     props: [
         {
             param: 'key',
-            desc: '菜单项的唯一标识',
+            desc: '用于区分当前菜单项并驱动选中与展开状态的唯一标识',
             type: 'string',
             default: '-'
         },
         {
             param: 'label',
-            desc: '菜单项标题，支持字符串或 ReactNode',
+            desc: '菜单项主内容，支持字符串或 ReactNode',
             type: 'string | ReactNode',
             default: '-'
         },
         {
             param: 'icon',
-            desc: '菜单项的图标名称',
+            desc: '默认状态下显示在菜单项前的内置图标名称',
             type: 'string',
             default: '-'
         },
         {
             param: 'fillIcon',
-            desc: '激活时的图标名称，如果没有设置，默认使用icon并添加_fill后缀',
+            desc: '菜单项激活时使用的图标名称；未传时会尝试基于 icon 推导',
             type: 'string',
             default: '-'
         },
         {
             param: 'iconAnimation',
-            desc: '菜单项图标动画',
+            desc: '为菜单项图标附加持续动画效果',
             type: "'spinning' | 'pulse' | 'shake'",
             default: '-'
         },
         {
             param: 'iconState',
-            desc: '菜单项图标状态',
+            desc: '设置菜单项图标的状态语义样式',
             type: "'disabled' | 'loading' | 'error' | 'success'",
             default: '-'
         },
         {
             param: 'disabled',
-            desc: '是否禁用',
+            desc: '禁用后组件不可交互',
             type: 'boolean',
             default: 'false'
         },
         {
             param: 'children',
-            desc: '子菜单项',
-            type: 'MenuItem[]',
+            desc: '当前菜单项的子菜单配置；存在时该项可展开或收起',
+            type: 'AriMenuItemProps[]',
             default: '-'
         },
         {
             param: 'textPosition',
-            desc: '文本相对于图标的位置',
+            desc: '控制 label 相对 icon 的排布方向',
             type: "'right' | 'left' | 'top' | 'bottom'",
             default: "'right'"
         },
         {
             param: 'isGroup',
-            desc: '是否为分组标签',
+            desc: '将当前项渲染为分组标题，而不是可点击菜单项',
             type: 'boolean',
             default: 'false'
         },
         {
             param: 'meta',
-            desc: '菜单项右侧信息区域（如时间、状态）',
+            desc: '渲染在菜单项尾部的补充信息区域，如时间、计数或状态',
             type: 'ReactNode',
             default: '-'
         },
         {
             param: 'actions',
-            desc: '菜单项右侧操作区（如图钉、删除按钮）',
+            desc: '渲染在菜单项尾部的操作按钮区域，如更多、删除或置顶',
             type: 'ReactNode',
             default: '-'
         },
         {
             param: 'showActionsOnHover',
-            desc: '是否仅在 hover 时显示 actions（会自动隐藏 meta）',
+            desc: '是否仅在 hover 时显示 actions，并在显示时隐藏 meta',
             type: 'boolean',
             default: 'false'
         }
@@ -221,12 +221,12 @@ export const menuItemAPI: DocAPI = {
     events: [
         {
             event: 'onClick',
-            desc: '点击回调',
+            desc: '点击当前项时触发的回调函数',
             type: '() => void'
         },
         {
             event: 'onContextMenu',
-            desc: '右键菜单事件',
+            desc: '在当前菜单项上触发右键菜单时回调原始事件',
             type: '(event: React.MouseEvent<HTMLElement>) => void'
         }
     ]
@@ -250,7 +250,14 @@ const MenuDoc: React.FC = () => {
             extraProps={[
                 {
                     title: 'MenuItem API',
-                    content: "menuItemAPI"
+                    data: menuItemAPI.props,
+                    anchor: 'menu-item-api'
+                }
+            ]}
+            extraEvents={[
+                {
+                    title: 'MenuItem API',
+                    data: menuItemAPI.events
                 }
             ]}
         />

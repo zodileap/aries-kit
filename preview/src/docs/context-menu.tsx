@@ -183,7 +183,7 @@ export const contextMenuAPI: DocAPI = {
         },
         {
             event: 'onSelect',
-            desc: '默认 AriMenu 菜单项选中回调',
+            desc: '使用默认 AriMenu 时，菜单项被选中后触发',
             type: '(key: string, item: AriMenuItemProps) => void',
         },
         {

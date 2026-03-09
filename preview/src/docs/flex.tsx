@@ -116,7 +116,7 @@ export const flexAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -125,7 +125,7 @@ export const flexAPI: DocAPI = {
     slots: [
         {
             name: 'children',
-            desc: '子元素',
+            desc: '直接渲染在组件内部的 React 节点内容',
             type: 'React.ReactNode'
         }
     ]

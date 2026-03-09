@@ -67,7 +67,16 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         api: 'modern-compiler',
-        additionalData: `@import "@ari/theme/index.scss";`,
+        additionalData: (source: string, filename: string) => {
+          const normalized = filename.replace(/\\/g, '/')
+          if (
+            normalized.endsWith('/src/style.scss') ||
+            normalized.endsWith('/src/theme/style.scss')
+          ) {
+            return source
+          }
+          return `@import "@ari/theme/index.scss";${source}`
+        },
       },
     },
   },

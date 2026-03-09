@@ -71,7 +71,7 @@ export const gridAPI: DocAPI = {
         },
         {
             param: 'align',
-            desc: '垂直对齐方式',
+            desc: '控制同一行内各列在交叉轴上的垂直对齐方式',
             type: "'top' | 'middle' | 'bottom' | 'stretch'",
             default: '-'
         },
@@ -83,7 +83,7 @@ export const gridAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -164,7 +164,7 @@ export const gridAPI: DocAPI = {
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -183,8 +183,11 @@ export const anchors = Object.values(gridExamples).map(example => ({
     key: example.key,
     label: example.title
 })).concat([
+    { key: 'api', label: 'Grid API' },
     { key: 'row-api', label: 'Row API' },
-    { key: 'col-api', label: 'Col API' }
+    { key: 'col-api', label: 'Col API' },
+    { key: 'row-slots', label: 'Row Slots' },
+    { key: 'col-slots', label: 'Col Slots' }
 ]);
 
 const GridDoc: React.FC = () => {
@@ -192,27 +195,32 @@ const GridDoc: React.FC = () => {
         <Doc
             title="Grid 栅格"
             description="基于24栅格系统，通过Row和Col组件，迅速简便地创建布局。采用了flex布局，支持响应式设计和多种对齐方式。"
+            apiAnchor="api"
             examples={gridExamples}
             api={gridAPI}
             extraProps={[
                 {
                     title: 'Row API',
-                    content: "rowAPI"
+                    data: gridAPI.rowProps,
+                    anchor: 'row-api'
                 },
                 {
                     title: 'Col API',
-                    content: "colAPI"
+                    data: gridAPI.colProps,
+                    anchor: 'col-api'
                 }
             ]}
             extraSlots={
                 [
                     {
                         title: 'Row Slots',
-                        content: "rowSlots"
+                        data: gridAPI.rowSlots,
+                        anchor: 'row-slots'
                     },
                     {
                         title: 'Col Slots',
-                        content: "colSlots"
+                        data: gridAPI.colSlots,
+                        anchor: 'col-slots'
                     }
                 ]
             }

@@ -56,25 +56,25 @@ export const breadcrumbAPI: DocAPI = {
     props: [
         {
             param: 'items',
-            desc: '面包屑项目列表',
+            desc: '按层级顺序渲染的面包屑项数组',
             type: 'AriBreadcrumbItem[]',
             default: '[]'
         },
         {
             param: 'separator',
-            desc: '分隔符',
+            desc: '相邻面包屑项之间展示的分隔内容',
             type: 'string | React.ReactNode',
             default: '/'
         },
         {
             param: 'showIcon',
-            desc: '是否显示图标',
+            desc: '是否在每个面包屑项前展示其 icon',
             type: 'boolean',
             default: 'true'
         },
         {
             param: 'className',
-            desc: '自定义类名',
+            desc: '附加到组件根节点的自定义 CSS 类名',
             type: 'string',
             default: '-'
         }
@@ -87,31 +87,31 @@ export const breadcrumbItemAPI: DocAPI = {
     props: [
         {
             param: 'key',
-            desc: '项目的唯一标识',
+            desc: '用于区分当前面包屑项的唯一标识',
             type: 'string',
             default: '-'
         },
         {
             param: 'label',
-            desc: '显示的文本',
+            desc: '当前项展示的文本内容',
             type: 'string',
             default: '-'
         },
         {
             param: 'href',
-            desc: '链接地址，如果提供则可点击跳转',
+            desc: '点击当前项时跳转的目标地址；未提供时按普通文本渲染',
             type: 'string',
             default: '-'
         },
         {
             param: 'icon',
-            desc: '图标名称',
+            desc: '使用的内置图标名称',
             type: 'string',
             default: '-'
         },
         {
             param: 'disabled',
-            desc: '是否禁用点击',
+            desc: '禁用当前项的点击与跳转行为',
             type: 'boolean',
             default: 'false'
         }
@@ -119,7 +119,7 @@ export const breadcrumbItemAPI: DocAPI = {
     events: [
         {
             event: 'onClick',
-            desc: '点击回调函数',
+            desc: '点击当前项时触发的回调函数',
             type: '() => void'
         }
     ],
@@ -144,7 +144,14 @@ const BreadcrumbDoc: React.FC = () => {
             extraProps={[
                 {
                     title: 'BreadcrumbItem API',
-                    content: "breadcrumbItemAPI"
+                    data: breadcrumbItemAPI.props,
+                    anchor: 'breadcrumb-item-api'
+                }
+            ]}
+            extraEvents={[
+                {
+                    title: 'BreadcrumbItem API',
+                    data: breadcrumbItemAPI.events
                 }
             ]}
         />
