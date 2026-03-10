@@ -5,12 +5,13 @@ import topLevelAwait from 'vite-plugin-top-level-await'
 import svgr from 'vite-plugin-svgr'
 import path from 'path'
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react(), wasm(), topLevelAwait(), svgr()],
   server: {
     port: 5174
   },
-  base: '/aries-kit/',
+  // 本地开发直接挂根路径，线上构建仍然保留 /aries-kit 子路径。
+  base: command === 'build' ? '/aries-kit/' : '/',
   root: 'preview',
   publicDir: 'public', // 修改为 preview 目录下的 public 文件夹
   css: {
@@ -40,4 +41,4 @@ export default defineConfig({
   optimizeDeps: {
     include: ['monaco-editor'],
   },
-})
+}))
