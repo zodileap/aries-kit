@@ -115,8 +115,16 @@ export const AriNav: React.FC<AriNavProps> = ({
         if (item.onClick) {
             item.onClick();
         }
-        handleMenuOpen(item.key);
-    }, []);
+        if (item.children?.length) {
+            handleMenuOpen(item.key);
+            return;
+        }
+
+        if (item.path) {
+            navigate(item.path.replace(/^\/?/, '/'));
+        }
+        closeSubMenu();
+    }, [closeSubMenu, handleMenuOpen, navigate]);
 
     /**
      * 获取完整的路径

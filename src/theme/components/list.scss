@@ -82,18 +82,17 @@
     padding: getVar(inset, md) getVar(inset, lg);
     transition: all getVar(duration, element-interaction);
     position: relative;
-    border-radius: getVar(border-radius, sm);
+    border-radius: getVar(border-radius);
     margin: getVar(inset, xs);
     background-color: getVar(color, bg);
 
     &:hover {
       background: linear-gradient(135deg, getVar(color, bg-active) 0%, getVar(color, bg-secondary) 100%);
-      transform: translateX(getVar(inset, xs));
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
 
     &:active {
-      transform: translateX(getVar(inset, xs)) scale(0.98);
+      transform: scale(0.98);
     }
 
     // 列表项变体
