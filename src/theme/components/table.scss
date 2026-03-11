@@ -142,6 +142,7 @@
     width: 100%;
     position: relative;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   &__content {
@@ -461,6 +462,42 @@
     .#{$namespace}-table__header-cell,
     .#{$namespace}-table__cell {
       border-right: none;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .#{$namespace}-table {
+    &__container {
+      &--default,
+      &--xl {
+        .#{$namespace}-table__header-cell,
+        .#{$namespace}-table__cell {
+          padding: getVar(inset, xs) getVar(inset, sm);
+        }
+      }
+    }
+
+    &__content {
+      width: max-content;
+      min-width: 100%;
+      table-layout: auto;
+    }
+
+    &__header-cell,
+    &__cell {
+      font-size: getVar(font-size, callout);
+      white-space: nowrap;
+    }
+
+    &__pagination-wrapper {
+      height: auto;
+      padding: getVar(inset, sm);
+    }
+
+    &__empty {
+      min-height: 140px;
+      padding: getVar(inset, lg);
     }
   }
 }

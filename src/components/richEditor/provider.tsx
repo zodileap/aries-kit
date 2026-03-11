@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { RichEditorContext, RichEditorContextValue } from './context';
-import { RichEditorMode } from '@ari/types';
+import { RichEditorMediaConfig, RichEditorMode } from '@ari/types';
 import { useEditor, useMode, useImportExport, useMarkdown } from './hooks';
 import type { CodeBlockConfig } from './hooks';
 
@@ -30,6 +30,7 @@ export interface RichEditorProviderProps {
   className?: string;
   style?: React.CSSProperties;
   codeBlockConfig?: CodeBlockConfig;
+  media?: RichEditorMediaConfig;
 }
 
 /**
@@ -58,17 +59,19 @@ export const RichEditorProvider: React.FC<RichEditorProviderProps> = ({
   className,
   style,
   codeBlockConfig,
+  media,
 }) => {
   // 自动保存定时器引用
   const autoSaveTimerRef = useRef<NodeJS.Timeout>();
   
   // 使用各种 hooks
-  const useEditorHook = useEditor(value, defaultValue, onChange);
   const useModeHook = useMode(propMode, onModeChange);
   const useMarkdownHook = useMarkdown(codeBlockConfig);
+  const useEditorHook = useEditor(value, defaultValue, onChange, useMarkdownHook, media);
   const useImportExportHook = useImportExport(
     useEditorHook.content,
     useEditorHook.handleContentChange,
+    useMarkdownHook.renderHtmlDocument,
     beforeImport,
     beforeExport
   );
@@ -110,6 +113,7 @@ export const RichEditorProvider: React.FC<RichEditorProviderProps> = ({
 
   // 处理文本域点击和键盘事件
   const handleTextareaInteraction = () => {
+    useEditorHook.saveSelection();
     // 延迟执行以确保光标位置已更新
     setTimeout(syncScrollPosition, 100);
   };
@@ -144,6 +148,7 @@ export const RichEditorProvider: React.FC<RichEditorProviderProps> = ({
     style,
     className,
     toolbar,
+    media,
     
     // 代码块配置
     codeBlockConfig,
@@ -155,7 +160,7 @@ export const RichEditorProvider: React.FC<RichEditorProviderProps> = ({
     handleTextareaSelect,
   }), [
     useEditorHook, useModeHook, useMarkdownHook, useImportExportHook,
-    disabled, readOnly, showLineNumbers, placeholder, height, minHeight, maxHeight, style, className, toolbar,
+    disabled, readOnly, showLineNumbers, placeholder, height, minHeight, maxHeight, style, className, toolbar, media,
     codeBlockConfig, syncScrollPosition, handleTextareaInteraction, handleTextareaClick, handleTextareaSelect
   ]);
   

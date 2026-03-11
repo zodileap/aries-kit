@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useCss } from '@ari/utils';
 import { AriButton } from '@ari/components/button';
 import { AriTooltip } from '@ari/components/tooltip';
@@ -23,42 +23,47 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   buttons = [
     'bold', 'italic', 'strikethrough', 'divider',
     'heading', 'quote', 'code', 'codeBlock', 'divider',
-    'link', 'image', 'table', 'divider',
+    'link', 'image', 'video', 'table', 'divider',
     'list', 'orderedList', 'taskList', 'divider',
-    'undo', 'redo'
+    'undo', 'redo',
   ],
   showImport = true,
   showExport = true,
   showModeSwitch = true,
 }) => {
   const cn = useCss('rich-editor');
+  const importInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
   const {
     useEditor,
     useMode,
     useImportExport,
     disabled,
     readOnly,
+    media,
   } = useRichEditor();
-  
+
   const {
     handleToolbarAction,
     handleInsertHeading,
+    handleMediaFilesSelected,
     saveSelection,
+    pendingUploads,
   } = useEditor;
-  
+
   const {
     mode,
     isFullscreen,
     handleModeChange,
     toggleFullscreen,
   } = useMode;
-  
+
   const {
     handleImport,
     handleExport,
   } = useImportExport;
-  
-  // 图标映射
+
   const iconMap: Record<ToolbarButton, string> = {
     bold: 'format_bold',
     italic: 'format_italic',
@@ -69,16 +74,16 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     codeBlock: 'code_blocks',
     link: 'link',
     image: 'image',
+    video: 'movie',
     table: 'table_chart',
     list: 'format_list_bulleted',
     orderedList: 'format_list_numbered',
     taskList: 'checklist',
     undo: 'undo',
     redo: 'redo',
-    divider: ''
+    divider: '',
   };
-  
-  // 工具提示映射
+
   const tooltipMap: Record<ToolbarButton, string> = {
     bold: '加粗',
     italic: '斜体',
@@ -88,23 +93,32 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     code: '行内代码',
     codeBlock: '代码块',
     link: '链接',
-    image: '图片',
+    image: '上传图片',
+    video: '上传视频',
     table: '表格',
     list: '无序列表',
     orderedList: '有序列表',
     taskList: '任务列表',
     undo: '撤销',
     redo: '重做',
-    divider: ''
+    divider: '',
   };
-  
-  // 渲染工具栏按钮
+
+  const handleMouseDown = (callback?: () => void) => (event: React.MouseEvent) => {
+    event.preventDefault();
+    saveSelection();
+    callback?.();
+  };
+
+  const openFilePicker = (inputRef: React.RefObject<HTMLInputElement | null>) => {
+    inputRef.current?.click();
+  };
+
   const renderToolbarButton = (button: ToolbarButton) => {
     if (button === 'divider') {
-      return <div key={Math.random()} className={cn.e('toolbar-divider')} />;
+      return null;
     }
-    
-    // 标题按钮特殊处理
+
     if (button === 'heading') {
       const headingOptions = [
         { value: 1, label: '# 标题 1' },
@@ -112,7 +126,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         { value: 3, label: '### 标题 3' },
         { value: 4, label: '#### 标题 4' },
         { value: 5, label: '##### 标题 5' },
-        { value: 6, label: '###### 标题 6' }
+        { value: 6, label: '###### 标题 6' },
       ];
 
       return (
@@ -120,23 +134,18 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           key={button}
           options={headingOptions}
           trigger="hover"
-          renderTrigger={({ onToggle }) => (
+          renderTrigger={() => (
             <AriTooltip content={tooltipMap[button]}>
               <AriButton
                 type="text"
                 icon={iconMap[button]}
-                onMouseDown={(e) => {
-                  e.preventDefault(); // 阻止失焦
-                }}
-                onMouseEnter={() => {
-                  saveSelection(); // 鼠标进入时保存选择
-                }}
+                onMouseDown={handleMouseDown()}
                 disabled={disabled || readOnly}
               />
             </AriTooltip>
           )}
           onChange={(value) => {
-            if (value && typeof value === 'number') {
+            if (typeof value === 'number') {
               handleInsertHeading(value);
             }
           }}
@@ -144,146 +153,144 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         />
       );
     }
-    
+
+    if (button === 'image' || button === 'video') {
+      const isImage = button === 'image';
+      const inputRef = isImage ? imageInputRef : videoInputRef;
+      const uploadDisabled = disabled || readOnly || !media?.upload;
+
+      return (
+        <AriTooltip key={button} content={tooltipMap[button]}>
+          <AriButton
+            type="text"
+            icon={iconMap[button]}
+            onMouseDown={handleMouseDown(() => openFilePicker(inputRef))}
+            disabled={uploadDisabled}
+          />
+        </AriTooltip>
+      );
+    }
+
     return (
       <AriTooltip key={button} content={tooltipMap[button]}>
         <AriButton
           type="text"
           icon={iconMap[button]}
-          onMouseDown={(e) => {
-            e.preventDefault(); // 阻止失焦
-            handleToolbarAction(button);
-          }}
+          onMouseDown={handleMouseDown(() => handleToolbarAction(button))}
           disabled={disabled || readOnly}
         />
       </AriTooltip>
     );
   };
-  
+
+  const renderGroup = (groupButtons: ToolbarButton[]) => {
+    const visibleButtons = groupButtons.filter((button) => buttons.includes(button));
+    if (visibleButtons.length === 0) {
+      return null;
+    }
+
+    return (
+      <>
+        <div className={cn.e('toolbar-divider')} />
+        <div className={cn.e('toolbar-group')}>
+          {visibleButtons.map(renderToolbarButton)}
+        </div>
+      </>
+    );
+  };
+
   return (
     <div className={cn.e('toolbar')}>
-      {/* 主要格式化工具 */}
+      <input
+        ref={importInputRef}
+        type="file"
+        accept=".md,.markdown,.txt"
+        style={{ display: 'none' }}
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+          if (file) {
+            handleImport(file);
+          }
+          event.target.value = '';
+        }}
+      />
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept={media?.acceptImage || 'image/*'}
+        style={{ display: 'none' }}
+        onChange={(event) => {
+          handleMediaFilesSelected(event.target.files, 'toolbar');
+          event.target.value = '';
+        }}
+      />
+      <input
+        ref={videoInputRef}
+        type="file"
+        accept={media?.acceptVideo || 'video/*'}
+        style={{ display: 'none' }}
+        onChange={(event) => {
+          handleMediaFilesSelected(event.target.files, 'toolbar');
+          event.target.value = '';
+        }}
+      />
+
       <div className={cn.e('toolbar-group')}>
-        {buttons.filter(btn => ['bold', 'italic', 'strikethrough'].includes(btn)).map(renderToolbarButton)}
+        {buttons.filter((button) => ['bold', 'italic', 'strikethrough'].includes(button)).map(renderToolbarButton)}
       </div>
-      
-      {/* 标题和引用 */}
-      {buttons.some(btn => ['heading', 'quote'].includes(btn)) && (
-        <>
-          <div className={cn.e('toolbar-divider')} />
-          <div className={cn.e('toolbar-group')}>
-            {buttons.filter(btn => ['heading', 'quote'].includes(btn)).map(renderToolbarButton)}
-          </div>
-        </>
-      )}
-      
-      {/* 代码相关 */}
-      {buttons.some(btn => ['code', 'codeBlock'].includes(btn)) && (
-        <>
-          <div className={cn.e('toolbar-divider')} />
-          <div className={cn.e('toolbar-group')}>
-            {buttons.filter(btn => ['code', 'codeBlock'].includes(btn)).map(renderToolbarButton)}
-          </div>
-        </>
-      )}
-      
-      {/* 插入元素 */}
-      {buttons.some(btn => ['link', 'image', 'table'].includes(btn)) && (
-        <>
-          <div className={cn.e('toolbar-divider')} />
-          <div className={cn.e('toolbar-group')}>
-            {buttons.filter(btn => ['link', 'image', 'table'].includes(btn)).map(renderToolbarButton)}
-          </div>
-        </>
-      )}
-      
-      {/* 列表 */}
-      {buttons.some(btn => ['list', 'orderedList', 'taskList'].includes(btn)) && (
-        <>
-          <div className={cn.e('toolbar-divider')} />
-          <div className={cn.e('toolbar-group')}>
-            {buttons.filter(btn => ['list', 'orderedList', 'taskList'].includes(btn)).map(renderToolbarButton)}
-          </div>
-        </>
-      )}
-      
-      {/* 撤销重做 */}
-      {buttons.some(btn => ['undo', 'redo'].includes(btn)) && (
-        <>
-          <div className={cn.e('toolbar-divider')} />
-          <div className={cn.e('toolbar-group')}>
-            {buttons.filter(btn => ['undo', 'redo'].includes(btn)).map(renderToolbarButton)}
-          </div>
-        </>
-      )}
-      
-      {/* 右侧功能区 */}
+
+      {renderGroup(['heading', 'quote'])}
+      {renderGroup(['code', 'codeBlock'])}
+      {renderGroup(['link', 'image', 'video', 'table'])}
+      {renderGroup(['list', 'orderedList', 'taskList'])}
+      {renderGroup(['undo', 'redo'])}
+
+      <div className={cn.e('toolbar-spacer')} />
+
       <div className={cn.e('toolbar-actions')}>
-        {/* 导入导出 */}
+        {pendingUploads.length > 0 && (
+          <AriTooltip content={`还有 ${pendingUploads.length} 个媒体资源上传中`}>
+            <AriButton type="text" icon="cloud_sync" disabled>
+              {pendingUploads.length}
+            </AriButton>
+          </AriTooltip>
+        )}
+
         {(showImport || showExport) && (
           <div className={cn.e('toolbar-group')}>
             {showImport && (
-              <>
-                <input
-                  type="file"
-                  accept=".md,.markdown,.txt"
-                  style={{ display: 'none' }}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleImport(file);
-                    e.target.value = '';
-                  }}
-                  ref={(ref) => {
-                    // 这里可以考虑使用 useRef 优化
-                  }}
+              <AriTooltip content="导入 Markdown">
+                <AriButton
+                  type="text"
+                  icon="upload_file"
+                  onMouseDown={handleMouseDown(() => openFilePicker(importInputRef))}
+                  disabled={disabled || readOnly}
                 />
-                <AriTooltip content="导入文件">
-                  <AriButton
-                    type="text"
-                    icon="upload_file"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      // 触发文件选择
-                      const input = e.currentTarget.parentElement?.querySelector('input[type="file"]') as HTMLInputElement;
-                      input?.click();
-                    }}
-                    disabled={disabled || readOnly}
-                  />
-                </AriTooltip>
-              </>
+              </AriTooltip>
             )}
             {showExport && (
               <>
-                <AriTooltip content="导出为 Markdown">
+                <AriTooltip content="导出 Markdown">
                   <AriButton
                     type="text"
                     icon="description"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleExport('md');
-                    }}
+                    onMouseDown={handleMouseDown(() => handleExport('md'))}
                     disabled={disabled}
                   />
                 </AriTooltip>
-                <AriTooltip content="导出为 HTML">
+                <AriTooltip content="导出 HTML">
                   <AriButton
                     type="text"
                     icon="html"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleExport('html');
-                    }}
+                    onMouseDown={handleMouseDown(() => handleExport('html'))}
                     disabled={disabled}
                   />
                 </AriTooltip>
-                <AriTooltip content="导出为 PDF">
+                <AriTooltip content="打印 / 导出 PDF">
                   <AriButton
                     type="text"
                     icon="picture_as_pdf"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleExport('pdf');
-                    }}
+                    onMouseDown={handleMouseDown(() => handleExport('pdf'))}
                     disabled={disabled}
                   />
                 </AriTooltip>
@@ -291,57 +298,46 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             )}
           </div>
         )}
-        
-        {/* 模式切换 */}
+
         {showModeSwitch && (
           <div className={cn.e('toolbar-group')}>
-            <AriTooltip content="源码编辑">
+            <AriTooltip content="源码模式">
               <AriButton
                 type={mode === 'source' ? 'default' : 'text'}
-                icon="code"
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  handleModeChange('source');
-                }}
+                onMouseDown={handleMouseDown(() => handleModeChange('source'))}
                 disabled={disabled}
-              />
+              >
+                源码
+              </AriButton>
             </AriTooltip>
-            <AriTooltip content="可视化编辑">
+            <AriTooltip content="可视模式">
               <AriButton
                 type={mode === 'visual' ? 'default' : 'text'}
-                icon="visibility"
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  handleModeChange('visual');
-                }}
+                onMouseDown={handleMouseDown(() => handleModeChange('visual'))}
                 disabled={disabled}
-              />
+              >
+                可视
+              </AriButton>
             </AriTooltip>
             <AriTooltip content="分屏模式">
               <AriButton
                 type={mode === 'split' ? 'default' : 'text'}
-                icon="vertical_split"
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  handleModeChange('split');
-                }}
+                onMouseDown={handleMouseDown(() => handleModeChange('split'))}
+                disabled={disabled}
+              >
+                分屏
+              </AriButton>
+            </AriTooltip>
+            <AriTooltip content={isFullscreen ? '退出全屏' : '全屏'}>
+              <AriButton
+                type="text"
+                icon={isFullscreen ? 'fullscreen_exit' : 'fullscreen'}
+                onMouseDown={handleMouseDown(toggleFullscreen)}
                 disabled={disabled}
               />
             </AriTooltip>
           </div>
         )}
-        
-        {/* 全屏按钮 */}
-        <AriTooltip content={isFullscreen ? '退出全屏' : '全屏'}>
-          <AriButton
-            type="text"
-            icon={isFullscreen ? 'fullscreen_exit' : 'fullscreen'}
-            onMouseDown={(e) => {
-              e.preventDefault();
-              toggleFullscreen();
-            }}
-          />
-        </AriTooltip>
       </div>
     </div>
   );

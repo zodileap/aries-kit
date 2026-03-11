@@ -128,10 +128,14 @@
         position: absolute;
         z-index: 1000;
         margin-top: 4px;
+        max-width: calc(100vw - #{getVar(inset, sm)} * 2);
         opacity: 0;
         visibility: hidden;
         transform: translateY(8px);
-        transition: all getVar(duration, element-interaction);
+        transition: opacity getVar(duration, element-interaction),
+            visibility getVar(duration, element-interaction),
+            transform getVar(duration, element-interaction),
+            box-shadow getVar(duration, element-interaction);
         border-radius: getVar(border-radius);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
@@ -167,6 +171,7 @@
         align-items: stretch;
         justify-content: flex-start;
         height: 216px;
+        max-width: 100%;
         position: relative;
         z-index: 1;
     }
@@ -208,6 +213,7 @@
     &__column-list {
             flex: 1;
             overflow-y: auto;
+            overscroll-behavior: contain;
             scroll-behavior: smooth;
             scrollbar-width: none;
             
@@ -671,6 +677,79 @@
         .#{$namespace}-time-picker__period-column {
             min-width: 50px;
             flex: 0 0 50px;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .#{$namespace}-time-picker {
+        max-width: none;
+
+        &--size-small,
+        &--size-medium,
+        &--size-large {
+            max-width: none;
+        }
+
+        &__popup {
+            width: min(100vw - #{getVar(inset, sm)} * 2, 360px);
+        }
+
+        &__panel {
+            width: 100%;
+            padding: getVar(inset, sm);
+        }
+
+        &__columns {
+            height: 200px;
+            gap: getVar(inset, xs);
+        }
+
+        &__column {
+            margin: 0;
+
+            &:not(:last-child) {
+                margin-right: 0;
+            }
+        }
+
+        &__column-item {
+            font-size: getVar(font-size, footnote);
+            padding: getVar(inset, xxs) 0;
+        }
+
+        &__period-column {
+            width: 48px;
+            min-width: 48px;
+        }
+
+        &__column-divider {
+            min-width: 16px;
+            padding: 0 getVar(inset, xxs);
+        }
+
+        &__footer {
+            gap: getVar(inset, xs);
+            flex-wrap: wrap;
+        }
+
+        &.#{$namespace}-is-embedded {
+            .#{$namespace}-time-picker__columns {
+                min-width: 0;
+            }
+
+            .#{$namespace}-time-picker__column {
+                min-width: 0;
+            }
+
+            .#{$namespace}-time-picker__column-divider {
+                min-width: 12px;
+            }
+
+            .#{$namespace}-time-picker__period-column {
+                min-width: 44px;
+                flex-basis: 44px;
+            }
         }
     }
 }

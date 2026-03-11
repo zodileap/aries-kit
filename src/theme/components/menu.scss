@@ -21,6 +21,8 @@
         gap: getVar(inset, sm);
         padding: getVar(inset, xs) getVar(inset, sm);
         border-radius: getVar(border-radius, lg);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
 
         .#{$namespace}-menu-item {
             width: auto;
@@ -51,6 +53,43 @@
             .#{$namespace}-menu-item__content {
                 padding: getVar(inset, xs);
                 gap: getVar(inset, xs);
+            }
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .#{$namespace}-menu {
+        &--horizontal {
+            gap: getVar(inset, xs);
+            padding: getVar(inset, xxs) getVar(inset, xs);
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+
+    .#{$namespace}-menu-item {
+        &__content {
+            gap: getVar(inset, xs);
+            padding: getVar(inset, xs) getVar(inset, sm);
+        }
+
+        &__meta,
+        &__actions {
+            min-width: 0;
+        }
+
+        &__children {
+            margin-left: getVar(inset);
+            padding-left: getVar(inset, xs);
+        }
+
+        &.#{$namespace}-is-selected {
+            .#{$namespace}-menu-item__content {
+                transform: translateX(0);
             }
         }
     }

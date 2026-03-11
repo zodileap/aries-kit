@@ -108,27 +108,32 @@
 
     &__error {
         color: getVar(color, danger);
-        padding: getVar(inset, container-vertical-min) getVar(inset, container-horizontal-min);
+        padding: 0 getVar(inset, container-horizontal-min);
         border-radius: getVar(border-radius, sm);
-        margin-top: getVar(inset, xs);
+        margin-top: 0;
         overflow: hidden;
         @include flex(flex-start, center);
-        line-height: getVar(element-size, sm);
+        line-height: 1.5;
         background-color: rgba(getVar(color, danger), 0.1);
         border-left: 3px solid getVar(color, danger);
         font-size: getVar(font-size, caption);
 
         // 动画状态
-        height: 0;
+        max-height: 0;
         opacity: 0;
+        transform: translateY(-4px);
         transition:
-            height getVar(duration) getVar(transition-timing-function),
+            max-height getVar(duration) getVar(transition-timing-function),
             opacity getVar(duration) getVar(transition-timing-function),
-            transform getVar(duration) getVar(transition-timing-function);
+            transform getVar(duration) getVar(transition-timing-function),
+            padding getVar(duration) getVar(transition-timing-function),
+            margin-top getVar(duration) getVar(transition-timing-function);
 
         &.#{$namespace}-is-visible {
-            height: getVar(element-size, sm);
+            max-height: 120px;
             opacity: 1;
+            margin-top: getVar(inset, xs);
+            padding: getVar(inset, container-vertical-min) getVar(inset, container-horizontal-min);
             transform: translateY(0);
         }
     }
@@ -179,7 +184,7 @@
     &--density-compact {
         margin-bottom: getVar(inset, xs) !important;
         
-        .#{$namespace}-form-item__error {
+        .#{$namespace}-form-item__error.#{$namespace}-is-visible {
             margin-top: getVar(inset, xxs);
         }
         
@@ -197,7 +202,7 @@
     &--density-loose {
         margin-bottom: getVar(inset) !important;
         
-        .#{$namespace}-form-item__error {
+        .#{$namespace}-form-item__error.#{$namespace}-is-visible {
             margin-top: getVar(inset, sm);
         }
         
@@ -245,6 +250,48 @@
 
         .#{$namespace}-form-item__label {
             color: getVar(color, text-disabled);
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .#{$namespace}-form {
+        &--inline {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+
+    .#{$namespace}-form-item {
+        height: auto;
+        min-height: getVar(element-size, lg);
+
+        &--horizontal,
+        &--inline {
+            flex-direction: column;
+            align-items: stretch;
+            gap: getVar(inset, xs);
+            margin-right: 0;
+
+            > .#{$namespace}-col {
+                width: 100% !important;
+                margin-left: 0 !important;
+                left: auto !important;
+                right: auto !important;
+            }
+
+            .#{$namespace}-form-item__label {
+                width: 100% !important;
+                justify-content: flex-start;
+                text-align: left;
+                padding-right: 0;
+                margin-bottom: getVar(inset, xs);
+            }
+
+            .#{$namespace}-form-item__content,
+            .#{$namespace}-form-item__control {
+                width: 100%;
+            }
         }
     }
 }

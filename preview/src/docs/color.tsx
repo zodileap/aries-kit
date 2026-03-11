@@ -29,7 +29,7 @@ const ColorGrid: React.FC<ColorGridProps> = ({ colors, title, description }) => 
             )}
             <div style={{ 
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
                 gap: '16px'
             }}>
                 {Object.entries(colors).map(([name, value]) => (
@@ -202,9 +202,18 @@ const ColorDoc: React.FC = () => {
     };
 
     return (
-        <div style={{ padding: '24px' }}>
-            <AriFlex justify="space-between" align="center" style={{ marginBottom: '32px' }}>
-                <div>
+        <div style={{ padding: '0 0 24px', maxWidth: '100%' }}>
+            <div
+                style={{
+                    marginBottom: '32px',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '16px',
+                    alignItems: 'flex-start',
+                    justifyContent: 'space-between'
+                }}
+            >
+                <div style={{ minWidth: 0, flex: '1 1 240px' }}>
                     <AriTypography variant="h1" value="颜色系统" style={{ marginBottom: '8px' }} />
                     <AriTypography 
                         variant="body" 
@@ -214,22 +223,24 @@ const ColorDoc: React.FC = () => {
                 </div>
                 <AriButton 
                     type="default"
+                    style={{ flexShrink: 0 }}
                     onClick={toggleTheme}
                 >
                     {currentTheme === 'light' ? '切换到暗主题' : '切换到亮主题'}
                 </AriButton>
-            </AriFlex>
+            </div>
 
             <div style={{ marginBottom: '40px' }}>
                 <AriTypography variant="h2" value="使用指南" style={{ marginBottom: '16px' }} />
                 <AriTypography variant="body" color="secondary" style={{ marginBottom: '12px' }}>
                     在 SCSS 中使用颜色变量：
                 </AriTypography>
-                <AriCode
-                    language="scss"
-                    showCopyButton={true}
-                    showLineNumbers={true}
-                    value={`// 语义化颜色（推荐使用）
+                <div style={{ maxWidth: '100%', overflowX: 'auto' }}>
+                    <AriCode
+                        language="scss"
+                        showCopyButton={true}
+                        showLineNumbers={true}
+                        value={`// 语义化颜色（推荐使用）
 color: getVar(color, brand);              // 品牌主色
 background-color: getVar(color, bg);      // 背景色
 border: 1px solid getVar(color, border); // 边框色
@@ -241,7 +252,8 @@ background-color: getVar(color, success); // 成功背景色
 // 标签颜色
 background-color: getVar(color, tag-blue);      // 蓝色标签背景
 color: getVar(color, tag-blue-text);            // 蓝色标签文本`}
-                />
+                    />
+                </div>
             </div>
 
             <ColorGrid 

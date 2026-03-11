@@ -195,6 +195,7 @@ export const AriSelect: React.FC<AriSelectProps> = ({
         
         const triggerRect = triggerRef.current.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
         
         // 估算下拉菜单的高度
         // 每个选项高度: element-size-sm = 1.5rem = 24px
@@ -216,10 +217,21 @@ export const AriSelect: React.FC<AriSelectProps> = ({
         const topSpace = triggerRect.top;
         
         const styles: React.CSSProperties = {
-            left: `${triggerRect.left}px`,
             minWidth: `${triggerRect.width}px`,
+            maxWidth: `${Math.max(viewportWidth - insetSize * 2, triggerRect.width)}px`,
             position: 'fixed',
         };
+
+        const safeWidth = Math.max(
+            triggerRect.width,
+            Math.min(viewportWidth - insetSize * 2, 360)
+        );
+        const safeLeft = Math.min(
+            Math.max(triggerRect.left, insetSize),
+            Math.max(insetSize, viewportWidth - safeWidth - insetSize)
+        );
+
+        styles.left = `${safeLeft}px`;
         
         // 如果底部空间不足且顶部空间足够，则向上显示
         if (bottomSpace < estimatedHeight + insetSize && topSpace > estimatedHeight + insetSize) {

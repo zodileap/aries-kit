@@ -340,3 +340,30 @@
     }
   }
 }
+
+@media (max-width: 767px) {
+  .#{$namespace}-upload {
+    &__file-header {
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    &__file-name {
+      min-width: 100%;
+
+      .#{$namespace}-typography {
+        white-space: normal;
+        word-break: break-word;
+      }
+    }
+
+    &__file-size {
+      flex-basis: auto;
+      width: auto;
+    }
+
+    &__file-actions {
+      opacity: 1;
+    }
+  }
+}

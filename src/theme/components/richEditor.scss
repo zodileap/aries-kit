@@ -24,7 +24,8 @@
     &-group {
       @include flex(flex-start, center);
       gap: getVar(inset, xs);
-      height: 32px; // 增加组高度
+      min-height: 32px;
+      flex-wrap: wrap;
     }
     
     // 分隔线
@@ -47,7 +48,8 @@
       @include flex(flex-end, center);
       gap: getVar(inset, xs);
       margin-left: auto;
-      height: 32px; // 固定右侧功能区高度
+      min-height: 32px;
+      flex-wrap: wrap;
     }
   }
   
@@ -154,6 +156,7 @@
     // 可视化编辑模式样式
     &--editable {
       cursor: text;
+      position: relative;
       
       &:focus {
         outline: 2px solid getVar(color, brand);
@@ -172,6 +175,10 @@
         border-radius: getVar(border-radius);
         pointer-events: none;
         opacity: 0.3;
+      }
+
+      > * + * {
+        margin-top: getVar(inset, sm);
       }
     }
     
@@ -539,10 +546,33 @@
       
     }
     
-    img {
+    img,
+    video {
       max-width: 100%;
       height: auto;
       border-radius: getVar(border-radius, sm);
+      display: block;
+      margin-bottom: getVar(inset, sm);
+    }
+
+    video {
+      background-color: #000;
+    }
+
+    [data-rich-editor-media-placeholder="true"] {
+      @include flex(flex-start, flex-start, column);
+      gap: getVar(inset, xs);
+      margin-bottom: getVar(inset, sm);
+      padding: getVar(inset);
+      border: 1px dashed getVar(color, border-active);
+      border-radius: getVar(border-radius, sm);
+      background: getVar(color, bg-page);
+      color: getVar(color, text-secondary);
+
+      strong {
+        margin: 0;
+        color: getVar(color, text);
+      }
     }
     
     hr {
@@ -643,6 +673,10 @@
     .#{$namespace}-rich-editor__textarea {
       cursor: default;
     }
+  }
+
+  &[data-rich-editor-root="true"] {
+    min-height: inherit;
   }
   
   // 中等屏幕优化

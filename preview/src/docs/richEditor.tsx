@@ -8,6 +8,7 @@ import {
   CustomToolbarExample,
   ReadOnlyExample,
   ApiExample,
+  MediaUploadExample,
   AutoSaveExample,
   CodeHighlightExample,
   CodeHighlightLinesExample,
@@ -70,6 +71,15 @@ export const richEditorExamples: Record<string, DocExample> = {
         demos: [{
             component: ApiExample,
             sourceCode: sourceMap['richEditor']['ApiExample']
+        }]
+    },
+    mediaUpload: {
+        title: '媒体上传',
+        key: 'media-upload',
+        description: '通过 media.upload 让业务方接入图片 / 视频上传接口，并支持工具栏上传、剪贴板粘贴上传以及等待上传完成后再保存。',
+        demos: [{
+            component: MediaUploadExample,
+            sourceCode: sourceMap['richEditor']['MediaUploadExample']
         }]
     },
     autoSave: {
@@ -236,6 +246,12 @@ export const richEditorAPI: DocAPI = {
             param: 'beforeExport',
             desc: '导出前的钩子函数',
             type: "(format: 'md' | 'html' | 'pdf', content: string) => string | Promise<string>",
+            default: '-'
+        },
+        {
+            param: 'media',
+            desc: '媒体上传配置。通过 upload 接口接入图片 / 视频上传，并可开启剪贴板媒体粘贴上传。',
+            type: 'RichEditorMediaConfig',
             default: '-'
         },
         {

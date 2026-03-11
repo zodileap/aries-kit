@@ -59,6 +59,7 @@ html {
         height: 100%;
         max-width: getVar(nav, max-width);
         padding: 0 getVar(windows-inset, left) 0 getVar(windows-inset, right);
+        overflow-x: auto;
         transition: all getVar(duration, element-interaction);
     }
 
@@ -87,6 +88,7 @@ html {
         @include flex(flex-start, center);
         gap: getVar(inset, xl);
         flex: 1;
+        min-width: max-content;
         transition: all getVar(duration, element-interaction);
     }
 
@@ -260,6 +262,46 @@ html {
         &.#{$namespace}-is-open {
             opacity: 1;
             pointer-events: auto;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .#{$namespace}-nav {
+        &__container {
+            gap: getVar(inset, sm);
+            padding: 0 getVar(inset, sm);
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        &__items,
+        &__suffixed {
+            gap: getVar(inset, sm);
+        }
+
+        &__item {
+            flex-shrink: 0;
+            padding: 0 getVar(inset, xs);
+            font-size: getVar(font-size, footnote);
+        }
+
+        &__submenu {
+            width: 100vw;
+        }
+
+        &__submenu-content {
+            flex-wrap: wrap;
+            gap: getVar(inset, sm);
+            padding: getVar(inset, sm);
+        }
+
+        &__submenu-group {
+            min-width: min(140px, 100%);
+            flex: 1 1 140px;
         }
     }
 }

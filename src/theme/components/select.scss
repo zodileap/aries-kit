@@ -144,7 +144,9 @@
   &__dropdown {
     position: fixed;
     max-height: 15rem;
+    max-width: calc(100vw - #{getVar(inset, sm)} * 2);
     overflow-y: auto;
+    overscroll-behavior: contain;
     background-color: getVar(color, bg-solid);
     border: 1px solid getVar(color, border);
     @include adaptive-border-radius("", getVar(element-size));
@@ -193,6 +195,7 @@
     @include flex(flex-start);
     @include adaptive-border-radius("", getVar(element-size, sm));
     transform: translateX(0);
+    white-space: nowrap;
 
     &:hover {
       background-color: getVar(color, bg-active);
@@ -280,5 +283,35 @@
     font-size: getVar(font-size, caption);
     color: getVar(color, text-secondary);
     margin-top: getVar(inset, xs);
+  }
+}
+
+@media (max-width: 767px) {
+  .#{$namespace}-select {
+    width: 100%;
+
+    &__trigger {
+      width: 100%;
+    }
+
+    &__dropdown {
+      width: auto;
+      min-width: min(100%, calc(100vw - #{getVar(inset, sm)} * 2));
+      border-radius: getVar(border-radius, lg);
+    }
+
+    &__option {
+      min-height: getVar(element-size);
+      height: auto;
+      white-space: normal;
+      align-items: flex-start;
+      word-break: break-word;
+    }
+
+    &__value,
+    &__item-label {
+      white-space: normal;
+      word-break: break-word;
+    }
   }
 }

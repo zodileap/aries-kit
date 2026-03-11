@@ -7,8 +7,8 @@ export interface MarkdownRendererProps {
 }
 
 /**
- * Markdown渲染器组件
- * 根据解析后的数据结构渲染React组件
+ * Markdown 渲染器组件
+ * 根据解析后的数据结构渲染 React 组件
  */
 export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ elements }) => {
   const renderElement = (element: MarkdownElement, index: number): React.ReactElement => {
@@ -16,12 +16,11 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ elements }) 
 
     switch (element.type) {
       case 'heading': {
-        const { level, id } = element.props || {};
-        const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
+        const HeadingTag = `h${element.props?.level || 1}` as keyof JSX.IntrinsicElements;
         return React.createElement(
           HeadingTag,
-          { key, id },
-          element.children?.map((child, childIndex) => renderElement(child, childIndex))
+          { key, id: element.props?.id },
+          element.children?.map((child, childIndex) => renderElement(child, childIndex)),
         );
       }
 
@@ -32,19 +31,17 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ elements }) 
           </p>
         );
 
-      case 'codeBlock': {
-        const { language, title, code, highlightLines, config } = element.props || {};
+      case 'codeBlock':
         return (
           <CodeBlock
             key={key}
-            language={language}
-            title={title}
-            code={code}
-            highlightLines={highlightLines}
-            config={config}
+            language={element.props?.language}
+            title={element.props?.title}
+            code={element.props?.code}
+            highlightLines={element.props?.highlightLines}
+            config={element.props?.config}
           />
         );
-      }
 
       case 'blockquote':
         return (
@@ -53,22 +50,19 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ elements }) 
           </blockquote>
         );
 
-      case 'callout': {
-        const { type, title } = element.props || {};
+      case 'callout':
         return (
           <Callout
             key={key}
-            type={type}
-            title={title}
+            type={element.props?.type}
+            title={element.props?.title}
             children={element.children}
             renderElement={renderElement}
           />
         );
-      }
 
       case 'list': {
-        const { listType } = element.props || {};
-        const ListTag = listType as keyof JSX.IntrinsicElements;
+        const ListTag = (element.props?.listType || 'ul') as keyof JSX.IntrinsicElements;
         return React.createElement(
           ListTag,
           { key },
@@ -82,11 +76,36 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ elements }) 
                   style={{ marginRight: '8px' }}
                 />
               )}
-              {child.children?.map((grandChild, grandChildIndex) => 
-                renderElement(grandChild, grandChildIndex)
-              )}
+              {child.children?.map((grandChild, grandChildIndex) => renderElement(grandChild, grandChildIndex))}
             </li>
-          ))
+          )),
+        );
+      }
+
+      case 'table': {
+        const header = element.props?.header || [];
+        const rows = element.props?.rows || [];
+        return (
+          <table key={key}>
+            {header.length > 0 && (
+              <thead>
+                <tr>
+                  {header.map((cell: string, cellIndex: number) => (
+                    <th key={`${key}-header-${cellIndex}`}>{cell}</th>
+                  ))}
+                </tr>
+              </thead>
+            )}
+            <tbody>
+              {rows.map((row: string[], rowIndex: number) => (
+                <tr key={`${key}-row-${rowIndex}`}>
+                  {row.map((cell, cellIndex) => (
+                    <td key={`${key}-cell-${rowIndex}-${cellIndex}`}>{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         );
       }
 
@@ -109,31 +128,59 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ elements }) 
           </code>
         );
 
-      case 'link': {
-        const { href } = element.props || {};
+      case 'link':
         return (
           <a
             key={key}
-            href={href}
+            href={element.props?.href}
             target="_blank"
             rel="noopener noreferrer"
           >
             {element.content}
           </a>
         );
-      }
 
-      case 'image': {
-        const { src, alt } = element.props || {};
+      case 'image':
         return (
           <img
             key={key}
-            src={src}
-            alt={alt}
+            src={element.props?.src}
+            alt={element.props?.alt || ''}
+            title={element.props?.title}
             loading="lazy"
+            data-media-id={element.props?.id}
           />
         );
-      }
+
+      case 'video':
+        return (
+          <video
+            key={key}
+            controls
+            playsInline
+            preload="metadata"
+            src={element.props?.src}
+            poster={element.props?.poster}
+            data-media-id={element.props?.id}
+          />
+        );
+
+      case 'mediaPlaceholder':
+        return (
+          <div
+            key={key}
+            data-rich-editor-media-placeholder="true"
+            data-token={element.props?.token}
+            data-kind={element.props?.kind}
+            data-status={element.props?.status}
+            data-name={element.props?.name}
+            data-error={element.props?.error}
+          >
+            <strong>{element.props?.status === 'error' ? '上传失败' : '上传中'}</strong>
+            <span>{element.props?.name || '未命名资源'}</span>
+            {element.props?.error && <span>{element.props.error}</span>}
+          </div>
+        );
 
       case 'text':
       default:
@@ -141,9 +188,5 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ elements }) 
     }
   };
 
-  return (
-    <>
-      {elements.map((element, index) => renderElement(element, index))}
-    </>
-  );
+  return <>{elements.map((element, index) => renderElement(element, index))}</>;
 };

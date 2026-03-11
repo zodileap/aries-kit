@@ -120,7 +120,9 @@
         opacity: 0;
         visibility: hidden;
         transform: translateY(8px);
-        transition: all getVar(duration, element-interaction);
+        transition: opacity getVar(duration, element-interaction),
+            visibility getVar(duration, element-interaction),
+            transform getVar(duration, element-interaction);
     }
 
     &__calendar-wrapper {
@@ -454,6 +456,64 @@
             right: 0;
             margin-top: 4px;
             transform: translateY(8px);
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .#{$namespace}-date-picker {
+        max-width: none;
+
+        &__popup {
+            width: min(100vw - #{getVar(inset, sm)} * 2, 360px);
+            max-width: calc(100vw - #{getVar(inset, sm)} * 2);
+        }
+
+        &__calendar-wrapper {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        &__panel-container {
+            min-width: 0;
+        }
+
+        &__time-panel {
+            padding: getVar(inset, xs);
+
+            .#{$namespace}-time-picker {
+                .#{$namespace}-time-picker__columns {
+                    min-width: 0;
+                }
+
+                .#{$namespace}-time-picker__column {
+                    min-width: 0;
+                }
+            }
+        }
+
+        &__footer {
+            gap: getVar(inset, xs);
+            flex-wrap: wrap;
+        }
+
+        &.#{$namespace}-is-with-time {
+            .#{$namespace}-date-picker__popup {
+                min-width: min(320px, calc(100vw - #{getVar(inset, sm)} * 2));
+            }
+
+            .#{$namespace}-date-picker__calendar-wrapper {
+                min-height: 0;
+                min-width: 0;
+                width: min(100vw - #{getVar(inset, sm)} * 2, 360px);
+            }
+
+            .#{$namespace}-date-picker__panel-container,
+            .#{$namespace}-date-picker__date-panel,
+            .#{$namespace}-date-picker__time-panel {
+                min-height: 0;
+                min-width: 0;
+            }
         }
     }
 }

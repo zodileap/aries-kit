@@ -30,6 +30,8 @@ const RichEditorContent = forwardRef<RichEditorInstance, {}>((_, ref) => {
     setContent,
     clear,
     focus,
+    hasPendingUploads,
+    waitForPendingUploads,
   } = useEditor;
   
   const {
@@ -49,8 +51,10 @@ const RichEditorContent = forwardRef<RichEditorInstance, {}>((_, ref) => {
     exportAs,
     importFile,
     clear,
-    focus
-  }), [getContent, setContent, exportAs, importFile, clear, focus]);
+    focus,
+    hasPendingUploads,
+    waitForPendingUploads,
+  }), [clear, exportAs, focus, getContent, hasPendingUploads, importFile, setContent, waitForPendingUploads]);
   
   // 计算编辑器高度样式
   const editorStyle = {
@@ -78,7 +82,7 @@ const RichEditorContent = forwardRef<RichEditorInstance, {}>((_, ref) => {
           buttons={toolbar === false ? [] : (toolbar?.buttons || [
             'bold', 'italic', 'strikethrough', 'divider',
             'heading', 'quote', 'code', 'codeBlock', 'divider',
-            'link', 'image', 'table', 'divider',
+            'link', 'image', 'video', 'table', 'divider',
             'list', 'orderedList', 'taskList', 'divider',
             'undo', 'redo'
           ])}

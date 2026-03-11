@@ -60,12 +60,63 @@ export interface RichEditorInstance {
    * 聚焦编辑器
    */
   focus: () => void;
+
+  /**
+   * 当前是否仍有上传中的媒体资源
+   */
+  hasPendingUploads: () => boolean;
+
+  /**
+   * 等待所有上传中的媒体资源完成
+   */
+  waitForPendingUploads: () => Promise<void>;
 }
 
 /**
  * 编辑器模式类型
  */
 export type RichEditorMode = 'source' | 'visual' | 'split';
+
+export type RichEditorMediaKind = 'image' | 'video';
+
+export type RichEditorMediaSource = 'toolbar' | 'paste';
+
+export interface RichEditorUploadRequest {
+  file: File;
+  kind: RichEditorMediaKind;
+  source: RichEditorMediaSource;
+  signal?: AbortSignal;
+}
+
+export interface RichEditorUploadResult {
+  id?: string;
+  url: string;
+  alt?: string;
+  title?: string;
+  posterUrl?: string;
+  mimeType?: string;
+  width?: number;
+  height?: number;
+  duration?: number;
+}
+
+export interface RichEditorPendingUpload {
+  token: string;
+  kind: RichEditorMediaKind;
+  source: RichEditorMediaSource;
+  name: string;
+  status: 'uploading' | 'error';
+  error?: string;
+}
+
+export interface RichEditorMediaConfig {
+  upload?: (request: RichEditorUploadRequest) => Promise<RichEditorUploadResult>;
+  enablePasteUpload?: boolean;
+  acceptImage?: string;
+  acceptVideo?: string;
+  maxImageSize?: number;
+  maxVideoSize?: number;
+}
 
 /**
  * 工具栏按钮类型
@@ -80,6 +131,7 @@ export type ToolbarButton =
   | 'codeBlock'
   | 'link'
   | 'image'
+  | 'video'
   | 'table'
   | 'list'
   | 'orderedList'
@@ -291,6 +343,11 @@ export interface RichEditorProps extends AriaAttributes {
     enableMonaco?: boolean;
     onCodeEdit?: (code: string, language: string, title?: string) => void;
   };
+
+  /**
+   * 媒体上传配置
+   */
+  media?: RichEditorMediaConfig;
   
   /**
    * 子元素（用于扩展功能）

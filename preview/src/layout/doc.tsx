@@ -60,6 +60,27 @@ const resolveSectionData = <T,>(api: DocAPI, section: DocTableSection<T>): T[] =
     return [];
 };
 
+const renderTable = <T extends Record<string, unknown>>(
+    data: T[],
+    columns: ReadonlyArray<{ title: string; key: string; width?: string }>
+) => {
+    if (data.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className="doc-table-wrapper">
+            <AriTable
+                title={``}
+                data={data}
+                columns={[...columns]}
+                bordered
+                striped
+            />
+        </div>
+    );
+};
+
 const Doc: React.FC<DocProps> = ({
     title,
     description,
@@ -104,13 +125,7 @@ const Doc: React.FC<DocProps> = ({
                         value={section.title}
                         id={section.anchor ?? (section.content ? toAnchorId(section.content) : toAnchorId(section.title))}
                     />
-                    <AriTable
-                        title={``}
-                        data={section.data}
-                        columns={[...columns]}
-                        bordered
-                        striped
-                    />
+                    {renderTable(section.data, columns)}
                 </React.Fragment>
             ));
     };
@@ -123,13 +138,7 @@ const Doc: React.FC<DocProps> = ({
         return (
             <>
                 <AriTypography variant="h3" value={section.title} id={section.anchor ?? toAnchorId(section.title)} />
-                <AriTable
-                    title={``}
-                    data={section.apis}
-                    columns={[...NAMED_API_COLUMNS]}
-                    bordered
-                    striped
-                />
+                {renderTable(section.apis, NAMED_API_COLUMNS)}
             </>
         );
     };
@@ -140,7 +149,7 @@ const Doc: React.FC<DocProps> = ({
             <AriTypography variant="body" value={description} />
 
             {Object.entries(examples).map(([key, example]) => (
-                <React.Fragment key={key}>
+                <section className="doc-section" key={key}>
                     <AriTypography variant="h2" value={example.title} id={example.key} />
                     <AriTypography variant="body" value={example.description} />
                     {example.demos.map((demo, index) => {
@@ -148,8 +157,8 @@ const Doc: React.FC<DocProps> = ({
                         const sourceCode = demo.sourceCode
 
                         return (
-                            <div key={index} style={{ width: '100%' }}>
-                                {demo.title && <h4>{demo.title}</h4>}
+                            <div key={index} className="doc-example">
+                                {demo.title && <h4 className="doc-example__title">{demo.title}</h4>}
                                 {sourceCode && (
                                     <AriCollapse
                                         collapseContent={
@@ -169,7 +178,7 @@ const Doc: React.FC<DocProps> = ({
                             </div>
                         );
                     })}
-                </React.Fragment>
+                </section>
             ))}
 
             <AriTypography variant="h2" value={apiTitle ?? 'API'} id={apiAnchor ?? 'api'} />
@@ -177,13 +186,7 @@ const Doc: React.FC<DocProps> = ({
             {hasProps && (
                 <>
                     <AriTypography variant="h3" value="属性" id="props" />
-                    {api.props && api.props.length > 0 && <AriTable
-                        title={``}
-                        data={api.props}
-                        columns={[...PROP_COLUMNS]}
-                        bordered
-                        striped
-                    />}
+                    {api.props && renderTable(api.props, PROP_COLUMNS)}
                     {renderExtraTables(propSections, PROP_COLUMNS)}
                 </>
             )}
@@ -191,13 +194,7 @@ const Doc: React.FC<DocProps> = ({
             {hasEvents && (
                 <>
                     <AriTypography variant="h3" value="事件" id="events" />
-                    {api.events && api.events.length > 0 && <AriTable
-                        title={``}
-                        data={api.events}
-                        columns={[...EVENT_COLUMNS]}
-                        bordered
-                        striped
-                    />}
+                    {api.events && renderTable(api.events, EVENT_COLUMNS)}
                     {renderExtraTables(eventSections, EVENT_COLUMNS)}
                 </>
             )}
@@ -205,14 +202,7 @@ const Doc: React.FC<DocProps> = ({
             {hasSlots && (
                 <>
                     <AriTypography variant="h3" value="插槽" id="slots" />
-                    {api.slots && api.slots.length > 0 && <AriTable
-                        title={``}
-                        data={api.slots}
-                        columns={[...SLOT_COLUMNS]}
-                        bordered
-                        striped
-                    />
-                    }
+                    {api.slots && renderTable(api.slots, SLOT_COLUMNS)}
                     {renderExtraTables(slotSections, SLOT_COLUMNS)}
                 </>
             )}

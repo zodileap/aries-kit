@@ -40,6 +40,7 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
     const cs = useCss('date-picker');
     const pickerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const popupRef = useRef<HTMLDivElement>(null);
     const today = useMemo(() => new Date(), []);
 
     // 处理受控和非受控模式
@@ -48,6 +49,7 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
     const [popupVisible, setPopupVisible] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<'date' | 'time'>('date');
     const [shouldShowAbove, setShouldShowAbove] = useState<boolean>(false);
+    const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
 
     // 2. 当value变化时更新选中日期（受控模式）
     useEffect(() => {
@@ -95,6 +97,31 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
         return findScrollParent(element.parentElement!);
     }, []);
 
+    const calculatePopupPosition = useCallback(() => {
+        if (!pickerRef.current || !popupRef.current) return;
+
+        const inset = 8;
+        const pickerRect = pickerRef.current.getBoundingClientRect();
+        const popupWidth = popupRef.current.getBoundingClientRect().width || popupRef.current.offsetWidth || pickerRect.width;
+        const viewportWidth = window.innerWidth;
+        const maxWidth = Math.max(viewportWidth - inset * 2, 0);
+        const safeWidth = Math.min(Math.max(popupWidth, pickerRect.width), maxWidth);
+        const shouldAlignEnd = placement.endsWith('end');
+        const naturalLeft = shouldAlignEnd ? pickerRect.right - safeWidth : pickerRect.left;
+        const safeLeft = Math.min(
+            Math.max(naturalLeft, inset),
+            Math.max(inset, viewportWidth - safeWidth - inset)
+        );
+
+        setPopupStyle({
+            left: `${safeLeft - pickerRect.left}px`,
+            right: 'auto',
+            maxWidth: `${maxWidth}px`,
+            minWidth: `${Math.min(pickerRect.width, maxWidth)}px`,
+            ...(popupWidth > maxWidth ? { width: `${maxWidth}px` } : {}),
+        });
+    }, [placement]);
+
     // 检测popup显示位置（上方还是下方）
     useEffect(() => {
         if (popupVisible && pickerRef.current) {
@@ -124,6 +151,7 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
             
             return () => clearTimeout(timer);
         } else if (!popupVisible) {
+            setPopupStyle({});
             // 延迟重置位置状态，让关闭动画先完成
             const resetTimer = setTimeout(() => {
                 setShouldShowAbove(false);
@@ -132,6 +160,26 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
             return () => clearTimeout(resetTimer);
         }
     }, [popupVisible, showTime, findScrollParent]);
+
+    useEffect(() => {
+        if (!popupVisible) {
+            return;
+        }
+
+        const updatePopupPosition = () => {
+            calculatePopupPosition();
+        };
+
+        const timer = window.setTimeout(updatePopupPosition, 0);
+        window.addEventListener('scroll', updatePopupPosition, true);
+        window.addEventListener('resize', updatePopupPosition);
+
+        return () => {
+            window.clearTimeout(timer);
+            window.removeEventListener('scroll', updatePopupPosition, true);
+            window.removeEventListener('resize', updatePopupPosition);
+        };
+    }, [activeTab, calculatePopupPosition, popupVisible]);
 
     // 3. 派生状态计算
     const formatDate = useCallback((date: Date | undefined): string => {
@@ -488,7 +536,11 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
                 {renderSuffix()}
             </div>
 
-            <div className={cs.e('popup')}>
+            <div
+                ref={popupRef}
+                className={cs.e('popup')}
+                style={popupStyle}
+            >
                 {renderCalendar()}
             </div>
         </div>

@@ -41,6 +41,7 @@ export const Editor: React.FC<EditorProps> = ({
     textareaRef,
     lineNumbersRef,
     handleContentChange,
+    handlePaste,
   } = useEditor;
   
   const finalPlaceholder = placeholder || contextPlaceholder;
@@ -78,6 +79,7 @@ export const Editor: React.FC<EditorProps> = ({
         onClick={handleTextareaClick}
         onSelect={handleTextareaSelect}
         onKeyDown={handleKeyDown}
+        onPaste={handlePaste}
         placeholder={finalPlaceholder}
         disabled={disabled}
         readOnly={readOnly}

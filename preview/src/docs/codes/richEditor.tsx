@@ -1,6 +1,42 @@
 import React, { useState, useRef } from 'react';
 import { AriFlex, AriRichEditor, AriButton, AriCard, AriMessage } from '@aries-kit/react';
-import { RichEditorInstance } from '@aries-kit/react';
+import { RichEditorInstance, RichEditorUploadRequest } from '@aries-kit/react';
+
+const readFileAsDataUrl = (file: File) => new Promise<string>((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => resolve(reader.result as string);
+  reader.onerror = () => reject(new Error('读取文件失败'));
+  reader.readAsDataURL(file);
+});
+
+const mockUploadMedia = async ({ file, kind, source, signal }: RichEditorUploadRequest) => {
+  if (signal?.aborted) {
+    throw new Error('上传已取消');
+  }
+
+  await new Promise<void>((resolve, reject) => {
+    const timer = window.setTimeout(resolve, 400);
+    signal?.addEventListener('abort', () => {
+      window.clearTimeout(timer);
+      reject(new Error('上传已取消'));
+    }, { once: true });
+  });
+
+  const url = await readFileAsDataUrl(file);
+  return {
+    id: `${kind}-${Date.now()}`,
+    url,
+    alt: file.name,
+    title: source === 'paste' ? '来自剪贴板' : '来自工具栏',
+  };
+};
+
+const demoMediaConfig = {
+  upload: mockUploadMedia,
+  enablePasteUpload: true,
+  maxImageSize: 10 * 1024 * 1024,
+  maxVideoSize: 100 * 1024 * 1024,
+};
 
 export const BasicExample: React.FC = () => {
   const [content, setContent] = useState(`# 欢迎使用富文本编辑器
@@ -51,6 +87,7 @@ function hello() {
         onChange={setContent}
         height="400px"
         placeholder="开始编写你的内容..."
+        media={demoMediaConfig}
       />
     </AriCard>
   );
@@ -106,6 +143,7 @@ export const ModeExample: React.FC = () => {
           onChange={setContent}
           mode={mode}
           height="350px"
+          media={demoMediaConfig}
         />
       </AriCard>
     </AriFlex>
@@ -141,6 +179,7 @@ export const ToolbarExample: React.FC = () => {
         value={content}
         onChange={setContent}
         height="350px"
+        media={demoMediaConfig}
         toolbar={{
           buttons: ['bold', 'italic', 'strikethrough', 'divider', 'heading', 'code', 'link']
         }}
@@ -162,6 +201,7 @@ export const CustomToolbarExample: React.FC = () => {
         value={content}
         onChange={setContent}
         height="300px"
+        media={demoMediaConfig}
         toolbar={{
           buttons: ['bold', 'italic', 'heading', 'quote', 'list'],
           showImport: false,
@@ -208,6 +248,7 @@ const readOnly = true;
 export const ApiExample: React.FC = () => {
   const editorRef = useRef<RichEditorInstance>(null);
   const [content, setContent] = useState('# API 演示\n\n使用下面的按钮来控制编辑器');
+  const [saving, setSaving] = useState(false);
 
   const handleClear = () => {
     editorRef.current?.clear();
@@ -224,7 +265,9 @@ export const ApiExample: React.FC = () => {
 - \`setContent(content)\`: 设置内容  
 - \`clear()\`: 清空内容
 - \`focus()\`: 聚焦编辑器
-- \`exportAs(format)\`: 导出内容`);
+- \`exportAs(format)\`: 导出内容
+- \`hasPendingUploads()\`: 检查是否还有媒体上传中
+- \`waitForPendingUploads()\`: 等待上传结束再保存`);
   };
 
   const handleGetContent = () => {
@@ -236,6 +279,14 @@ export const ApiExample: React.FC = () => {
     editorRef.current?.focus();
   };
 
+  const handleSave = async () => {
+    setSaving(true);
+    await editorRef.current?.waitForPendingUploads();
+    const currentContent = editorRef.current?.getContent() || '';
+    AriMessage.success(`已模拟保存 ${currentContent.length} 个字符`);
+    setSaving(false);
+  };
+
   return (
     <AriFlex vertical space={16}>
       <AriFlex space={8} wrap>
@@ -243,6 +294,9 @@ export const ApiExample: React.FC = () => {
         <AriButton onClick={handleGetContent}>获取内容</AriButton>
         <AriButton onClick={handleClear}>清空内容</AriButton>
         <AriButton onClick={handleFocus}>聚焦编辑器</AriButton>
+        <AriButton loading={saving} onClick={handleSave}>
+          等待上传后保存
+        </AriButton>
       </AriFlex>
       
       <AriCard>
@@ -251,8 +305,74 @@ export const ApiExample: React.FC = () => {
           value={content}
           onChange={setContent}
           height="300px"
+          media={demoMediaConfig}
         />
       </AriCard>
+    </AriFlex>
+  );
+};
+
+export const MediaUploadExample: React.FC = () => {
+  const editorRef = useRef<RichEditorInstance>(null);
+  const [content, setContent] = useState([
+    '# 媒体上传演示',
+    '',
+    '这个示例模拟了业务方提供上传接口后的完整链路：',
+    '',
+    '- 点击工具栏里的图片 / 视频按钮上传文件',
+    '- 在源码模式或可视模式下直接粘贴剪贴板中的图片 / 视频文件',
+    '- 上传完成后，内容里会写入真正可保存的媒体地址标记',
+    '',
+    '建议操作：',
+    '',
+    '1. 切换到可视模式',
+    '2. 上传一张图片或一个小视频',
+    '3. 点击下方的“模拟保存”按钮',
+    '',
+    '保存后你会拿到带 `<img />` / `<video />` 标签的 Markdown 内容。',
+  ].join('\n'));
+  const [savedContent, setSavedContent] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    setSaving(true);
+    await editorRef.current?.waitForPendingUploads();
+    const nextContent = editorRef.current?.getContent() || '';
+    setSavedContent(nextContent);
+    AriMessage.success('已等待所有上传完成并写入保存内容');
+    setSaving(false);
+  };
+
+  return (
+    <AriFlex vertical space={16}>
+      <AriFlex space={8} wrap>
+        <AriButton loading={saving} onClick={handleSave}>模拟保存</AriButton>
+        <AriButton
+          type="text"
+          onClick={() => {
+            const isPending = editorRef.current?.hasPendingUploads();
+            AriMessage.info(isPending ? '还有媒体正在上传' : '当前没有待完成上传');
+          }}
+        >
+          检查上传状态
+        </AriButton>
+      </AriFlex>
+
+      <AriCard>
+        <AriRichEditor
+          ref={editorRef}
+          value={content}
+          onChange={setContent}
+          height="420px"
+          media={demoMediaConfig}
+        />
+      </AriCard>
+
+      {savedContent && (
+        <AriCard>
+          <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{savedContent}</pre>
+        </AriCard>
+      )}
     </AriFlex>
   );
 };
@@ -281,6 +401,7 @@ export const AutoSaveExample: React.FC = () => {
           autoSave
           autoSaveInterval={5000}
           onAutoSave={handleAutoSave}
+          media={demoMediaConfig}
         />
       </AriCard>
     </AriFlex>
@@ -552,6 +673,7 @@ ORDER BY avg_lifetime_value DESC;
           onChange={setContent}
           height="600px"
           codeBlockConfig={codeBlockConfig}
+          media={demoMediaConfig}
         />
       </AriCard>
     </AriFlex>
@@ -709,6 +831,7 @@ LIMIT 100;
           showCopyButton: true,
           showTitle: true
         }}
+        media={demoMediaConfig}
       />
     </AriCard>
   );
@@ -844,6 +967,7 @@ export const CalloutExample: React.FC = () => {
         value={content}
         onChange={setContent}
         height="600px"
+        media={demoMediaConfig}
       />
     </AriCard>
   );
@@ -927,6 +1051,7 @@ export const Button: React.FC<ButtonProps> = ({
           showCopyButton: true,
           showTitle: true
         }}
+        media={demoMediaConfig}
       />
     </AriCard>
   );
@@ -972,6 +1097,7 @@ export const AdvancedConfigExample: React.FC = () => {
             AriMessage.success('准备导出 ' + format.toUpperCase() + ' 文件');
             return content + '\n\n<!-- exported:' + format + ' -->';
           }}
+          media={demoMediaConfig}
         />
       </AriCard>
       <div>当前编辑模式: {mode}</div>

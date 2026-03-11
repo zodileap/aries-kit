@@ -12,9 +12,15 @@
     border-radius: getVar(border-radius, lg);
     overflow-y: hidden;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
     white-space: nowrap;
     position: relative;
     transition: all getVar(duration, element-interaction);
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &__slider {
@@ -116,6 +122,44 @@
   // 卡片样式 (已合并到默认样式中)
   &--card {
     // 卡片样式现在是默认样式，保留此类以兼容
+  }
+}
+
+@media (max-width: 767px) {
+  .#{$namespace}-tabs {
+    &__nav {
+      padding: getVar(inset, xxs);
+      gap: getVar(inset, xxs);
+      scroll-snap-type: x proximity;
+    }
+
+    &__nav-item {
+      padding: getVar(inset, xs) getVar(inset, sm);
+      scroll-snap-align: start;
+    }
+
+    &__content {
+      padding: getVar(inset) 0;
+      margin-top: getVar(inset, sm);
+    }
+
+    &--vertical {
+      flex-direction: column;
+
+      .#{$namespace}-tabs__nav {
+        flex-direction: row;
+        min-width: 0;
+        margin-right: 0;
+        margin-bottom: getVar(inset, sm);
+      }
+
+      .#{$namespace}-tabs__slider {
+        top: getVar(inset, xxs);
+        left: 0;
+        width: auto;
+        height: calc(100% - #{getVar(inset, xxs)} * 2);
+      }
+    }
   }
 }
 

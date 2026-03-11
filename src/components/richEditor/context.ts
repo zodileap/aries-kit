@@ -1,6 +1,6 @@
-import { createContext } from 'react';
-import { RichEditorMode } from '@ari/types';
+import { CSSProperties, createContext } from 'react';
 import type { CodeBlockConfig } from './hooks';
+import type { RichEditorMediaConfig } from '@ari/types';
 
 /**
  * 富文本编辑器上下文接口
@@ -20,9 +20,10 @@ export interface RichEditorContextValue {
   height: string | number;
   minHeight: string | number;
   maxHeight: string | number;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   className?: string;
   toolbar: any;
+  media?: RichEditorMediaConfig;
   
   // 代码块配置
   codeBlockConfig?: CodeBlockConfig;

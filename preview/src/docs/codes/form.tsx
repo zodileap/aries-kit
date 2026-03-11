@@ -1,10 +1,21 @@
 import { AriButton, AriFlex, AriForm, AriFormItem, AriInput, AriTextInput, AriRow, AriCol, AriMessage, useForm, AriFormInstance, AriTypography, AriIcon } from '@aries-kit/react';
 import { useRef } from 'react';
 
+const narrowFormStyle = {
+    width: '100%',
+    maxWidth: 600,
+};
+
+const wideFormStyle = {
+    width: '100%',
+    maxWidth: 700,
+};
+
 export const BasicForm: React.FC = () => (
     <AriForm
         labelAlign="right"
         labelWidth={100}
+        style={narrowFormStyle}
         initialValues={{ user: { name: 'John' } }}
         rules={{
             user: {
@@ -39,21 +50,21 @@ export const LayoutDemo: React.FC = () => (
         <AriFlex vertical space={24}>
             <AriFlex vertical>
                 <AriTypography variant='h4' value='水平布局（默认）' />
-                <AriForm layout="horizontal" style={{ maxWidth: 600 }} labelWidth={80}>
+                <AriForm layout="horizontal" style={narrowFormStyle} labelWidth={80}>
                     <AriFormItem label="用户名" required>
                         <AriInput placeholder="请输入用户名" />
                     </AriFormItem>
                     <AriFormItem label="密码" required>
                         <AriInput type="password" placeholder="请输入密码" />
                     </AriFormItem>
-                    <AriFormItem wrapperCol={{ offset: 80 }}>
+                    <AriFormItem>
                         <AriButton color="primary">提交</AriButton>
                     </AriFormItem>
                 </AriForm>
             </AriFlex>
             <AriFlex vertical>
                 <AriTypography variant='h4' value='垂直布局' />
-                <AriForm layout="vertical" style={{ maxWidth: 600 }}>
+                <AriForm layout="vertical" style={narrowFormStyle}>
                     <AriFormItem label="用户名" required>
                         <AriInput placeholder="请输入用户名" />
                     </AriFormItem>
@@ -103,7 +114,7 @@ export const ValidationDemo: React.FC = () => {
         onFinish={handleFinish}
         onFinishFailed={handleFinishFailed}
         className="preview-validation-form"
-        style={{ maxWidth: 600 }}
+        style={narrowFormStyle}
       >
         <AriFormItem
           label="用户名"
@@ -160,7 +171,7 @@ export const ValidationDemo: React.FC = () => {
           <AriInput type="password" placeholder="请再次输入密码" />
         </AriFormItem>
 
-        <AriFormItem wrapperCol={{ offset: 100 }}>
+        <AriFormItem>
           <AriButton color="primary" htmlType="submit">
             提交
           </AriButton>
@@ -195,7 +206,7 @@ export const NestedFieldsDemo: React.FC = () => {
             labelWidth={120}
             initialValues={initialValues}
             onFinish={handleFinish}
-            style={{ maxWidth: 600 }}
+            style={narrowFormStyle}
         >
             <AriFormItem label="用户名" name="user.name" required>
                 <AriInput />
@@ -217,7 +228,7 @@ export const NestedFieldsDemo: React.FC = () => {
                 <AriInput />
             </AriFormItem>
 
-            <AriFormItem wrapperCol={{ offset: 120 }}>
+            <AriFormItem>
                 <AriButton color="primary" htmlType="submit">
                     提交
                 </AriButton>
@@ -228,7 +239,7 @@ export const NestedFieldsDemo: React.FC = () => {
 
 
 export const CustomLayoutDemo: React.FC = () => (
-    <AriForm style={{ maxWidth: 700 }}>
+    <AriForm style={wideFormStyle}>
         {/* 标准布局 */}
         <AriFormItem
             label="默认布局"
@@ -374,6 +385,7 @@ export const UseRefDemo: React.FC = () => {
         <>
             <AriForm
                 ref={formRef}
+                style={narrowFormStyle}
                 initialValues={{ username: '' }}
                 onFinish={(values) => {
                     console.log('表单提交:', values);
@@ -390,7 +402,7 @@ export const UseRefDemo: React.FC = () => {
                 </AriFormItem>
             </AriForm>
 
-            <AriFlex style={{ marginTop: '20px' }}>
+            <AriFlex style={{ marginTop: '20px', flexWrap: 'wrap', gap: '12px' }}>
                 <AriButton onClick={handleReset}>重置表单</AriButton>
                 <AriButton onClick={handleFill}>填充数据</AriButton>
                 <AriButton onClick={handleGetValues}>获取表单值</AriButton>
@@ -423,7 +435,7 @@ export const UseHookDemo: React.FC = () => {
     return (
         <AriFlex vertical space={24}>
             <AriTypography variant='h4' value='个人资料' />
-            <AriForm layout="horizontal" labelCol={6} wrapperCol={18}>
+            <AriForm layout="horizontal" labelCol={6} wrapperCol={18} style={narrowFormStyle}>
                 <AriFormItem label="用户名" name="username">
                     <AriInput placeholder="请输入用户名" />
                 </AriFormItem>

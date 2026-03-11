@@ -97,6 +97,16 @@ export const initI18n = (options: InitI18nOptions = {}) => {
     return i18n;
 }
 
+const ensureI18nInitialized = (options: InitI18nOptions = {}) => {
+    if (!i18n.isInitialized) {
+        initI18n(options);
+    } else if (options.resources) {
+        addI18nResources(options.resources);
+    }
+
+    return i18n;
+}
+
 /**
  * useI18n 国际化钩子函数
  * 
@@ -115,8 +125,12 @@ export const useI18n = (
     ns?: I18nNamespace[],
     options?: UseTranslationOptions<undefined>
 ): UseI18nReturn => {
-    const use = useTranslation(ns, options);
-    const i18n = use.i18n;
+    const i18nInstance = ensureI18nInitialized();
+    const use = useTranslation(ns, {
+        ...options,
+        i18n: i18nInstance
+    });
+    const i18n = use.i18n || i18nInstance;
 
     const t = useMemo(() => {
         // 创建一个更安全的翻译函数，确保正确指定命名空间

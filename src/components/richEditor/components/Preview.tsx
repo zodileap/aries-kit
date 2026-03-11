@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useCss } from '@ari/utils';
-import { useRichEditor } from '../hooks';
+import { useKeyboardShortcuts, useRichEditor } from '../hooks';
 import { MarkdownRenderer } from './MarkdownRenderer';
 
 /**
@@ -12,64 +12,65 @@ export interface PreviewProps {
 }
 
 /**
- * Markdown预览组件
- * 
- * 支持两种模式：
- * 1. 预览模式：只读显示渲染后的React组件
- * 2. 可视化编辑模式：可以直接编辑渲染后的内容
- * 
- * Params:
- * 
- *   - className: 自定义样式类名
- * 
- * Example:
- * 
- * ```tsx
- * <Preview className="custom-preview" />
- * ```
+ * Markdown 预览 / 可视化编辑组件
  */
 export const Preview: React.FC<PreviewProps> = ({ className }) => {
   const cn = useCss('rich-editor');
-  const { useEditor, useMode, useMarkdown, codeBlockConfig } = useRichEditor();
-  const editableRef = useRef<HTMLDivElement>(null);
-  
-  // 检查是否为可视化编辑模式
-  const isVisualMode = useMode.mode === 'visual';
-  
-  // 解析Markdown为结构化数据
-  const markdownElements = useMarkdown.parseMarkdown(useEditor.content);
-  
-  // 设置预览容器的ref
+  const containerRef = useRef<HTMLDivElement>(null);
+  const {
+    useEditor,
+    useMode,
+    useMarkdown,
+    disabled,
+    readOnly,
+  } = useRichEditor();
+  const handleKeyDown = useKeyboardShortcuts();
+
+  const isEditableVisualMode = useMode.mode === 'visual' && !readOnly && !disabled;
+  const markdownElements = useMemo(
+    () => useMarkdown.parseMarkdown(useEditor.content),
+    [useEditor.content, useMarkdown],
+  );
+
   useEffect(() => {
-    if (editableRef.current) {
-      useEditor.previewRef.current = editableRef.current;
+    const element = containerRef.current;
+    if (!element) {
+      return;
     }
-  }, [useEditor]);
-  
-  if (isVisualMode) {
-    // 可视化编辑模式：使用contentEditable
-    // TODO: 实现可视化编辑功能
+
+    useEditor.previewRef.current = element;
+
+    if (isEditableVisualMode) {
+      useEditor.visualEditorRef.current = element;
+      useEditor.syncVisualEditorContent();
+      return;
+    }
+
+    useEditor.visualEditorRef.current = null;
+  }, [isEditableVisualMode, useEditor]);
+
+  if (isEditableVisualMode) {
     return (
-      <div 
-        ref={editableRef}
-        className={cn.gen(className, cn.e('preview'), cn.m('editable'))}
+      <div
+        ref={containerRef}
+        className={cn.gen(className, cn.e('preview'), cn.em('preview', 'editable'))}
         contentEditable
         suppressContentEditableWarning
-        style={{
-          outline: 'none',
-          minHeight: '200px',
-          padding: '16px',
-        }}
-      >
-        <MarkdownRenderer elements={markdownElements} />
-      </div>
+        data-rich-editor-root="true"
+        onInput={useEditor.handleVisualInput}
+        onKeyDown={handleKeyDown}
+        onPaste={useEditor.handlePaste}
+        onMouseUp={useEditor.saveVisualSelection}
+        onKeyUp={useEditor.saveVisualSelection}
+        onFocus={useEditor.saveVisualSelection}
+        style={{ outline: 'none' }}
+      />
     );
   }
-  
-  // 预览模式：只读显示React组件
+
   return (
-    <div 
-      ref={editableRef}
+    <div
+      ref={containerRef}
       className={cn.gen(className, cn.e('preview'))}
     >
       <MarkdownRenderer elements={markdownElements} />

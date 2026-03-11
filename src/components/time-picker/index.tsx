@@ -38,6 +38,7 @@ export const AriTimePicker: React.FC<AriTimePickerProps> = ({
     const cs = useCss('time-picker');
     const pickerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const popupRef = useRef<HTMLDivElement>(null);
     const hourListRef = useRef<HTMLDivElement>(null);
     const minuteListRef = useRef<HTMLDivElement>(null);
     const secondListRef = useRef<HTMLDivElement>(null);
@@ -54,6 +55,7 @@ export const AriTimePicker: React.FC<AriTimePickerProps> = ({
     const [popupVisible, setPopupVisible] = useState<boolean>(embedded);
     const [shouldShowAbove, setShouldShowAbove] = useState<boolean>(false);
     const [isCompactMode, setIsCompactMode] = useState<boolean>(false);
+    const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
 
     // 2. 当value变化时更新选中时间（受控模式）
     useEffect(() => {
@@ -80,6 +82,31 @@ export const AriTimePicker: React.FC<AriTimePickerProps> = ({
         
         return findScrollParent(element.parentElement!);
     }, []);
+
+    const calculatePopupPosition = useCallback(() => {
+        if (!pickerRef.current || !popupRef.current || embedded) return;
+
+        const inset = 8;
+        const pickerRect = pickerRef.current.getBoundingClientRect();
+        const popupWidth = popupRef.current.getBoundingClientRect().width || popupRef.current.offsetWidth || pickerRect.width;
+        const viewportWidth = window.innerWidth;
+        const maxWidth = Math.max(viewportWidth - inset * 2, 0);
+        const safeWidth = Math.min(Math.max(popupWidth, pickerRect.width), maxWidth);
+        const shouldAlignEnd = placement.endsWith('end');
+        const naturalLeft = shouldAlignEnd ? pickerRect.right - safeWidth : pickerRect.left;
+        const safeLeft = Math.min(
+            Math.max(naturalLeft, inset),
+            Math.max(inset, viewportWidth - safeWidth - inset)
+        );
+
+        setPopupStyle({
+            left: `${safeLeft - pickerRect.left}px`,
+            right: 'auto',
+            maxWidth: `${maxWidth}px`,
+            minWidth: `${Math.min(pickerRect.width, maxWidth)}px`,
+            ...(popupWidth > maxWidth ? { width: `${maxWidth}px` } : {}),
+        });
+    }, [embedded, placement]);
 
     // 检测popup显示位置（上方还是下方）
     useEffect(() => {
@@ -116,6 +143,29 @@ export const AriTimePicker: React.FC<AriTimePickerProps> = ({
         }
         // 注意：popup关闭时不重置shouldShowAbove，保持最后的位置状态用于过渡动画
     }, [popupVisible, embedded, findScrollParent]);
+
+    useEffect(() => {
+        if (embedded || !popupVisible) {
+            if (!popupVisible) {
+                setPopupStyle({});
+            }
+            return;
+        }
+
+        const updatePopupPosition = () => {
+            calculatePopupPosition();
+        };
+
+        const timer = window.setTimeout(updatePopupPosition, 0);
+        window.addEventListener('scroll', updatePopupPosition, true);
+        window.addEventListener('resize', updatePopupPosition);
+
+        return () => {
+            window.clearTimeout(timer);
+            window.removeEventListener('scroll', updatePopupPosition, true);
+            window.removeEventListener('resize', updatePopupPosition);
+        };
+    }, [calculatePopupPosition, embedded, isCompactMode, popupVisible, showSecond, use12Hours]);
 
     // 3. 派生状态计算
     const hourStep = step?.hour || 1;
@@ -793,7 +843,11 @@ export const AriTimePicker: React.FC<AriTimePickerProps> = ({
             </div>
 
             {popupVisible && (
-                <div className={cs.e('popup')}>
+                <div
+                    ref={popupRef}
+                    className={cs.e('popup')}
+                    style={popupStyle}
+                >
                     {renderTimePicker()}
                 </div>
             )}
