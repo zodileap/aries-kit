@@ -161,6 +161,72 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
 
     const displayValue = useMemo(() => formatDate(selectedDate), [formatDate, selectedDate]);
     const hasValue = !!selectedDate;
+    const [inputValue, setInputValue] = useState(displayValue);
+
+    useEffect(() => {
+        setInputValue(displayValue);
+    }, [displayValue]);
+
+    const parseInputDate = useCallback((text: string): Date | undefined => {
+        const normalized = text.trim()
+            .replace(/[./]/g, '-')
+            .replace(/\s+/g, ' ');
+
+        if (!normalized) {
+            return undefined;
+        }
+
+        const match = normalized.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:\s+(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?$/);
+        if (match) {
+            const [, yearText, monthText, dayText, hourText, minuteText, secondText] = match;
+            const year = Number(yearText);
+            const month = Number(monthText);
+            const day = Number(dayText);
+            const fallbackDate = tempDate || selectedDate || today;
+            const hours = Number(hourText ?? (showTime ? fallbackDate.getHours() : 0));
+            const minutes = Number(minuteText ?? (showTime ? fallbackDate.getMinutes() : 0));
+            const seconds = Number(secondText ?? (showTime ? fallbackDate.getSeconds() : 0));
+
+            const parsedDate = new Date(year, month - 1, day, hours, minutes, showTime ? seconds : 0, 0);
+            if (
+                parsedDate.getFullYear() !== year ||
+                parsedDate.getMonth() !== month - 1 ||
+                parsedDate.getDate() !== day
+            ) {
+                return undefined;
+            }
+
+            return parsedDate;
+        }
+
+        const fallbackDate = new Date(normalized);
+        return Number.isNaN(fallbackDate.getTime()) ? undefined : fallbackDate;
+    }, [selectedDate, showTime, tempDate, today]);
+
+    const commitInputValue = useCallback(() => {
+        if (readonly) {
+            return;
+        }
+
+        if (!inputValue.trim()) {
+            setSelectedDate(undefined);
+            setTempDate(undefined);
+            onChange?.(undefined as any);
+            setInputValue('');
+            return;
+        }
+
+        const parsedDate = parseInputDate(inputValue);
+        if (!parsedDate) {
+            setInputValue(displayValue);
+            return;
+        }
+
+        setSelectedDate(parsedDate);
+        setTempDate(parsedDate);
+        onChange?.(parsedDate);
+        setInputValue(formatDate(parsedDate));
+    }, [displayValue, formatDate, inputValue, onChange, parseInputDate, readonly]);
 
     // 4. 事件处理函数
     const handleInputClick = useCallback(() => {
@@ -178,6 +244,18 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
             inputRef.current?.focus();
         }, 0);
     }, [disabled, selectedDate, today]);
+
+    const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        if (readonly) {
+            return;
+        }
+
+        setInputValue(event.target.value);
+    }, [readonly]);
+
+    const handleInputBlur = useCallback(() => {
+        commitInputValue();
+    }, [commitInputValue]);
 
     const handleClear = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
@@ -230,13 +308,16 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
         if (e.key === 'Escape') {
             setPopupVisible(false);
         } else if (e.key === 'Enter') {
-            if (!popupVisible) {
+            if (!readonly) {
+                commitInputValue();
+                setPopupVisible(false);
+            } else if (!popupVisible) {
                 setPopupVisible(true);
             } else if (showTime) {
                 handleConfirm();
             }
         }
-    }, [popupVisible, handleConfirm, showTime]);
+    }, [commitInputValue, handleConfirm, popupVisible, readonly, showTime]);
 
     const handleTabChange = useCallback((tab: 'date' | 'time') => {
         setActiveTab(tab);
@@ -254,7 +335,7 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
     const renderSuffix = useCallback(() => {
         return (
             <div className={cs.e('suffix-icons')}>
-                {clearable && hasValue && (
+                {clearable && hasValue && !disabled && (
                     <div 
                         className={cs.e('clear-icon')} 
                         onClick={handleClear}
@@ -267,7 +348,7 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
                 </div>
             </div>
         );
-    }, [cs, clearable, hasValue, handleClear]);
+    }, [cs, clearable, disabled, hasValue, handleClear]);
 
     const renderTabs = useCallback(() => {
         if (!showTime) return null;
@@ -397,10 +478,12 @@ export const AriDatePicker: React.FC<AriDatePickerProps> = ({
                     className={cs.e('input')}
                     type="text"
                     placeholder={placeholder}
-                    value={displayValue}
+                    value={readonly ? displayValue : inputValue}
                     readOnly={readonly}
                     disabled={disabled}
+                    onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
+                    onBlur={handleInputBlur}
                 />
                 {renderSuffix()}
             </div>

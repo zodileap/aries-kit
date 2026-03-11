@@ -116,7 +116,7 @@ export const ValidationDemo: React.FC = () => {
             { min: 3, max: 20, message: "用户名长度必须在3-20个字符之间" },
           ]}
           help={<AriIcon name="info" />}
-          helpTooltip="用户名将用于登录系统，请谨慎选择"
+          tooltip="用户名将用于登录系统，请谨慎选择"
         >
           <AriInput placeholder="请输入用户名" />
         </AriFormItem>
@@ -443,4 +443,3 @@ export const UseHookDemo: React.FC = () => {
         </AriFlex>
     );
 };
-

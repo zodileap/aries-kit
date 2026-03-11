@@ -345,7 +345,7 @@ export const UploadListControlExample: React.FC = () => {
       type: 'image/png',
       status: 'uploading',
       progress: 64,
-      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+      url: '/assets/logo/logo.png'
     },
     {
       id: 'demo-doc',

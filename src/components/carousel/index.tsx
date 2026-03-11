@@ -21,6 +21,8 @@ import { AriIcon } from "@ari/components/icon";
 export const AriCarousel: React.FC<AriCarouselProps> = ({
     items = [],
     children,
+    activeIndex,
+    defaultActiveIndex = 0,
     autoplay = false,
     interval = 3000,
     showIndicators = true,
@@ -33,21 +35,24 @@ export const AriCarousel: React.FC<AriCarouselProps> = ({
     renderIndicator,
     onSlideChange,
     className,
+    style,
     ...restProps
 }) => {
     const cn = useCss("carousel");
+    const { onChange: legacyOnChange, ...domProps } = restProps as typeof restProps & { onChange?: (index: number) => void };
     
     // 处理受控和非受控模式
-    const isControlled = restProps.activeIndex !== undefined;
-    const [internalIndex, setInternalIndex] = useState(restProps.defaultActiveIndex || 0);
-    const currentIndex = isControlled ? restProps.activeIndex : internalIndex;
+    const isControlled = activeIndex !== undefined;
+    const [internalIndex, setInternalIndex] = useState(defaultActiveIndex);
+    const currentIndex = isControlled ? activeIndex : internalIndex;
     
     const setCurrentIndex = useCallback((newIndex: number) => {
         if (!isControlled) {
             setInternalIndex(newIndex);
         }
         onSlideChange?.(newIndex);
-    }, [isControlled, onSlideChange]);
+        legacyOnChange?.(newIndex);
+    }, [isControlled, legacyOnChange, onSlideChange]);
     
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
@@ -152,8 +157,8 @@ export const AriCarousel: React.FC<AriCarouselProps> = ({
     // 计算容器样式
     const containerStyle = useMemo(() => ({
         height: typeof height === "number" ? `${height}px` : height,
-        ...restProps.style
-    }), [height, restProps.style]);
+        ...style
+    }), [height, style]);
     
     // 获取可见项目
     const getVisibleItems = useCallback(() => {
@@ -227,7 +232,7 @@ export const AriCarousel: React.FC<AriCarouselProps> = ({
             style={containerStyle}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            {...restProps}
+            {...domProps}
         >
             {/* 毛玻璃背景 */}
             <div className={cn.e("background")}></div>

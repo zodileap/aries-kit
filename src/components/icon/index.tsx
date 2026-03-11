@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { useCss } from '@ari/utils';
 import { AriIconProps } from '@ari/types/components';
 
@@ -7,6 +7,45 @@ const svgCache: Record<string, string> = {};
 
 // 创建一个全局的加载状态管理器，用于跟踪正在进行的请求
 const loadingPromises: Record<string, Promise<string>> = {};
+
+const ICON_NAME_ALIASES: Record<string, string> = {
+    image_broken: 'broken_image',
+    external_link: 'open_in_new',
+    info_circle: 'info',
+    warning_circle: 'warning',
+    close_circle: 'cancel',
+    exclamation_circle: 'warning',
+    heart: 'favorite',
+    clock: 'schedule',
+    unorderedlist: 'format_list_bulleted',
+    file: 'description',
+    calendar: 'calendar_month',
+    user: 'person',
+    setting: 'settings',
+    file_text: 'description',
+    file_html: 'html',
+    file_code: 'code',
+    file_css: 'css',
+    file_markdown: 'markdown',
+    caret_down: 'arrow_drop_down',
+    smile: 'sentiment_satisfied',
+    sticky_note_2: 'description'
+};
+
+const normalizeIconName = (iconName?: string) => {
+    return iconName?.trim().replace(/-/g, '_').toLowerCase();
+};
+
+const resolveIconCandidates = (iconName?: string) => {
+    const normalizedName = normalizeIconName(iconName);
+
+    if (!normalizedName) {
+        return [];
+    }
+
+    const aliasedName = ICON_NAME_ALIASES[normalizedName];
+    return Array.from(new Set([aliasedName, normalizedName].filter(Boolean))) as string[];
+};
 
 /**
  * 图标组件
@@ -28,9 +67,11 @@ export const AriIcon: React.FC<AriIconProps> = ({
 }) => {
     const [svgContent, setSvgContent] = useState<string>('');
     const cs = useCss('icon');
+    const iconCandidates = useMemo(() => resolveIconCandidates(name), [name]);
+    const resolvedName = iconCandidates[0];
 
     // 生成缓存键
-    const cacheKey = useRef(fullPath || (name ? `icon-${name}-${strokeWidth || 1}` : ''));
+    const cacheKey = useRef(fullPath || (resolvedName ? `icon-${resolvedName}-${strokeWidth || 1}` : ''));
 
     // 加载SVG图标内容
     useEffect(() => {
@@ -51,25 +92,42 @@ export const AriIcon: React.FC<AriIconProps> = ({
                     return;
                 }
 
-                if (fullPath || name) {
+                if (fullPath || resolvedName) {
                     // 创建新的加载 Promise
                     const loadPromise = (async () => {
-                        const fetchUrl = fullPath || `/assets/icons/${name}.svg`;
-                        const url = new URL(fetchUrl, import.meta.url).href;
+                        let svg = '';
+                        let lastError: Error | undefined;
 
-                        const response = await fetch(url, {
-                            headers: {
-                                'Accept': 'image/svg+xml' // 显式指定接受SVG
+                        for (const candidate of fullPath ? [fullPath] : iconCandidates) {
+                            const fetchUrl = fullPath || `/assets/icons/${candidate}.svg`;
+                            const url = new URL(fetchUrl, import.meta.url).href;
+
+                            try {
+                                const response = await fetch(url, {
+                                    headers: {
+                                        'Accept': 'image/svg+xml'
+                                    }
+                                });
+
+                                if (!response.ok) {
+                                    throw new Error(`Failed to load SVG: ${response.status} ${response.statusText}`);
+                                }
+
+                                svg = await response.text();
+                                break;
+                            } catch (error) {
+                                lastError = error instanceof Error ? error : new Error(String(error));
                             }
-                        });
+                        }
 
-                        if (!response.ok) throw new Error(`Failed to load SVG: ${response.statusText}`);
+                        if (!svg) {
+                            throw lastError ?? new Error('Failed to load SVG');
+                        }
 
-                        const svg = await response.text();
                         // 移除所有fill属性，添加currentColor和stroke-width
                         let processedSvg = svg;
 
-                        if (name) {
+                        if (resolvedName) {
                             processedSvg = processedSvg
                                 .replace(/fill="[^"]*"/g, '')
                                 .replace(/stroke="[^"]*"/g, '')  // 移除原有的stroke
@@ -109,12 +167,14 @@ export const AriIcon: React.FC<AriIconProps> = ({
         };
 
         // 更新缓存键，因为属性可能已经改变
-        cacheKey.current = fullPath || (name ? `icon-${name}-${strokeWidth || 1}` : '');
+        cacheKey.current = fullPath || (resolvedName ? `icon-${resolvedName}-${strokeWidth || 1}` : '');
 
-        if (fullPath || name) {
+        if (fullPath || resolvedName) {
             loadSvg();
+        } else {
+            setSvgContent('');
         }
-    }, [fullPath, name, strokeWidth]);
+    }, [fullPath, iconCandidates, resolvedName, strokeWidth]);
 
     return (
         <span

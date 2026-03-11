@@ -1,35 +1,55 @@
 import { AriCarousel } from '@ari/components';
 import React, { useState } from 'react';
 
+const createSlideImage = (label: string, startColor: string, endColor: string) => {
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+            <defs>
+                <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="${startColor}" />
+                    <stop offset="100%" stop-color="${endColor}" />
+                </linearGradient>
+            </defs>
+            <rect width="600" height="800" rx="36" fill="url(#bg)" />
+            <circle cx="460" cy="180" r="88" fill="rgba(255,255,255,0.18)" />
+            <circle cx="150" cy="620" r="110" fill="rgba(255,255,255,0.12)" />
+            <text x="64" y="640" fill="white" font-size="72" font-family="Arial, sans-serif" font-weight="700">${label}</text>
+            <text x="64" y="704" fill="rgba(255,255,255,0.8)" font-size="26" font-family="Arial, sans-serif">Aries Kit Preview</text>
+        </svg>
+    `;
+
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+};
+
 // 毛玻璃轮播示例图片数据
 const carouselImages = [
     {
         id: 1,
-        src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=800&fit=crop&crop=center',
+        src: createSlideImage('Bloom', '#667eea', '#764ba2'),
         alt: 'bloom',
         title: 'bloom'
     },
     {
         id: 2,
-        src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=800&fit=crop&crop=center',
+        src: createSlideImage('Vivia', '#f093fb', '#f5576c'),
         alt: 'vivia',
         title: 'vivia'
     },
     {
         id: 3,
-        src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&h=800&fit=crop&crop=center',
+        src: createSlideImage('Petaled', '#4facfe', '#00f2fe'),
         alt: 'petaled',
         title: 'petaled'
     },
     {
         id: 4,
-        src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=800&fit=crop&crop=center',
+        src: createSlideImage('Nature', '#43cea2', '#185a9d'),
         alt: 'nature',
         title: 'nature'
     },
     {
         id: 5,
-        src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=600&h=800&fit=crop&crop=center',
+        src: createSlideImage('Forest', '#ff9a9e', '#fad0c4'),
         alt: 'forest',
         title: 'forest'
     }
@@ -184,7 +204,7 @@ export const ControlledCarouselExample: React.FC = () => {
                 activeIndex={activeIndex}
                 defaultActiveIndex={1}
                 duration={900}
-                onChange={setActiveIndex}
+                onSlideChange={setActiveIndex}
                 renderItem={(item, index) => (
                     <div
                         style={{

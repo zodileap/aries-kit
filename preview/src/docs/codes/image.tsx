@@ -4,7 +4,7 @@ import { AriImage, AriContainer, AriFlex, AriIcon, AriTypography } from '@aries-
 export const BackgroundDemo: React.FC = () => (
     <AriContainer style={{ width: '300px', height: '200px' }}>
         <AriImage
-            fileName="example.png"
+            fileName="empty.png"
             usage="background"
         />
     </AriContainer>
@@ -12,7 +12,7 @@ export const BackgroundDemo: React.FC = () => (
 
 export const BasicImage: React.FC = () => (
     <AriImage
-        fileName="example.png"
+        fileName="empty.png"
         usage="image"
         alt="基础示例图片"
         className="preview-image-outline"
@@ -56,7 +56,7 @@ export const FallbackDemo: React.FC = () => (
 
 export const PlaceholderDemo: React.FC = () => (
     <AriImage
-        fileName="large-image.jpg"
+        fileName="empty.png"
         usage="image"
         style={{ width: '300px' }}
         placeholder
@@ -65,7 +65,7 @@ export const PlaceholderDemo: React.FC = () => (
 
 export const PreviewDemo: React.FC = () => (
     <AriImage
-        fileName="example.png"
+        fileName="empty.png"
         usage="image"
         style={{ width: '250px' }}
         preview
@@ -75,13 +75,13 @@ export const PreviewDemo: React.FC = () => (
 export const SrcDemo: React.FC = () => (
     <AriFlex space={16}>
         <AriImage
-            src="https://picsum.photos/200"
+            src="/assets/logo/logo.png"
             usage="image"
             style={{ width: '200px' }}
         />
         
         <AriImage
-            src="https://picsum.photos/300/200"
+            src="/assets/images/empty.png"
             usage="background"
             style={{ width: '300px', height: '200px' }}
         />

@@ -156,10 +156,16 @@ const Doc: React.FC<DocProps> = ({
                                             <AriCode language="tsx" value={sourceCode} />
                                         }
                                     >
-                                        <DemoComponent />
+                                        <div className="doc-example-preview">
+                                            <DemoComponent />
+                                        </div>
                                     </AriCollapse>
                                 )}
-                                {!sourceCode && <DemoComponent />}
+                                {!sourceCode && (
+                                    <div className="doc-example-preview">
+                                        <DemoComponent />
+                                    </div>
+                                )}
                             </div>
                         );
                     })}

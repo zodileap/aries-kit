@@ -38,7 +38,7 @@ export const CustomIcon: React.FC = () => (
   <AriResult
     title="自定义图标"
     subTitle="使用自定义图标替代默认状态图标"
-    icon="smile"
+    icon="sentiment_satisfied"
   />
 );
 
@@ -46,7 +46,7 @@ export const CustomImage: React.FC = () => (
   <AriResult
     title="自定义图片"
     subTitle="使用自定义图片替代默认图标"
-    image="https://via.placeholder.com/150"
+    image="/assets/logo/logo.png"
   />
 );
 

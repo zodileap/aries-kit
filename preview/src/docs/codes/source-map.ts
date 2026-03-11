@@ -1162,7 +1162,7 @@ const [calloutType, setCalloutType] = useState<'note' | 'tip' | 'info' | 'warnin
                 activeIndex={activeIndex}
                 defaultActiveIndex={1}
                 duration={900}
-                onChange={setActiveIndex}
+                onSlideChange={setActiveIndex}
                 renderItem={(item, index) => (
                     <div
                         style={{
@@ -5632,7 +5632,7 @@ const [visible, setVisible] = useState(false);
             { min: 3, max: 20, message: "用户名长度必须在3-20个字符之间" },
           ]}
           help={<AriIcon name="info" />}
-          helpTooltip="用户名将用于登录系统，请谨慎选择"
+          tooltip="用户名将用于登录系统，请谨慎选择"
         >
           <AriInput placeholder="请输入用户名" />
         </AriFormItem>
@@ -5950,7 +5950,6 @@ export const UseHookDemo: React.FC = () => {
         </AriFlex>
     );
 };
-
 `,
     "UseHookDemo": `export const UseHookDemo: React.FC = () => {
   // 自定义表单字段组件
@@ -6271,14 +6270,14 @@ export const UseHookDemo: React.FC = () => {
     "BackgroundDemo": `export const BackgroundDemo: React.FC = () => (
   <AriContainer style={{ width: '300px', height: '200px' }}>
         <AriImage
-            fileName="example.png"
+            fileName="empty.png"
             usage="background"
         />
     </AriContainer>
 );`,
     "BasicImage": `export const BasicImage: React.FC = () => (
   <AriImage
-        fileName="example.png"
+        fileName="empty.png"
         usage="image"
         alt="基础示例图片"
         className="preview-image-outline"
@@ -6320,7 +6319,7 @@ export const UseHookDemo: React.FC = () => {
 );`,
     "PlaceholderDemo": `export const PlaceholderDemo: React.FC = () => (
   <AriImage
-        fileName="large-image.jpg"
+        fileName="empty.png"
         usage="image"
         style={{ width: '300px' }}
         placeholder
@@ -6328,7 +6327,7 @@ export const UseHookDemo: React.FC = () => {
 );`,
     "PreviewDemo": `export const PreviewDemo: React.FC = () => (
   <AriImage
-        fileName="example.png"
+        fileName="empty.png"
         usage="image"
         style={{ width: '250px' }}
         preview
@@ -6337,13 +6336,13 @@ export const UseHookDemo: React.FC = () => {
     "SrcDemo": `export const SrcDemo: React.FC = () => (
   <AriFlex space={16}>
         <AriImage
-            src="https://picsum.photos/200"
+            src="/assets/logo/logo.png"
             usage="image"
             style={{ width: '200px' }}
         />
         
         <AriImage
-            src="https://picsum.photos/300/200"
+            src="/assets/images/empty.png"
             usage="background"
             style={{ width: '300px', height: '200px' }}
         />
@@ -7371,7 +7370,7 @@ export const CustomLayout: React.FC = () => {
                 emptyMessage={
                     <AriEmpty 
                         description="暂无列表数据"
-                        image="https://placehold.co/96x96/png"
+                        image="/assets/images/empty.png"
                     />
                 }
             />
@@ -7433,19 +7432,19 @@ export const ComplexList: React.FC = () => {
         {
             title: 'Aries Kit',
             description: '面向 React 的前端基础库，提供组件、hooks 与基础交互能力',
-            avatar: 'https://placehold.co/96x96/png',
+            avatar: '/assets/logo/logo.png',
             tags: ['React', 'Hooks']
         },
         {
             title: '组件与交互',
             description: '覆盖常用组件场景，支持响应式布局、主题定制与细粒度交互',
-            avatar: 'https://placehold.co/96x96/png',
+            avatar: '/assets/logo/logo.png',
             tags: ['UI', '组件']
         },
         {
             title: '主题与样式',
             description: '内置图标、颜色、排版与样式变量，方便建立一致的前端体验',
-            avatar: 'https://placehold.co/96x96/png',
+            avatar: '/assets/logo/logo.png',
             tags: ['Theme', 'Styles']
         }
     ];
@@ -7487,19 +7486,19 @@ export const ComplexList: React.FC = () => {
         {
             title: 'Aries Kit',
             description: '面向 React 的前端基础库，提供组件、hooks 与基础交互能力',
-            avatar: 'https://placehold.co/96x96/png',
+            avatar: '/assets/logo/logo.png',
             tags: ['React', 'Hooks']
         },
         {
             title: '组件与交互',
             description: '覆盖常用组件场景，支持响应式布局、主题定制与细粒度交互',
-            avatar: 'https://placehold.co/96x96/png',
+            avatar: '/assets/logo/logo.png',
             tags: ['UI', '组件']
         },
         {
             title: '主题与样式',
             description: '内置图标、颜色、排版与样式变量，方便建立一致的前端体验',
-            avatar: 'https://placehold.co/96x96/png',
+            avatar: '/assets/logo/logo.png',
             tags: ['Theme', 'Styles']
         }
     ];
@@ -9879,14 +9878,14 @@ const [value, setValue] = useState<string>('default');
 <AriResult
     title="自定义图标"
     subTitle="使用自定义图标替代默认状态图标"
-    icon="smile"
+    icon="sentiment_satisfied"
   />
 );`,
     "CustomImage": `export const CustomImage: React.FC = () => (
 <AriResult
     title="自定义图片"
     subTitle="使用自定义图片替代默认图标"
-    image="https://via.placeholder.com/150"
+    image="/assets/logo/logo.png"
   />
 );`,
     "ExtraContent": `export const ExtraContent: React.FC = () => (
@@ -22550,7 +22549,7 @@ export const UploadListControlExample: React.FC = () => {
       type: 'image/png',
       status: 'uploading',
       progress: 64,
-      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+      url: '/assets/logo/logo.png'
     },
     {
       id: 'demo-doc',
@@ -22948,7 +22947,7 @@ export const UploadListControlExample: React.FC = () => {
       type: 'image/png',
       status: 'uploading',
       progress: 64,
-      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+      url: '/assets/logo/logo.png'
     },
     {
       id: 'demo-doc',
@@ -23317,7 +23316,7 @@ export const UploadListControlExample: React.FC = () => {
       type: 'image/png',
       status: 'uploading',
       progress: 64,
-      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+      url: '/assets/logo/logo.png'
     },
     {
       id: 'demo-doc',
@@ -23654,7 +23653,7 @@ export const UploadListControlExample: React.FC = () => {
       type: 'image/png',
       status: 'uploading',
       progress: 64,
-      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+      url: '/assets/logo/logo.png'
     },
     {
       id: 'demo-doc',
@@ -23940,7 +23939,7 @@ export const UploadListControlExample: React.FC = () => {
       type: 'image/png',
       status: 'uploading',
       progress: 64,
-      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+      url: '/assets/logo/logo.png'
     },
     {
       id: 'demo-doc',
@@ -24187,7 +24186,7 @@ export const UploadListControlExample: React.FC = () => {
       type: 'image/png',
       status: 'uploading',
       progress: 64,
-      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+      url: '/assets/logo/logo.png'
     },
     {
       id: 'demo-doc',
@@ -24399,7 +24398,7 @@ export const UploadListControlExample: React.FC = () => {
       type: 'image/png',
       status: 'uploading',
       progress: 64,
-      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+      url: '/assets/logo/logo.png'
     },
     {
       id: 'demo-doc',
@@ -24529,7 +24528,7 @@ export const UploadListControlExample: React.FC = () => {
       type: 'image/png',
       status: 'uploading',
       progress: 64,
-      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+      url: '/assets/logo/logo.png'
     },
     {
       id: 'demo-doc',
@@ -24615,7 +24614,7 @@ const [fileList, setFileList] = useState<AriUploadFile[]>([
       type: 'image/png',
       status: 'uploading',
       progress: 64,
-      url: 'https://via.placeholder.com/120x80.png?text=Preview'
+      url: '/assets/logo/logo.png'
     },
     {
       id: 'demo-doc',

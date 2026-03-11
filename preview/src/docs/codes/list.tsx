@@ -97,7 +97,7 @@ export const EmptyList: React.FC = () => {
                 emptyMessage={
                     <AriEmpty 
                         description="暂无列表数据"
-                        image="https://placehold.co/96x96/png"
+                        image="/assets/images/empty.png"
                     />
                 }
             />
@@ -161,19 +161,19 @@ export const ComplexList: React.FC = () => {
         {
             title: 'Aries Kit',
             description: '面向 React 的前端基础库，提供组件、hooks 与基础交互能力',
-            avatar: 'https://placehold.co/96x96/png',
+            avatar: '/assets/logo/logo.png',
             tags: ['React', 'Hooks']
         },
         {
             title: '组件与交互',
             description: '覆盖常用组件场景，支持响应式布局、主题定制与细粒度交互',
-            avatar: 'https://placehold.co/96x96/png',
+            avatar: '/assets/logo/logo.png',
             tags: ['UI', '组件']
         },
         {
             title: '主题与样式',
             description: '内置图标、颜色、排版与样式变量，方便建立一致的前端体验',
-            avatar: 'https://placehold.co/96x96/png',
+            avatar: '/assets/logo/logo.png',
             tags: ['Theme', 'Styles']
         }
     ];

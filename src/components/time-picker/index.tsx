@@ -207,6 +207,81 @@ export const AriTimePicker: React.FC<AriTimePickerProps> = ({
 
     const displayValue = useMemo(() => formatTime(selectedTime), [formatTime, selectedTime]);
     const hasValue = !!selectedTime;
+    const [inputValue, setInputValue] = useState(displayValue);
+
+    useEffect(() => {
+        setInputValue(displayValue);
+    }, [displayValue]);
+
+    const parseInputTime = useCallback((text: string): Date | undefined => {
+        const normalized = text.trim();
+
+        if (!normalized) {
+            return undefined;
+        }
+
+        const match = normalized.match(/^(\d{1,2})(?::(\d{1,2}))?(?::(\d{1,2}))?\s*(am|pm)?$/i);
+        if (!match) {
+            return undefined;
+        }
+
+        let [, hourText, minuteText = '0', secondText = '0', periodText] = match;
+        let hours = Number(hourText);
+        const minutes = Number(minuteText);
+        const seconds = Number(secondText);
+
+        if ([hours, minutes, seconds].some(value => Number.isNaN(value))) {
+            return undefined;
+        }
+
+        if (minutes < 0 || minutes > 59 || seconds < 0 || seconds > 59) {
+            return undefined;
+        }
+
+        if (use12Hours || periodText) {
+            if (hours < 1 || hours > 12) {
+                return undefined;
+            }
+
+            const period = (periodText || currentPeriod).toUpperCase();
+            if (period === 'PM' && hours !== 12) {
+                hours += 12;
+            } else if (period === 'AM' && hours === 12) {
+                hours = 0;
+            }
+        } else if (hours < 0 || hours > 23) {
+            return undefined;
+        }
+
+        const nextDate = new Date(tempTime || selectedTime || now);
+        nextDate.setHours(hours, minutes, showSecond ? seconds : 0, 0);
+        return nextDate;
+    }, [currentPeriod, now, selectedTime, showSecond, tempTime, use12Hours]);
+
+    const commitInputValue = useCallback(() => {
+        if (readonly) {
+            return;
+        }
+
+        if (!inputValue.trim()) {
+            setSelectedTime(undefined);
+            setTempTime(now);
+            onChange?.(undefined as any);
+            setInputValue('');
+            return;
+        }
+
+        const parsedTime = parseInputTime(inputValue);
+        if (!parsedTime) {
+            setInputValue(displayValue);
+            return;
+        }
+
+        setSelectedTime(parsedTime);
+        setTempTime(parsedTime);
+        onChange?.(parsedTime);
+        setInputValue(formatTime(parsedTime));
+    }, [displayValue, formatTime, inputValue, now, onChange, parseInputTime, readonly]);
 
     // 用于判断时间是否禁用
     const isTimeDisabled = useCallback((hour: number, minute: number, second: number, period?: string): boolean => {
@@ -243,6 +318,18 @@ export const AriTimePicker: React.FC<AriTimePickerProps> = ({
             inputRef.current?.focus();
         }, 0);
     }, [disabled, embedded]);
+
+    const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        if (readonly) {
+            return;
+        }
+
+        setInputValue(event.target.value);
+    }, [readonly]);
+
+    const handleInputBlur = useCallback(() => {
+        commitInputValue();
+    }, [commitInputValue]);
 
     const handleClear = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
@@ -367,13 +454,16 @@ export const AriTimePicker: React.FC<AriTimePickerProps> = ({
         if (e.key === 'Escape') {
             setPopupVisible(false);
         } else if (e.key === 'Enter') {
-            if (!popupVisible) {
+            if (!readonly) {
+                commitInputValue();
+                setPopupVisible(false);
+            } else if (!popupVisible) {
                 setPopupVisible(true);
             } else {
                 handleConfirm();
             }
         }
-    }, [popupVisible, handleConfirm]);
+    }, [commitInputValue, handleConfirm, popupVisible, readonly]);
 
     // 5. 外部点击处理
     useEffect(() => {
@@ -431,7 +521,7 @@ export const AriTimePicker: React.FC<AriTimePickerProps> = ({
     const renderSuffix = useCallback(() => {
         return (
             <div className={cs.e('suffix-icons')}>
-                {clearable && hasValue && (
+                {clearable && hasValue && !disabled && (
                     <div 
                         className={cs.e('clear-icon')} 
                         onClick={handleClear}
@@ -444,7 +534,7 @@ export const AriTimePicker: React.FC<AriTimePickerProps> = ({
                 </div>
             </div>
         );
-    }, [cs, clearable, hasValue, handleClear]);
+    }, [cs, clearable, disabled, hasValue, handleClear]);
 
     const renderHourColumn = useCallback(() => {
         return (
@@ -692,10 +782,12 @@ export const AriTimePicker: React.FC<AriTimePickerProps> = ({
                     className={cs.e('input')}
                     type="text"
                     placeholder={placeholder}
-                    value={displayValue}
+                    value={readonly ? displayValue : inputValue}
                     readOnly={readonly}
                     disabled={disabled}
+                    onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
+                    onBlur={handleInputBlur}
                 />
                 {renderSuffix()}
             </div>

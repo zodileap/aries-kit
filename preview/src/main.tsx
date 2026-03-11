@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AriApp, setAppConfig } from '@ari/init';
 import Layout from './layout';
 import { menuConfig, routes } from './config';
@@ -8,13 +8,21 @@ import { Navigation } from './layout/header';
 import "@ari/theme/components/index.scss"
 
 const previewBaseName = import.meta.env.BASE_URL.replace(/\/$/, '');
+const defaultPreviewRoute = '/icon';
 
 const Preview = () => {
     return (
-        <BrowserRouter basename={previewBaseName}>
+        <BrowserRouter
+            basename={previewBaseName}
+            future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true,
+            }}
+        >
             <Layout menu={menuConfig}>
                 <Suspense fallback={<div>Loading...</div>}>
                     <Routes>
+                        <Route path="/" element={<Navigate replace to={defaultPreviewRoute} />} />
                         {routes.map(route => (
                             <Route
                                 key={route.path}
@@ -22,6 +30,7 @@ const Preview = () => {
                                 element={<route.component />}
                             />
                         ))}
+                        <Route path="*" element={<Navigate replace to={defaultPreviewRoute} />} />
                     </Routes>
                 </Suspense>
             </Layout>
