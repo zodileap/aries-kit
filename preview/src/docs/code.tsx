@@ -74,7 +74,7 @@ export const codeExamples: Record<string, DocExample> = {
     diff: {
         title: 'Diff 模式',
         key: 'diff-lines',
-        description: '通过 diffLines 属性配置新增和删除行高亮，并在头部展示变更统计。',
+        description: '通过 diffLines 属性配置新增和删除整行高亮，并在头部展示变更统计。',
         demos: [{
             component: DiffCodeDemo
         }, {

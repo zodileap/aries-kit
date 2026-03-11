@@ -111,6 +111,7 @@ export const useCodeDecorations = () => {
       options: {
         isWholeLine: true,
         className: 'diff-line-add',
+        marginClassName: 'diff-line-add-margin',
         lineNumberClassName: 'diff-line-add-number',
       }
     }));
@@ -120,6 +121,7 @@ export const useCodeDecorations = () => {
       options: {
         isWholeLine: true,
         className: 'diff-line-remove',
+        marginClassName: 'diff-line-remove-margin',
         lineNumberClassName: 'diff-line-remove-number',
       }
     }));

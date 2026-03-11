@@ -1,5 +1,9 @@
 @use "../global/index.scss" as *;
 
+@mixin code-diff-background($color-name) {
+    background-color: color-mix(in srgb, #{getVar(color, $color-name)} 14%, transparent) !important;
+}
+
 .#{$namespace}-code {
     border: 1px solid getVar(color, border);
     border-radius: getVar(border-radius);
@@ -225,7 +229,7 @@
 }
 
 .diff-line-add {
-    background-color: rgba(getVar(color, success), 0.14) !important;
+    @include code-diff-background(success);
     position: relative;
     padding-left: 5px !important;
 
@@ -241,8 +245,12 @@
     }
 }
 
+.diff-line-add-margin {
+    @include code-diff-background(success);
+}
+
 .diff-line-remove {
-    background-color: rgba(getVar(color, danger), 0.14) !important;
+    @include code-diff-background(danger);
     position: relative;
     padding-left: 5px !important;
 
@@ -256,6 +264,10 @@
         background-color: getVar(color, danger);
         z-index: 1;
     }
+}
+
+.diff-line-remove-margin {
+    @include code-diff-background(danger);
 }
 
 .diff-line-add-number {
