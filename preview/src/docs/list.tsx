@@ -8,6 +8,7 @@ import {
     HeaderFooterList, 
     EmptyList, 
     LoadingList, 
+    SortableList,
     ListItemDemo,
     ComplexList
 } from './codes/list';
@@ -66,6 +67,15 @@ export const listExamples: Record<string, DocExample> = {
         demos: [{
             component: LoadingList,
             sourceCode: sourceMap['list']['LoadingList']
+        }]
+    },
+    sortable: {
+        title: '拖拽排序',
+        key: 'sortable',
+        description: '通过 allowDrag 开启拖拽排序，配合 onDragSort 可以将新的顺序同步回业务数据。',
+        demos: [{
+            component: SortableList,
+            sourceCode: sourceMap['list']['SortableList']
         }]
     },
     listItem: {
@@ -155,6 +165,18 @@ export const listAPI: DocAPI = {
             desc: '空数据时的提示文本',
             type: 'React.ReactNode',
             default: "'暂无数据'"
+        },
+        {
+            param: 'allowDrag',
+            desc: '是否允许在 dataSource 模式下通过拖拽调整列表顺序',
+            type: 'boolean',
+            default: 'false'
+        },
+        {
+            param: 'onDragSort',
+            desc: '拖拽排序时的回调，返回源索引、目标索引和排序后的数据数组',
+            type: '(fromIndex: number, toIndex: number, allItems: any[]) => void',
+            default: 'undefined'
         },
         {
             param: 'children',

@@ -1,7 +1,8 @@
-import React, { useMemo, useCallback } from 'react';
-import { useCss } from "@ari/utils";
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
+import { useCss, useDragSort } from "@ari/utils";
 import { AriListProps, AriListItemProps } from "@ari/types/components";
 import { AriEmpty } from "@ari/components/empty";
+import { AriIcon } from "@ari/components/icon";
 
 /**
  * 列表组件
@@ -17,6 +18,7 @@ export const AriList: React.FC<AriListProps> = ({
     children,
     dataSource,
     renderItem,
+    allowDrag = false,
     loading = false,
     loadingMessage = '加载中...',
     bordered = false,
@@ -25,34 +27,86 @@ export const AriList: React.FC<AriListProps> = ({
     header,
     footer,
     emptyMessage = '暂无数据',
+    onDragSort,
     ...restProps
 }) => {
     const cn = useCss('list');
+    const [innerDataSource, setInnerDataSource] = useState<any[]>(() => dataSource ?? []);
+
+    useEffect(() => {
+        if (dataSource !== undefined) {
+            setInnerDataSource(dataSource);
+        }
+    }, [dataSource]);
+
+    const currentDataSource = dataSource !== undefined ? innerDataSource : undefined;
+    const canDrag = allowDrag && !loading && !!currentDataSource && currentDataSource.length > 1;
+
+    const { dragState, getDragItemProps } = useDragSort({
+        items: currentDataSource ?? [],
+        onSortChange: (newItems, fromIndex, toIndex) => {
+            setInnerDataSource(newItems);
+            onDragSort?.(fromIndex, toIndex, newItems);
+        }
+    });
+
+    const getItemKey = useCallback((item: any, index: number) => {
+        if (item && typeof item === 'object') {
+            const candidate = item.id ?? item.key;
+
+            if (typeof candidate === 'string' || typeof candidate === 'number') {
+                return candidate;
+            }
+        }
+
+        return `list-item-${index}`;
+    }, []);
 
     // 渲染列表项
     const renderListItem = useCallback((item: any, index: number) => {
         if (renderItem) {
+            const isDragging = canDrag && dragState.dragIndex === index;
+            const isDragOver = canDrag && dragState.hoverIndex === index;
+            const dragProps = canDrag ? getDragItemProps(index) : {};
+
             return (
                 <AriListItem 
-                    key={index} 
-                    className={cn.e('item')}
-                    bordered={bordered}
-                    split={split && index < dataSource!.length - 1}
+                    key={getItemKey(item, index)}
+                    className={cn.gen(
+                        canDrag ? cn.is('draggable', true) : '',
+                        isDragging ? cn.is('dragging', true) : '',
+                        isDragOver ? cn.is('drag-over', true) : ''
+                    )}
+                    split={split && index < (currentDataSource?.length ?? 0) - 1}
+                    {...dragProps}
                 >
-                    {renderItem(item, index)}
+                    <div className={cn.e('item-main')}>
+                        {canDrag && (
+                            <div className={cn.e('item-drag-handle')} aria-hidden="true">
+                                <AriIcon name="drag_indicator" />
+                            </div>
+                        )}
+                        <div className={cn.e('item-body')}>
+                            {renderItem(item, index)}
+                        </div>
+                    </div>
                 </AriListItem>
             );
         }
         return null;
-    }, [renderItem, cn, bordered, split, dataSource]);
+    }, [renderItem, cn, bordered, split, currentDataSource, canDrag, dragState.dragIndex, dragState.hoverIndex, getDragItemProps, getItemKey]);
 
     // 渲染数据源内容
     const renderDataSourceContent = useMemo(() => {
-        if (!dataSource || dataSource.length === 0) {
-            return <AriEmpty description={typeof emptyMessage === 'string' ? emptyMessage : '暂无数据'} />;
+        if (!currentDataSource || currentDataSource.length === 0) {
+            if (typeof emptyMessage === 'string') {
+                return <AriEmpty description={emptyMessage} />;
+            }
+
+            return emptyMessage;
         }
-        return dataSource.map(renderListItem);
-    }, [dataSource, renderListItem, emptyMessage]);
+        return currentDataSource.map(renderListItem);
+    }, [currentDataSource, renderListItem, emptyMessage]);
 
     // 渲染主要内容
     const renderContent = useMemo(() => {
@@ -60,12 +114,12 @@ export const AriList: React.FC<AriListProps> = ({
             return <div className={cn.e('loading')}>{loadingMessage}</div>;
         }
         
-        if (dataSource !== undefined) {
+        if (currentDataSource !== undefined) {
             return renderDataSourceContent;
         }
         
         return children;
-    }, [loading, dataSource, children, renderDataSourceContent, cn, loadingMessage]);
+    }, [loading, currentDataSource, children, renderDataSourceContent, cn, loadingMessage]);
 
     return (
         <div 

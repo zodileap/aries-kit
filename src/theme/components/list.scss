@@ -89,10 +89,47 @@
     &:hover {
       background: linear-gradient(135deg, getVar(color, bg-active) 0%, getVar(color, bg-secondary) 100%);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+      .#{$namespace}-list__item-drag-handle {
+        color: getVar(color, brand);
+        background-color: rgba(getVar(color, brand), 0.08);
+      }
     }
 
     &:active {
       transform: scale(0.98);
+    }
+
+    &.#{$namespace}-is-draggable {
+      cursor: grab;
+      user-select: none;
+    }
+
+    &.#{$namespace}-is-dragging {
+      opacity: 0.82;
+      transform: scale(0.98);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+      z-index: 2;
+      background: getVar(color, bg-selected);
+      border-color: getVar(color, border-brand);
+    }
+
+    &.#{$namespace}-is-drag-over {
+      background: getVar(color, bg-active);
+      border-color: getVar(color, brand);
+      box-shadow: getVar(color, box-shadow);
+      transform: translateX(getVar(inset, sm));
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: getVar(inset, xs);
+        bottom: getVar(inset, xs);
+        width: 3px;
+        border-radius: 999px;
+        background: getVar(color, brand);
+      }
     }
 
     // 列表项变体
@@ -141,6 +178,37 @@
     flex: 1;
     min-width: 0;
     transition: all getVar(duration, element-interaction);
+  }
+
+  &__item-main {
+    display: flex;
+    align-items: flex-start;
+    gap: getVar(inset, sm);
+    width: 100%;
+    min-width: 0;
+  }
+
+  &__item-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__item-drag-handle {
+    @include flex();
+    flex: 0 0 auto;
+    width: calc(getVar(element-size, sm) - 2px);
+    height: calc(getVar(element-size, sm) - 2px);
+    margin-top: 2px;
+    cursor: grab;
+    color: getVar(color, text-tertiary);
+    border-radius: getVar(border-radius, sm);
+    background-color: rgba(getVar(color, bg-secondary), 0.9);
+    transition: all getVar(duration, element-interaction);
+
+    .#{$namespace}-icon {
+      font-size: getVar(font-size, title-4);
+      color: inherit;
+    }
   }
 
   &__item-action {

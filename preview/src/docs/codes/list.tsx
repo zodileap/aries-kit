@@ -1,4 +1,4 @@
-import { AriList, AriListItem, AriFlex, AriButton, AriAvatar, AriTag, AriSpin, AriTypography, AriImage, AriEmpty } from '@aries-kit/react';
+import { AriList, AriListItem, AriFlex, AriButton, AriAvatar, AriTag, AriTypography, AriImage, AriEmpty } from '@aries-kit/react';
 import React, { useState } from 'react';
 
 export const BasicList: React.FC = () => {
@@ -130,6 +130,45 @@ export const LoadingList: React.FC = () => {
     );
 };
 
+export const SortableList: React.FC = () => {
+    const [tasks, setTasks] = useState([
+        { id: 'todo-1', title: '确认需求范围', owner: '产品', status: '待开始' },
+        { id: 'todo-2', title: '拆分交互细节', owner: '设计', status: '进行中' },
+        { id: 'todo-3', title: '联调接口返回', owner: '前端', status: '待验证' }
+    ]);
+    const [sortMessage, setSortMessage] = useState('拖动左侧手柄可调整任务优先级');
+
+    return (
+        <AriFlex space={16} vertical>
+            <AriTypography variant='h3'>{sortMessage}</AriTypography>
+            <AriList
+                bordered
+                allowDrag
+                header="可拖拽任务列表"
+                dataSource={tasks}
+                onDragSort={(fromIndex, toIndex, allItems) => {
+                    const nextTasks = [...allItems] as typeof tasks;
+                    setTasks(nextTasks);
+                    setSortMessage(`已将「${nextTasks[toIndex].title}」从第 ${fromIndex + 1} 位移动到第 ${toIndex + 1} 位`);
+                }}
+                renderItem={(item) => (
+                    <AriFlex align="center" justify="space-between" space={16}>
+                        <div>
+                            <AriTypography variant='h3' style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                                {item.title}
+                            </AriTypography>
+                            <AriTypography variant='h3' color='secondary'>
+                                负责人：{item.owner}
+                            </AriTypography>
+                        </div>
+                        <AriTag>{item.status}</AriTag>
+                    </AriFlex>
+                )}
+            />
+        </AriFlex>
+    );
+};
+
 export const ListItemDemo: React.FC = () => {
     const data = [1, 2, 3];
 
@@ -162,19 +201,28 @@ export const ComplexList: React.FC = () => {
             title: 'Aries Kit',
             description: '面向 React 的前端基础库，提供组件、hooks 与基础交互能力',
             avatar: '/assets/logo/logo.png',
-            tags: ['React', 'Hooks']
+            tags: [
+                { label: 'React', color: 'pale-blue' },
+                { label: 'Hooks', color: 'pale-violet' }
+            ]
         },
         {
             title: '组件与交互',
             description: '覆盖常用组件场景，支持响应式布局、主题定制与细粒度交互',
             avatar: '/assets/logo/logo.png',
-            tags: ['UI', '组件']
+            tags: [
+                { label: 'UI', color: 'pale-green' },
+                { label: '组件', color: 'pale-yellow' }
+            ]
         },
         {
             title: '主题与样式',
             description: '内置图标、颜色、排版与样式变量，方便建立一致的前端体验',
             avatar: '/assets/logo/logo.png',
-            tags: ['Theme', 'Styles']
+            tags: [
+                { label: 'Theme', color: 'pale-persimmon' },
+                { label: 'Styles', color: 'pale-pink' }
+            ]
         }
     ];
 
@@ -184,26 +232,73 @@ export const ComplexList: React.FC = () => {
                 <AriListItem
                     key={item.title}
                     split={index < data.length - 1}
-                    actions={[
-                        <AriButton key="view" type="text">查看</AriButton>,
-                        <AriButton key="edit" type="text">编辑</AriButton>
-                    ]}
-                    extra={
-                        <AriImage
-                            width={120}
-                            height={80}
-                            src={item.avatar}
-                            alt={item.title}
-                        />
-                    }
                 >
-                    <AriTypography variant='h3' style={{ fontSize: '16px', fontWeight: 'bold' }}>{item.title}</AriTypography>
-                    <AriTypography variant='h3' color='secondary'>{item.description}</AriTypography>
-                    <div style={{ marginTop: '8px' }}>
-                        {item.tags.map(tag => (
-                            <AriTag key={tag} style={{ marginRight: '8px' }}>{tag}</AriTag>
-                        ))}
-                    </div>
+                    <AriFlex
+                        align="flex-start"
+                        justify="space-between"
+                        space={24}
+                        wrap
+                    >
+                        <div style={{ flex: '1 1 420px', minWidth: 0 }}>
+                            <AriFlex vertical align="flex-start" space={14}>
+                                <AriFlex vertical align="flex-start" space={8}>
+                                    <AriTypography
+                                        variant='h3'
+                                        style={{ fontSize: '20px', fontWeight: 700, lineHeight: 1.2 }}
+                                    >
+                                        {item.title}
+                                    </AriTypography>
+                                    <AriTypography
+                                        variant='h3'
+                                        color='secondary'
+                                        style={{ fontSize: '15px', lineHeight: 1.75 }}
+                                    >
+                                        {item.description}
+                                    </AriTypography>
+                                </AriFlex>
+
+                                <AriFlex wrap align="center" space={8}>
+                                    {item.tags.map((tag) => (
+                                        <AriTag
+                                            key={tag.label}
+                                            size="sm"
+                                            bordered
+                                            color={tag.color}
+                                        >
+                                            {tag.label}
+                                        </AriTag>
+                                    ))}
+                                </AriFlex>
+
+                                <AriFlex space={12} align="center">
+                                    <AriButton key="view" type="text" size="sm" icon="visibility">
+                                        查看
+                                    </AriButton>
+                                    <AriButton key="edit" type="text" size="sm" icon="edit">
+                                        编辑
+                                    </AriButton>
+                                </AriFlex>
+                            </AriFlex>
+                        </div>
+
+                        <div
+                            style={{
+                                width: 112,
+                                padding: 10,
+                                borderRadius: 18,
+                                background: 'linear-gradient(180deg, var(--z-color-bg-secondary) 0%, var(--z-color-bg) 100%)',
+                                boxShadow: '0 10px 24px rgba(15, 23, 42, 0.08)'
+                            }}
+                        >
+                            <AriImage
+                                width={92}
+                                height={92}
+                                src={item.avatar}
+                                alt={item.title}
+                                style={{ borderRadius: 16 }}
+                            />
+                        </div>
+                    </AriFlex>
                 </AriListItem>
             ))}
         </AriList>

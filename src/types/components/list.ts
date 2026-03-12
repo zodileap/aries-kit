@@ -21,6 +21,14 @@ export interface AriListProps extends React.HTMLAttributes<HTMLDivElement> {
      * default: undefined
      */
     dataSource?: any[];
+
+    /**
+     * 是否允许拖拽排序
+     * 仅在使用 dataSource 渲染列表时生效，开启后可通过拖拽调整项目顺序
+     * 
+     * default: false
+     */
+    allowDrag?: boolean;
     
     /**
      * 列表项渲染函数
@@ -85,6 +93,22 @@ export interface AriListProps extends React.HTMLAttributes<HTMLDivElement> {
      * default: '暂无数据'
      */
     emptyMessage?: React.ReactNode;
+
+    /**
+     * 拖拽排序时的回调
+     * 当用户通过拖拽改变 dataSource 的显示顺序时触发
+     * 
+     * Params:
+     * 
+     *   - fromIndex: 拖拽源索引
+     *   - toIndex: 拖拽目标索引
+     *   - allItems: 排序后的完整数据数组
+     * 
+     * Returns:
+     *   
+     *   void: 无返回值
+     */
+    onDragSort?: (fromIndex: number, toIndex: number, allItems: any[]) => void;
     
     /**
      * 子元素
