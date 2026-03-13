@@ -534,7 +534,7 @@ export function useMarkdown(config?: CodeBlockConfig) {
 
         while (currentIndex < lines.length) {
           const currentLine = lines[currentIndex];
-          const taskMatch = currentLine.match(/^- \[([x ])\]\s+(.+)$/);
+          const taskMatch = currentLine.match(/^- \[([x ])\]\s*(.*)$/);
           if (taskMatch) {
             listItems.push({
               type: 'text',
@@ -548,7 +548,7 @@ export function useMarkdown(config?: CodeBlockConfig) {
             continue;
           }
 
-          const listMatch = currentLine.match(/^(?:[*-]|\d+\.)\s+(.+)$/);
+          const listMatch = currentLine.match(/^(?:[*-]|\d+\.)\s*(.*)$/);
           if (listMatch) {
             listItems.push({
               type: 'text',
@@ -559,6 +559,15 @@ export function useMarkdown(config?: CodeBlockConfig) {
           }
 
           break;
+        }
+
+        if (listItems.length === 0) {
+          elements.push({
+            type: 'paragraph',
+            children: parseInlineMarkdown(line),
+          });
+          currentIndex++;
+          continue;
         }
 
         elements.push({
