@@ -113,6 +113,14 @@ export interface AriButtonProps extends ButtonPropsWithoutRef {
     ghost?: boolean;
 
     /**
+     * 是否让彩色按钮使用同色系文字
+     * 开启后会为彩色按钮应用同色系高对比背景与文字；关闭后文字回退为中性色。
+     *
+     * default: true
+     */
+    useColorText?: boolean;
+
+    /**
      * 按钮点击事件处理函数
      * 当按钮被点击时触发的回调函数
      * 

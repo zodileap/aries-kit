@@ -1,4 +1,4 @@
-import { AriButton } from "@aries-kit/react"
+import { AriButton, AriFlex, AriTypography } from "@aries-kit/react"
 
 export const BasicButton: React.FC = () => (
     <>
@@ -12,14 +12,30 @@ export const BasicButton: React.FC = () => (
 );
 
 export const ColorDemo: React.FC = () => (
-    <>
-        <AriButton color="primary" label="主要按钮" />
-        <AriButton color="success" label="成功按钮" />
-        <AriButton color="warning" label="警告按钮" />
-        <AriButton color="danger" label="危险按钮" />
-        <AriButton color="info" label="信息按钮" />
-        <AriButton color="brand" label="品牌按钮" />
-    </>
+    <AriFlex vertical space={16} style={{ width: '100%' }}>
+        <AriFlex vertical space={8}>
+            <AriTypography variant='caption' value='默认开启，同色系文字会自动配合同色浅底保持对比度。' />
+            <AriFlex wrap space={12}>
+                <AriButton color="primary" label="主要按钮" />
+                <AriButton color="success" label="成功按钮" />
+                <AriButton color="warning" label="警告按钮" />
+                <AriButton color="danger" label="危险按钮" />
+                <AriButton color="info" label="信息按钮" />
+                <AriButton color="brand" label="品牌按钮" />
+            </AriFlex>
+        </AriFlex>
+        <AriFlex vertical space={8}>
+            <AriTypography variant='caption' value='关闭后，彩色按钮文字会回退为中性色。' />
+            <AriFlex wrap space={12}>
+                <AriButton color="primary" label="主要按钮" useColorText={false} />
+                <AriButton color="success" label="成功按钮" useColorText={false} />
+                <AriButton color="warning" label="警告按钮" useColorText={false} />
+                <AriButton color="danger" label="危险按钮" useColorText={false} />
+                <AriButton color="info" label="信息按钮" useColorText={false} />
+                <AriButton color="brand" label="品牌按钮" useColorText={false} />
+            </AriFlex>
+        </AriFlex>
+    </AriFlex>
 );
 
 export const ShapeDemo: React.FC = () => (

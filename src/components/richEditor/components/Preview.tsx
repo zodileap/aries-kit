@@ -49,14 +49,26 @@ export const Preview: React.FC<PreviewProps> = ({ className }) => {
     useEditor.visualEditorRef.current = null;
   }, [isEditableVisualMode, useEditor]);
 
+  useEffect(() => () => {
+    if (useEditor.previewRef.current === containerRef.current) {
+      useEditor.previewRef.current = null;
+    }
+
+    if (useEditor.visualEditorRef.current === containerRef.current) {
+      useEditor.visualEditorRef.current = null;
+    }
+  }, [useEditor]);
+
   if (isEditableVisualMode) {
     return (
       <div
+        key="rich-editor-preview-editable"
         ref={containerRef}
         className={cn.gen(className, cn.e('preview'), cn.em('preview', 'editable'))}
         contentEditable
         suppressContentEditableWarning
         data-rich-editor-root="true"
+        onBeforeInput={useEditor.handleVisualBeforeInput}
         onInput={useEditor.handleVisualInput}
         onKeyDown={handleKeyDown}
         onPaste={useEditor.handlePaste}
@@ -70,6 +82,7 @@ export const Preview: React.FC<PreviewProps> = ({ className }) => {
 
   return (
     <div
+      key="rich-editor-preview-rendered"
       ref={containerRef}
       className={cn.gen(className, cn.e('preview'))}
     >

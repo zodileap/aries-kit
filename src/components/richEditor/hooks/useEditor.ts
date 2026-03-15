@@ -197,6 +197,84 @@ const createVisualListItem = (
   return item;
 };
 
+const createEmptyVisualListItem = (
+  kind: 'unordered' | 'ordered' | 'task',
+): HTMLLIElement => {
+  const item = document.createElement('li');
+
+  if (kind === 'task') {
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    item.appendChild(checkbox);
+  }
+
+  item.innerHTML += '<br />';
+  return item;
+};
+
+const normalizeVisualText = (value = ''): string => (
+  value
+    .replace(/\u00a0/g, ' ')
+    .replace(/\u200b/g, '')
+);
+
+const resolveVisualAutoFormatContext = (
+  editor: HTMLElement,
+  selection: Selection,
+): {
+  block: HTMLElement;
+  range: Range;
+  beforeText: string;
+  afterText: string;
+  blockText: string;
+} | null => {
+  if (selection.rangeCount === 0) {
+    return null;
+  }
+
+  const range = selection.getRangeAt(0);
+  if (!range.collapsed || !editor.contains(range.startContainer)) {
+    return null;
+  }
+
+  const block = resolveVisualBlockElement(range.startContainer, range.startOffset, editor);
+  if (!block || block.parentElement !== editor || isVisualListElement(block)) {
+    return null;
+  }
+
+  const beforeRange = document.createRange();
+  beforeRange.selectNodeContents(block);
+  beforeRange.setEnd(range.startContainer, range.startOffset);
+
+  const afterRange = document.createRange();
+  afterRange.selectNodeContents(block);
+  afterRange.setStart(range.startContainer, range.startOffset);
+
+  return {
+    block,
+    range,
+    beforeText: normalizeVisualText(beforeRange.toString()),
+    afterText: normalizeVisualText(afterRange.toString()),
+    blockText: normalizeVisualText(block.textContent || ''),
+  };
+};
+
+const detectVisualAutoListKind = (
+  value: string,
+): 'unordered' | 'ordered' | null => {
+  const normalized = value.trim();
+
+  if (/^[-*+]$/.test(normalized)) {
+    return 'unordered';
+  }
+
+  if (/^\d+\.$/.test(normalized)) {
+    return 'ordered';
+  }
+
+  return null;
+};
+
 const rangeToHtml = (range: Range): string => {
   const container = document.createElement('div');
   container.appendChild(range.cloneContents());
@@ -1373,6 +1451,61 @@ export function useEditor(
     syncContentFromVisualEditor();
   }, [saveVisualSelection, syncContentFromVisualEditor]);
 
+  const handleVisualBeforeInput = useCallback((event: React.FormEvent<HTMLDivElement>) => {
+    const nativeEvent = event.nativeEvent as InputEvent;
+    if (nativeEvent.inputType !== 'insertText' || nativeEvent.data !== ' ') {
+      return;
+    }
+
+    const editor = visualEditorRef.current;
+    const selection = window.getSelection();
+    if (!editor || !selection) {
+      return;
+    }
+
+    const context = resolveVisualAutoFormatContext(editor, selection);
+    if (!context) {
+      return;
+    }
+
+    const listKind = detectVisualAutoListKind(context.beforeText);
+    const blockHasTrailingContent = context.afterText.trim().length > 0;
+    const blockOnlyContainsShortcut = context.blockText.trim() === context.beforeText.trim();
+
+    if (!listKind || blockHasTrailingContent || !blockOnlyContainsShortcut) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const list = document.createElement(listKind === 'ordered' ? 'ol' : 'ul');
+    const item = createEmptyVisualListItem(listKind);
+    const afterNode = context.block.nextSibling;
+
+    list.appendChild(item);
+    editor.insertBefore(list, afterNode);
+    context.block.remove();
+
+    const syncAutoListState = () => {
+      if (!visualEditorRef.current?.contains(item)) {
+        return;
+      }
+
+      const nextRange = document.createRange();
+      nextRange.selectNodeContents(item);
+      nextRange.collapse(false);
+      setVisualSelectionRange(nextRange);
+      syncContentFromVisualEditor();
+    };
+
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(syncAutoListState);
+      return;
+    }
+
+    syncAutoListState();
+  }, [setVisualSelectionRange, syncContentFromVisualEditor]);
+
   const handleTextareaClick = useCallback(() => {
     saveSourceSelection();
   }, [saveSourceSelection]);
@@ -1413,6 +1546,7 @@ export function useEditor(
     syncContentFromVisualEditor,
     handleTextareaClick,
     handleTextareaSelect,
+    handleVisualBeforeInput,
     hasPendingUploads,
     waitForPendingUploads,
   };

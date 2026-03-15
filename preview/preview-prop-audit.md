@@ -1,6 +1,6 @@
 # Preview Props 覆盖审计
 
-生成时间: 2026-03-07T13:07:44.466Z
+生成时间: 2026-03-13T02:47:19.279Z
 
 审计方法:
 - 仅审计同时存在以下文件的组件:
@@ -13,23 +13,24 @@
 
 汇总:
 - 审计组件数: 58
-- 文档 props 总数: 708
+- 文档 props 总数: 710
 - 代码显式命中 props 数: 708
-- 缺失示例 props 数: 0
-- 平均覆盖率: 100.00%
+- 缺失示例 props 数: 2
+- 平均覆盖率: 99.72%
 
 ## 总览
 
 | 组件 | 文档 props | 已命中 | 缺失 | 覆盖率 |
 | --- | ---: | ---: | ---: | ---: |
+| carousel | 15 | 14 | 1 | 93.33% |
+| menu | 21 | 20 | 1 | 95.24% |
 | app-layout | 4 | 4 | 0 | 100.00% |
 | avatar | 11 | 11 | 0 | 100.00% |
 | breadcrumb | 9 | 9 | 0 | 100.00% |
-| button | 10 | 10 | 0 | 100.00% |
+| button | 11 | 11 | 0 | 100.00% |
 | calendar | 13 | 13 | 0 | 100.00% |
 | callout | 8 | 8 | 0 | 100.00% |
 | card | 24 | 24 | 0 | 100.00% |
-| carousel | 15 | 15 | 0 | 100.00% |
 | chart | 14 | 14 | 0 | 100.00% |
 | checkbox | 6 | 6 | 0 | 100.00% |
 | code | 23 | 23 | 0 | 100.00% |
@@ -51,8 +52,7 @@
 | input | 18 | 18 | 0 | 100.00% |
 | layout | 7 | 7 | 0 | 100.00% |
 | link | 13 | 13 | 0 | 100.00% |
-| list | 12 | 12 | 0 | 100.00% |
-| menu | 21 | 21 | 0 | 100.00% |
+| list | 14 | 14 | 0 | 100.00% |
 | message | 7 | 7 | 0 | 100.00% |
 | modal | 20 | 20 | 0 | 100.00% |
 | nav | 6 | 6 | 0 | 100.00% |
@@ -64,10 +64,10 @@
 | progress | 15 | 15 | 0 | 100.00% |
 | radio | 7 | 7 | 0 | 100.00% |
 | result | 7 | 7 | 0 | 100.00% |
-| richEditor | 19 | 19 | 0 | 100.00% |
+| richEditor | 20 | 20 | 0 | 100.00% |
 | select | 16 | 16 | 0 | 100.00% |
 | sidebar | 10 | 10 | 0 | 100.00% |
-| slider | 19 | 19 | 0 | 100.00% |
+| slider | 17 | 17 | 0 | 100.00% |
 | spin | 6 | 6 | 0 | 100.00% |
 | statistic | 14 | 14 | 0 | 100.00% |
 | sticky | 6 | 6 | 0 | 100.00% |
@@ -82,6 +82,16 @@
 | upload | 30 | 30 | 0 | 100.00% |
 
 ## 缺口详情
+
+### carousel
+- 缺失 props: onChange
+- Preview 文档: `preview/src/docs/carousel.tsx`
+- Demo 代码: `preview/src/docs/codes/carousel.tsx`
+
+### menu
+- 缺失 props: textPosition
+- Preview 文档: `preview/src/docs/menu.tsx`
+- Demo 代码: `preview/src/docs/codes/menu.tsx`
 
 ### app-layout
 - 缺失: 无
@@ -117,11 +127,6 @@
 - 缺失: 无
 - Preview 文档: `preview/src/docs/card.tsx`
 - Demo 代码: `preview/src/docs/codes/card.tsx`
-
-### carousel
-- 缺失: 无
-- Preview 文档: `preview/src/docs/carousel.tsx`
-- Demo 代码: `preview/src/docs/codes/carousel.tsx`
 
 ### chart
 - 缺失: 无
@@ -232,11 +237,6 @@
 - 缺失: 无
 - Preview 文档: `preview/src/docs/list.tsx`
 - Demo 代码: `preview/src/docs/codes/list.tsx`
-
-### menu
-- 缺失: 无
-- Preview 文档: `preview/src/docs/menu.tsx`
-- Demo 代码: `preview/src/docs/codes/menu.tsx`
 
 ### message
 - 缺失: 无

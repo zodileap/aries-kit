@@ -48,6 +48,7 @@ export const AriButton = forwardRef<AriButtonInstance & HTMLButtonElement, AriBu
     onClick,
     htmlType,
     ghost = false,
+    useColorText = true,
     ...props
 }, ref) => {
     const cn = useCss("button");
@@ -100,6 +101,7 @@ export const AriButton = forwardRef<AriButtonInstance & HTMLButtonElement, AriBu
                 cn.m(color),
                 cn.is('icon-only', !label && !children),
                 cn.is('ghost', ghost),
+                cn.is('neutral-text', color !== 'default' && !useColorText),
             )}
             disabled={disabled || isLoading}
             onClick={handleClick}

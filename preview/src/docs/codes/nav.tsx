@@ -1,6 +1,18 @@
 import { AriContainer, AriImage, AriNav } from '@ari/components';
 import { useNavigate } from 'react-router-dom';
 
+const navLogo = (
+    <AriImage
+        fileName="/assets/logo/logo.png"
+        style={{ width: 16, height: 16 }}
+        usage="image"
+    />
+);
+
+const navSuffix = (
+    <span style={{ fontSize: 12, whiteSpace: 'nowrap' }}>文档入口</span>
+);
+
 export const BasicNav: React.FC = () => {
     const navigate = useNavigate();
 
@@ -13,17 +25,59 @@ export const BasicNav: React.FC = () => {
             { key: "about", label: "关于", path: "/about" },
           ]}
           sticky
-          suffixed={<span style={{ fontSize: 12 }}>文档入口</span>}
-          logo={
-            <AriImage
-              fileName="/assets/logo/logo.png"
-              style={{ width: 16, height: 16 }}
-              usage="image"
-            />
-          }
+          suffixed={navSuffix}
+          logo={navLogo}
           navigate={navigate}
         />
       </AriContainer>
+    );
+};
+
+export const EdgeAlignedNav: React.FC = () => {
+    const navigate = useNavigate();
+
+    return (
+        <AriContainer style={{ display: 'grid', gap: 16 }}>
+            <style>
+                {`
+                    .nav-demo--hidden-items .z-nav__items {
+                        display: none;
+                    }
+                `}
+            </style>
+
+            <div style={{ display: 'grid', gap: 8 }}>
+                <div style={{ fontSize: 12, color: 'var(--z-color-text-secondary)' }}>
+                    items 为空
+                </div>
+                <AriContainer style={{ position: 'relative' }} height={50}>
+                    <AriNav
+                        items={[]}
+                        logo={navLogo}
+                        suffixed={navSuffix}
+                        navigate={navigate}
+                    />
+                </AriContainer>
+            </div>
+
+            <div style={{ display: 'grid', gap: 8 }}>
+                <div style={{ fontSize: 12, color: 'var(--z-color-text-secondary)' }}>
+                    items 被隐藏
+                </div>
+                <AriContainer style={{ position: 'relative' }} height={50}>
+                    <AriNav
+                        className="nav-demo--hidden-items"
+                        items={[
+                            { key: 'home', label: '首页', path: '/' },
+                            { key: 'products', label: '产品', path: '/products' }
+                        ]}
+                        logo={navLogo}
+                        suffixed={navSuffix}
+                        navigate={navigate}
+                    />
+                </AriContainer>
+            </div>
+        </AriContainer>
     );
 };
 

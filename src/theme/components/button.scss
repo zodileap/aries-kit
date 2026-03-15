@@ -68,41 +68,53 @@
     }
 }
 
-// 颜色 mixin
-@mixin button-color($color-name) {
-    background: getVar(color, $color-name);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid getVar(color, border-glass);
-    color: getVar(color, text, on-#{$color-name});
-    box-shadow: none;
-    
-    .#{$namespace}-typography {
-        color: getVar(color, text, on-#{$color-name});
-    }
-
-    &:hover {
-        background: getVar(color, $color-name, active);
-        box-shadow: none;
-    }
-
-    &.#{$namespace}-is-ripple {
-        &:hover {
-            @include rippleAnim(getVar(color, $color-name, tertiary), getVar(color, $color-name, active));
-        }
-    }
-}
-
-@mixin button-ghost-color($color-name) {
-    color: getVar(color, $color-name);
+@mixin button-content-color($text-color) {
+    color: $text-color;
 
     .#{$namespace}-typography,
     .#{$namespace}-icon {
         color: inherit;
     }
+}
+
+// 颜色 mixin
+@mixin button-color($color-name) {
+    background: color-mix(in srgb, getVar(color, $color-name) 14%, getVar(color, bg) 86%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid color-mix(in srgb, getVar(color, $color-name) 45%, getVar(color, border) 55%);
+    @include button-content-color(getVar(color, $color-name));
+    box-shadow: none;
 
     &:hover {
-        color: getVar(color, $color-name, active);
+        background: color-mix(in srgb, getVar(color, $color-name) 20%, getVar(color, bg) 80%);
+        border-color: getVar(color, border-#{$color-name});
+        box-shadow: none;
+    }
+
+    &.#{$namespace}-is-neutral-text {
+        @include button-content-color(getVar(color, text));
+    }
+
+    &.#{$namespace}-is-ripple {
+        &:hover {
+            @include rippleAnim(
+                color-mix(in srgb, getVar(color, $color-name) 12%, getVar(color, bg) 88%),
+                color-mix(in srgb, getVar(color, $color-name) 24%, getVar(color, bg) 76%)
+            );
+        }
+    }
+}
+
+@mixin button-ghost-color($color-name) {
+    @include button-content-color(getVar(color, $color-name));
+
+    &:hover {
+        @include button-content-color(getVar(color, $color-name, active));
+    }
+
+    &.#{$namespace}-is-neutral-text {
+        @include button-content-color(getVar(color, text));
     }
 }
 .#{$namespace}-button {
@@ -357,10 +369,6 @@
 
     &--brand {
         @include button-color("brand");
-
-        &:hover {
-            color: getVar(color, text, on-active);
-        }
 
         &.#{$namespace}-is-ghost {
             @include button-ghost-color("brand");

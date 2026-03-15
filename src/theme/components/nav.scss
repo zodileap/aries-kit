@@ -58,7 +58,7 @@ html {
         @include flex(flex-start, center);
         height: 100%;
         max-width: getVar(nav, max-width);
-        padding: 0 getVar(windows-inset, left) 0 getVar(windows-inset, right);
+        padding: 0;
         overflow-x: auto;
         transition: all getVar(duration, element-interaction);
     }
@@ -67,7 +67,7 @@ html {
         cursor: pointer;
         height: 100%;
         @include flex();
-        padding: 0 getVar(inset, element);
+        padding: 0 getVar(inset, element) 0 0;
         border-radius: getVar(border-radius, sm);
         transition: all getVar(duration, element-interaction);
 
@@ -148,9 +148,13 @@ html {
         }
     }
 
+    &__suffix,
     &__suffixed {
         @include flex();
+        margin-left: auto;
+        flex-shrink: 0;
         gap: getVar(inset, xl);
+        padding: 0 0 0 getVar(inset, element);
         transition: all getVar(duration, element-interaction);
     }
 
@@ -270,7 +274,7 @@ html {
     .#{$namespace}-nav {
         &__container {
             gap: getVar(inset, sm);
-            padding: 0 getVar(inset, sm);
+            padding: 0;
             scrollbar-width: none;
 
             &::-webkit-scrollbar {
@@ -279,8 +283,10 @@ html {
         }
 
         &__items,
+        &__suffix,
         &__suffixed {
             gap: getVar(inset, sm);
+            padding: 0;
         }
 
         &__item {

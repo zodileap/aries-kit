@@ -81,9 +81,15 @@ export const buttonAPI: DocAPI = {
         },
         {
             param: 'color',
-            desc: '按钮颜色风格（普通按钮影响背景色；ghost按钮影响文字与图标颜色）',
+            desc: '按钮颜色风格。默认会为彩色按钮应用同色系浅底；ghost按钮主要影响文字与图标颜色',
             type: "'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'brand'",
             default: 'default'
+        },
+        {
+            param: 'useColorText',
+            desc: '是否让彩色按钮文字跟随 color 使用同色系高对比方案；关闭后回退为中性色文字',
+            type: 'boolean',
+            default: 'true'
         },
         {
             param: 'type',

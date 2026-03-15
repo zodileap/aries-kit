@@ -2,7 +2,7 @@ import React from 'react';
 import { AriNav } from '@ari/components';
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import { BasicNav, SubMenuNav, DisableHoverNav } from './codes/nav';
+import { BasicNav, SubMenuNav, DisableHoverNav, EdgeAlignedNav } from './codes/nav';
 import { sourceMap } from './codes/source-map';
 
 export const navExamples: Record<string, DocExample> = {
@@ -13,6 +13,15 @@ export const navExamples: Record<string, DocExample> = {
         demos: [{
             component: BasicNav,
             sourceCode: sourceMap['nav']['BasicNav']
+        }]
+    },
+    edgeAligned: {
+        title: '边缘对齐场景',
+        key: 'edge-aligned',
+        description: '当 items 为空或被隐藏时，logo 和 suffix 仍会保持左右贴边。',
+        demos: [{
+            component: EdgeAlignedNav,
+            sourceCode: sourceMap['nav']['EdgeAlignedNav']
         }]
     },
     submenu: {
