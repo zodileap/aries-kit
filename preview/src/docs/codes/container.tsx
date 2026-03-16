@@ -16,6 +16,30 @@ export const BasicContainer: React.FC = () => (
     </AriContainer>
 );
 
+export const PlainContainerDemo: React.FC = () => (
+    <AriFlex vertical space={16}>
+        <AriContainer
+            variant='plain'
+            style={{
+                background: 'linear-gradient(135deg, rgba(33, 150, 243, 0.08), rgba(76, 175, 80, 0.08))',
+                padding: 16,
+            }}
+        >
+            <AriTypography variant='caption' value='plain 变体默认移除背景、圆角、边框、阴影和默认 padding，适合作为纯布局容器。' />
+        </AriContainer>
+
+        <AriContainer
+            variant='plain'
+            showBorder
+            showBorderRadius
+            bgVariant='solid'
+            padding={16}
+        >
+            plain 也可以通过显式传参重新打开边框、圆角与背景。
+        </AriContainer>
+    </AriFlex>
+);
+
 export const PositionDemo: React.FC = () => {
     return (
         <AriFlex vertical space={16}>

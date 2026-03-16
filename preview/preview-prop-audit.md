@@ -1,6 +1,6 @@
 # Preview Props 覆盖审计
 
-生成时间: 2026-03-13T02:47:19.279Z
+生成时间: 2026-03-16T13:39:25.045Z
 
 审计方法:
 - 仅审计同时存在以下文件的组件:
@@ -12,18 +12,16 @@
 - 这是静态启发式检查，能够快速暴露大多数缺口，但仍需要人工确认示例是否真正体现了 prop 行为。
 
 汇总:
-- 审计组件数: 58
-- 文档 props 总数: 710
-- 代码显式命中 props 数: 708
-- 缺失示例 props 数: 2
-- 平均覆盖率: 99.72%
+- 审计组件数: 59
+- 文档 props 总数: 725
+- 代码显式命中 props 数: 725
+- 缺失示例 props 数: 0
+- 平均覆盖率: 100.00%
 
 ## 总览
 
 | 组件 | 文档 props | 已命中 | 缺失 | 覆盖率 |
 | --- | ---: | ---: | ---: | ---: |
-| carousel | 15 | 14 | 1 | 93.33% |
-| menu | 21 | 20 | 1 | 95.24% |
 | app-layout | 4 | 4 | 0 | 100.00% |
 | avatar | 11 | 11 | 0 | 100.00% |
 | breadcrumb | 9 | 9 | 0 | 100.00% |
@@ -31,12 +29,13 @@
 | calendar | 13 | 13 | 0 | 100.00% |
 | callout | 8 | 8 | 0 | 100.00% |
 | card | 24 | 24 | 0 | 100.00% |
+| carousel | 15 | 15 | 0 | 100.00% |
 | chart | 14 | 14 | 0 | 100.00% |
 | checkbox | 6 | 6 | 0 | 100.00% |
 | code | 23 | 23 | 0 | 100.00% |
 | collapse | 3 | 3 | 0 | 100.00% |
 | color-picker | 10 | 10 | 0 | 100.00% |
-| container | 21 | 21 | 0 | 100.00% |
+| container | 22 | 22 | 0 | 100.00% |
 | context-menu | 19 | 19 | 0 | 100.00% |
 | date-picker | 20 | 20 | 0 | 100.00% |
 | divider | 9 | 9 | 0 | 100.00% |
@@ -49,10 +48,11 @@
 | grid | 0 | 0 | 0 | 100.00% |
 | icon | 10 | 10 | 0 | 100.00% |
 | image | 11 | 11 | 0 | 100.00% |
-| input | 18 | 18 | 0 | 100.00% |
+| input | 20 | 20 | 0 | 100.00% |
 | layout | 7 | 7 | 0 | 100.00% |
 | link | 13 | 13 | 0 | 100.00% |
 | list | 14 | 14 | 0 | 100.00% |
+| menu | 22 | 22 | 0 | 100.00% |
 | message | 7 | 7 | 0 | 100.00% |
 | modal | 20 | 20 | 0 | 100.00% |
 | nav | 6 | 6 | 0 | 100.00% |
@@ -60,6 +60,7 @@
 | pagination | 11 | 11 | 0 | 100.00% |
 | particle | 12 | 12 | 0 | 100.00% |
 | popconfirm | 13 | 13 | 0 | 100.00% |
+| popover | 10 | 10 | 0 | 100.00% |
 | portal | 2 | 2 | 0 | 100.00% |
 | progress | 15 | 15 | 0 | 100.00% |
 | radio | 7 | 7 | 0 | 100.00% |
@@ -77,21 +78,11 @@
 | tag | 8 | 8 | 0 | 100.00% |
 | time-picker | 18 | 18 | 0 | 100.00% |
 | timeline | 6 | 6 | 0 | 100.00% |
-| tooltip | 12 | 12 | 0 | 100.00% |
+| tooltip | 13 | 13 | 0 | 100.00% |
 | typography | 15 | 15 | 0 | 100.00% |
 | upload | 30 | 30 | 0 | 100.00% |
 
 ## 缺口详情
-
-### carousel
-- 缺失 props: onChange
-- Preview 文档: `preview/src/docs/carousel.tsx`
-- Demo 代码: `preview/src/docs/codes/carousel.tsx`
-
-### menu
-- 缺失 props: textPosition
-- Preview 文档: `preview/src/docs/menu.tsx`
-- Demo 代码: `preview/src/docs/codes/menu.tsx`
 
 ### app-layout
 - 缺失: 无
@@ -127,6 +118,11 @@
 - 缺失: 无
 - Preview 文档: `preview/src/docs/card.tsx`
 - Demo 代码: `preview/src/docs/codes/card.tsx`
+
+### carousel
+- 缺失: 无
+- Preview 文档: `preview/src/docs/carousel.tsx`
+- Demo 代码: `preview/src/docs/codes/carousel.tsx`
 
 ### chart
 - 缺失: 无
@@ -238,6 +234,11 @@
 - Preview 文档: `preview/src/docs/list.tsx`
 - Demo 代码: `preview/src/docs/codes/list.tsx`
 
+### menu
+- 缺失: 无
+- Preview 文档: `preview/src/docs/menu.tsx`
+- Demo 代码: `preview/src/docs/codes/menu.tsx`
+
 ### message
 - 缺失: 无
 - Preview 文档: `preview/src/docs/message.tsx`
@@ -272,6 +273,11 @@
 - 缺失: 无
 - Preview 文档: `preview/src/docs/popconfirm.tsx`
 - Demo 代码: `preview/src/docs/codes/popconfirm.tsx`
+
+### popover
+- 缺失: 无
+- Preview 文档: `preview/src/docs/popover.tsx`
+- Demo 代码: `preview/src/docs/codes/popover.tsx`
 
 ### portal
 - 缺失: 无

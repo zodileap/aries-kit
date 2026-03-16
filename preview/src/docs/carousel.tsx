@@ -164,7 +164,7 @@ export const carouselAPI: DocAPI = {
             default: '-'
         },
         {
-            param: 'onChange',
+            param: 'onSlideChange',
             desc: '索引变化时的回调函数',
             type: '(index: number) => void',
             default: '-'
@@ -172,7 +172,7 @@ export const carouselAPI: DocAPI = {
     ],
     events: [
         {
-            event: 'onChange',
+            event: 'onSlideChange',
             desc: '当前索引变化时触发',
             type: '(index: number) => void'
         }

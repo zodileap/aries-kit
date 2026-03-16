@@ -20,15 +20,19 @@ export const AriTextArea: React.FC<AriTextAreaProps> = ({
     autoComplete = "off",
     disabled = false,
     label,
+    help,
     showCount = false,
     maxLength,
     allowClear = false,
     variant = "outlined",
+    status = "default",
     rows = 1,
     cols,
     autoSize = false,
     bordered = true,
     enableHoverFocusEffect = true,
+    maxWidth,
+    minWidth,
     ...props
 }) => {
     const cs = useCss("text-area");
@@ -119,6 +123,14 @@ export const AriTextArea: React.FC<AriTextAreaProps> = ({
         }
     };
 
+    const containerStyle: React.CSSProperties = {};
+    if (maxWidth !== undefined) {
+        containerStyle.maxWidth = typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth;
+    }
+    if (minWidth !== undefined) {
+        containerStyle.minWidth = typeof minWidth === 'number' ? `${minWidth}px` : minWidth;
+    }
+
     return (
         <AriContainer className={cs.gen(
             className,
@@ -126,9 +138,10 @@ export const AriTextArea: React.FC<AriTextAreaProps> = ({
             cs.is('disabled', disabled),
             cs.is('auto-size', !!autoSize),
             cs.is(resolvedVariant),
+            cs.is(`status-${status}`, status !== 'default'),
             cs.is('no-hover-focus-effect', !enableHoverFocusEffect),
             
-        )}>
+        )} style={containerStyle}>
             {label && <AriTypography variant='body' className={cs.e('label')} value={label} />}
             
             <div className={cs.e('wrapper')}>
@@ -140,6 +153,7 @@ export const AriTextArea: React.FC<AriTextAreaProps> = ({
                     placeholder={placeholder}
                     autoComplete={autoComplete}
                     disabled={disabled}
+                    aria-invalid={status === 'error'}
                     rows={rows}
                     cols={cols}
                     maxLength={maxLength}
@@ -161,6 +175,11 @@ export const AriTextArea: React.FC<AriTextAreaProps> = ({
                     {maxLength ? `${(innerValue || '').length}/${maxLength}` : `${(innerValue || '').length} 个字符`}
                 </div>
             )}
+            {help ? (
+                <div className={cs.e('help')}>
+                    {help}
+                </div>
+            ) : null}
         </AriContainer>
     );
 };

@@ -1,7 +1,17 @@
 import React from 'react';
 import Doc from '../layout/doc';
 import { DocExample, DocAPI } from '../layout/types';
-import { BasicMenu, SubMenu, ModeDemo, IconAnimationDemo, ArrowPositionDemo, GroupDemo, SessionLikeMenu } from './codes/menu';
+import {
+    BasicMenu,
+    SubMenu,
+    ModeDemo,
+    IconAnimationDemo,
+    ArrowPositionDemo,
+    GroupDemo,
+    ActionsVisibilityDemo,
+    DynamicItemsDemo,
+    SessionLikeMenu
+} from './codes/menu';
 import { sourceMap } from './codes/source-map';
 
 export const menuExamples: Record<string, DocExample> = {
@@ -59,10 +69,28 @@ export const menuExamples: Record<string, DocExample> = {
             sourceCode: sourceMap['menu']['GroupDemo']
         }]
     },
+    actionsVisibility: {
+        title: '动作区显示时机',
+        key: 'actions-visibility',
+        description: '通过 actionsVisibility 控制 actions 何时显示，并在动作区显示时自动隐藏 meta 信息。',
+        demos: [{
+            component: ActionsVisibilityDemo,
+            sourceCode: sourceMap['menu']['ActionsVisibilityDemo']
+        }]
+    },
+    dynamicItems: {
+        title: '动态更新菜单树',
+        key: 'dynamic-items',
+        description: '菜单树结构变更后会自动同步折叠高度与展开状态，无需通过重建组件实例强制刷新。',
+        demos: [{
+            component: DynamicItemsDemo,
+            sourceCode: sourceMap['menu']['DynamicItemsDemo']
+        }]
+    },
     sessionLike: {
         title: '会话列表样式',
         key: 'session-like',
-        description: '支持左侧标题、右侧时间、hover 操作区和右键菜单，适合对话历史侧边栏。',
+        description: '支持左侧标题、右侧时间、hover 操作区和右键菜单，适合对话历史侧边栏或项目导航。',
         demos: [{
             component: SessionLikeMenu,
             sourceCode: sourceMap['menu']['SessionLikeMenu'] || sourceMap['menu']['BasicMenu']
@@ -212,8 +240,14 @@ export const menuItemAPI: DocAPI = {
             default: '-'
         },
         {
+            param: 'actionsVisibility',
+            desc: '控制 actions 的显示时机，并在动作区显示时隐藏 meta',
+            type: "'always' | 'hover' | 'hover-or-focus'",
+            default: '"always"'
+        },
+        {
             param: 'showActionsOnHover',
-            desc: '是否仅在 hover 时显示 actions，并在显示时隐藏 meta',
+            desc: '旧版兼容开关，等价于 actionsVisibility="hover"，建议迁移到 actionsVisibility',
             type: 'boolean',
             default: 'false'
         }

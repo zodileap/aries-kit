@@ -2,7 +2,7 @@ import { AriAppLayout, AriAppLayoutProvider } from "@ari/repository";
 import { useInitialization, setTheme } from ".";
 import Lottie from 'lottie-react';
 import { AppProps } from "@ari/types";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 
 export const AriApp: React.FC<AppProps> = ({
@@ -11,6 +11,7 @@ export const AriApp: React.FC<AppProps> = ({
     appConfig,
 }) => {
     const { isInitialized, isLoading, error } = useInitialization(appConfig);
+    const appliedCssVarKeysRef = useRef<string[]>([]);
     
     // 初始化主题样式
     useEffect(() => {
@@ -18,6 +19,30 @@ export const AriApp: React.FC<AppProps> = ({
             setTheme(appConfig.theme);
         }
     }, [appConfig.theme]);
+
+    useEffect(() => {
+        const root = document.documentElement;
+        const nextCssVars = appConfig.cssVars ?? {};
+        const previousKeys = new Set(appliedCssVarKeysRef.current);
+
+        Object.entries(nextCssVars).forEach(([name, value]) => {
+            root.style.setProperty(name, `${value}`);
+            previousKeys.delete(name);
+        });
+
+        previousKeys.forEach((name) => {
+            root.style.removeProperty(name);
+        });
+
+        appliedCssVarKeysRef.current = Object.keys(nextCssVars);
+
+        return () => {
+            appliedCssVarKeysRef.current.forEach((name) => {
+                root.style.removeProperty(name);
+            });
+            appliedCssVarKeysRef.current = [];
+        };
+    }, [appConfig.cssVars]);
 
     if (error) {
       return <div>初始化失败: {error.message}</div>;

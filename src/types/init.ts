@@ -52,6 +52,20 @@ export interface AppConfig extends CoreOptions {
      *   "brand"
      */
     theme?: 'brand';
+
+    /**
+     * 运行时覆盖的 CSS 变量
+     *
+     * 用于将宿主应用的主题 token 注入到根节点，避免额外维护独立覆盖文件。
+     *
+     * Example:
+     *
+     *   {
+     *     "--z-border-radius": "1rem",
+     *     "--z-icon-size": "24px"
+     *   }
+     */
+    cssVars?: Record<`--z-${string}`, string | number>;
 }
 
 

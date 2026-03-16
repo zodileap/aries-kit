@@ -154,7 +154,8 @@
             justify-content: flex-start;
         }
 
-        &.#{$namespace}-is-hover-actions {
+        &.#{$namespace}-is-actions-hover,
+        &.#{$namespace}-is-actions-hover-or-focus {
             .#{$namespace}-menu-item__meta {
                 opacity: 1;
                 transition: opacity getVar(duration, element-interaction);
@@ -166,7 +167,9 @@
                 transform: translateX(4px);
             }
 
-            &:hover {
+            &:hover,
+            &:active,
+            &:focus-within {
                 .#{$namespace}-menu-item__meta {
                     opacity: 0;
                 }

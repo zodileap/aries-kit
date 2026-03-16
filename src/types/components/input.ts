@@ -5,7 +5,8 @@ import React from "react";
  * 输入框变体类型
  * 控制输入框的外观样式
  */
-export type AriInputVariant = 'outlined' | 'borderless' | 'filled' | 'underlined';
+export type AriInputVariant = 'outlined' | 'borderless' | 'filled' | 'underlined' | 'embedded';
+export type AriInputStatus = 'default' | 'error' | 'warning' | 'success';
 
 /**
  * 文本输入框属性
@@ -64,6 +65,14 @@ export interface AriTextInputProps extends Omit<_Props, 'onChange' | 'ref'> {
      * default: undefined
      */
     label?: string;
+
+    /**
+     * 帮助信息
+     * 显示在输入框下方的提示、校验信息或说明文案
+     *
+     * default: undefined
+     */
+    help?: React.ReactNode;
 
     /**
      * 前缀内容
@@ -131,6 +140,14 @@ export interface AriTextInputProps extends Omit<_Props, 'onChange' | 'ref'> {
      * default: "outlined"
      */
     variant?: AriInputVariant;
+
+    /**
+     * 输入状态
+     * 用于表达校验和反馈状态
+     *
+     * default: "default"
+     */
+    status?: AriInputStatus;
 
     /**
      * 是否显示边框

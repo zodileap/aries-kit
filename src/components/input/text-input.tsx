@@ -21,6 +21,7 @@ export const AriTextInput = forwardRef<HTMLInputElement, AriTextInputProps>(({
     autoComplete = "off",
     disabled = false,
     label,
+    help,
     prefix,
     suffix,
     showCount = false,
@@ -29,6 +30,7 @@ export const AriTextInput = forwardRef<HTMLInputElement, AriTextInputProps>(({
     allowClear = false,
     showPasswordToggle = true,
     variant = "outlined",
+    status = "default",
     bordered = true,
     enableHoverFocusEffect = true,
     maxWidth,
@@ -129,6 +131,7 @@ export const AriTextInput = forwardRef<HTMLInputElement, AriTextInputProps>(({
                 cs.is('with-prefix', !!prefix),
                 cs.is('with-suffix', !!(suffix || (allowClear && innerValue) || (showCount && maxLength) || (type === 'password' && showPasswordToggle))),
                 cs.is(variant),
+                cs.is(`status-${status}`, status !== 'default'),
                 cs.is('borderless', !bordered),
                 cs.is('no-hover-focus-effect', !enableHoverFocusEffect),
                 cs.m(size),
@@ -150,6 +153,7 @@ export const AriTextInput = forwardRef<HTMLInputElement, AriTextInputProps>(({
                     type={actualType}
                     autoComplete={autoComplete}
                     disabled={disabled}
+                    aria-invalid={status === 'error'}
                     maxLength={maxLength}
                     minLength={minLength}
                     {...(({ children, ...inputProps }) => inputProps)(props)}
@@ -163,6 +167,11 @@ export const AriTextInput = forwardRef<HTMLInputElement, AriTextInputProps>(({
                     {innerValue.length} 个字符
                 </div>
             )}
+            {help ? (
+                <div className={cs.e('help')}>
+                    {help}
+                </div>
+            ) : null}
         </AriContainer>
     );
 });

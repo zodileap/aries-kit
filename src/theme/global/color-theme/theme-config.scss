@@ -35,7 +35,7 @@
   $border-glass,
   
   // 文本色
-  $text, $text-secondary, $text-tertiary, $text-active, $text-danger,
+  $text, $text-secondary, $text-tertiary, $text-active, $text-primary, $text-danger,
   $text-success, $text-warning, $text-info, $text-brand, $text-disabled,
   
   // 文本在背景上的颜色
@@ -290,6 +290,7 @@
     "text-secondary": $text-secondary,
     "text-tertiary": $text-tertiary,
     "text-active": $text-active,
+    "text-primary": $text-primary,
     "text-danger": $text-danger,
     "text-success": $text-success,
     "text-warning": $text-warning,

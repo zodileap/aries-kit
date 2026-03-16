@@ -136,6 +136,12 @@ export const TooltipBehaviorDemo: React.FC = () => {
             />
 
             <AriTooltip
+                content="会继承触发元素宽度，适合多行说明文案"
+                matchTriggerWidth
+                children={<AriButton style={{ width: 180 }}>匹配触发元素宽度</AriButton>}
+            />
+
+            <AriTooltip
                 content="这个提示框已被禁用"
                 disabled
                 children={<AriButton>禁用状态</AriButton>}

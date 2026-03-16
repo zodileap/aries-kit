@@ -10,6 +10,15 @@ import { _Props } from "./base";
  */
 export interface AriContainerProps extends _Props {
     /**
+     * 容器视觉变体
+     * - default: 默认容器样式
+     * - plain: 透明、无默认 padding、无默认圆角/边框/阴影的轻量容器
+     *
+     * default: "default"
+     */
+    variant?: 'default' | 'plain';
+
+    /**
      * 是否启用阴影激活态下的位移动画
      * 仅在 shadowMode 为 active 时生效
      *

@@ -114,7 +114,7 @@ export interface AriButtonProps extends ButtonPropsWithoutRef {
 
     /**
      * 是否让彩色按钮使用同色系文字
-     * 开启后会为彩色按钮应用同色系高对比背景与文字；关闭后文字回退为中性色。
+     * 开启后会为彩色按钮应用同色系浅底与同色系文字；关闭后文字回退为中性色。
      *
      * default: true
      */

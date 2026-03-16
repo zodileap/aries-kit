@@ -104,12 +104,19 @@ export const setAppConfig = (
     {
         localImgSrc = "",
         baseUrl = "",
-        theme = "brand"
-    }: { localImgSrc?: string, baseUrl?: string, theme?: 'brand' }): AppConfig => {
+        theme = "brand",
+        cssVars,
+    }: {
+        localImgSrc?: string,
+        baseUrl?: string,
+        theme?: 'brand',
+        cssVars?: AppConfig["cssVars"],
+    }): AppConfig => {
     return {
         localImgSrc,
         baseUrl,
         theme,
+        cssVars,
     };
 };
 

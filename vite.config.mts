@@ -17,6 +17,32 @@ const isExternal = (id: string) =>
   externalPackages.some((pkg) => id === pkg || id.startsWith(`${pkg}/`)) ||
   externalSubpaths.includes(id)
 
+const patchMonacoDynamicImports = async () => {
+  const distDir = path.resolve(__dirname, 'dist')
+  const target = 'import(`${FileAccess.asBrowserUri(`${e}.js`).toString(!0)}`)'
+  const replacement = 'import(/* @vite-ignore */ `${FileAccess.asBrowserUri(`${e}.js`).toString(!0)}`)'
+
+  if (!(await fs.pathExists(distDir))) {
+    return
+  }
+
+  const distEntries = await fs.readdir(distDir)
+  await Promise.all(
+    distEntries
+      .filter((entry) => /\.(m?js)$/.test(entry))
+      .map(async (entry) => {
+        const filePath = path.join(distDir, entry)
+        const content = await fs.readFile(filePath, 'utf8')
+
+        if (!content.includes(target) || content.includes(replacement)) {
+          return
+        }
+
+        await fs.writeFile(filePath, content.replaceAll(target, replacement))
+      })
+  )
+}
+
 export default defineConfig({
   plugins: [
     react(),
@@ -38,6 +64,7 @@ export default defineConfig({
 
         await fs.copy(path.resolve(__dirname, 'README.md'), path.resolve(__dirname, 'dist/README.md'))
         await fs.copy(path.resolve(__dirname, 'LICENSE'), path.resolve(__dirname, 'dist/LICENSE'))
+        await patchMonacoDynamicImports()
 
         // await fs.copy(path.resolve(__dirname, 'src/core'), path.resolve(__dirname, 'dist/core'))
         console.log('Files moved successfully')

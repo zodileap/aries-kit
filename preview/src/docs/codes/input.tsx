@@ -106,9 +106,74 @@ export const VariantDemp: React.FC = () => {
             <AriInput placeholder="通过 bordered 关闭边框" bordered={false} />
             <AriInput placeholder="填充背景" variant="filled" />
             <AriInput placeholder="下划线" variant="underlined" />
+            <AriInput placeholder="嵌入式输入框" variant="embedded" />
         </AriFlex>
     );
 }
+
+export const StatusAndHelpDemo: React.FC = () => {
+    return (
+        <AriFlex vertical space={16} style={{ width: '100%' }}>
+            <AriInput
+                label="项目名称"
+                placeholder="输入项目名称"
+                status="success"
+                help="名称可用，保存后会同步更新项目标题。"
+                defaultValue="aries-desktop"
+            />
+            <AriInput
+                label="访问令牌"
+                placeholder="请输入访问令牌"
+                status="error"
+                help="令牌不能为空，且长度至少为 16 位。"
+            />
+            <AriInput.TextArea
+                label="描述"
+                placeholder="请输入项目描述"
+                autoSize={{ minRows: 3, maxRows: 6 }}
+                status="warning"
+                help="描述过长时建议拆成两段，以免影响卡片列表展示。"
+            />
+            <AriInput.TextList
+                label="技能标签"
+                defaultValue={['React', 'Tauri']}
+                status="success"
+                help="拖拽可调整顺序，列表会同步展示在设置页概览卡片中。"
+            />
+        </AriFlex>
+    );
+};
+
+export const EmbeddedVariantDemo: React.FC = () => {
+    const [title, setTitle] = useState('本周版本回归整理');
+    const [summary, setSummary] = useState('用于验证 embedded 变体在列表、卡片和模态内联编辑时的表现。');
+
+    return (
+        <AriContainer
+            showBorder
+            bgVariant='solid'
+            padding={16}
+            style={{ width: '100%', maxWidth: 520 }}
+        >
+            <AriFlex vertical space={12}>
+                <AriTypography variant='caption' value='列表内联编辑' />
+                <AriInput
+                    variant='embedded'
+                    value={title}
+                    onChange={setTitle}
+                    prefix={<AriIcon name="edit" />}
+                />
+                <AriInput.TextArea
+                    variant='embedded'
+                    value={summary}
+                    onChange={setSummary}
+                    autoSize={{ minRows: 2, maxRows: 4 }}
+                    help="保留 focus ring，但不形成额外外框。"
+                />
+            </AriFlex>
+        </AriContainer>
+    );
+};
 
 export const NoHoverFocusEffectDemo: React.FC = () => {
     return (
@@ -177,6 +242,11 @@ export const TextAreaDemo: React.FC = () => {
             <AriInput.TextArea
                 placeholder="通过 variant 使用无边框"
                 variant="borderless"
+            />
+            <AriInput.TextArea
+                placeholder="嵌入式文本域"
+                variant="embedded"
+                help="适合卡片或模态里的内联编辑。"
             />
         </AriFlex>
     );
@@ -351,6 +421,15 @@ export const TextListVariants: React.FC = () => {
                 allowEmpty
                 defaultValue={['有内容的项', '']}
                 itemPlaceholder="可以为空"
+            />
+
+            <AriInput.TextList
+                label="嵌入式 + 错误状态"
+                variant="embedded"
+                status="error"
+                help="至少需要保留一条有效规则。"
+                defaultValue={['']}
+                allowEmpty
             />
         </AriFlex>
     );

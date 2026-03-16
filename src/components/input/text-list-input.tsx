@@ -29,12 +29,17 @@ export const AriTextListInput: React.FC<AriTextListInputProps> = ({
   className,
   disabled = false,
   label,
+  help,
   addText = "添加",
   itemPlaceholder = "请输入...",
   allowEmpty = false,
   allowDrag = true,
   maxItems,
   minItems = 0,
+  variant = "outlined",
+  status = "default",
+  bordered = true,
+  enableHoverFocusEffect = true,
   size = "default",
   maxWidth,
   minWidth,
@@ -122,6 +127,10 @@ export const AriTextListInput: React.FC<AriTextListInputProps> = ({
               onChange={(newValue) => handleItemChange(index, newValue)}
               placeholder={itemPlaceholder}
               disabled={disabled}
+              variant={variant}
+              status={status}
+              bordered={bordered}
+              enableHoverFocusEffect={enableHoverFocusEffect}
               size={size}
               maxWidth={maxWidth}
               minWidth={minWidth}
@@ -201,13 +210,14 @@ export const AriTextListInput: React.FC<AriTextListInputProps> = ({
 
   // 主要JSX返回
   return (
-    <AriContainer
-      className={cs.gen(
-        cs.b(),
-        cs.is("disabled", disabled),
-        cs.m(size),
-        className
-      )}
+      <AriContainer
+        className={cs.gen(
+          cs.b(),
+          cs.is("disabled", disabled),
+          cs.is(`status-${status}`, status !== "default"),
+          cs.m(size),
+          className
+        )}
       style={containerStyle}
     >
       {label && <AriTypography variant='body' className={cs.e("label")} value={label} />}
@@ -239,6 +249,11 @@ export const AriTextListInput: React.FC<AriTextListInputProps> = ({
           {innerValue.length}/{maxItems}
         </div>
       )}
+      {help ? (
+        <div className={cs.e("help")}>
+          {help}
+        </div>
+      ) : null}
     </AriContainer>
   );
 };

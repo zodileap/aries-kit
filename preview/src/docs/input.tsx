@@ -6,7 +6,8 @@ import {
     BasicSearchInput, CustomSearchButton,
     BasicInputNumber, InputNumberRange, InputNumberStep,
     InputWithPrefixSuffix, InputWithCount, InputWithClear, TextAreaDemo, VariantDemp, NoHoverFocusEffectDemo,
-    AutoCompleteDemo, BasicTextListInput, TextListWithEvents, TextListWithLimits, 
+    StatusAndHelpDemo, EmbeddedVariantDemo,
+    AutoCompleteDemo, BasicTextListInput, TextListWithEvents, TextListWithLimits,
     TextListVariants, TextListSizes
 } from './codes/input';
 import { sourceMap } from './codes/source-map';
@@ -75,13 +76,31 @@ export const inputExamples: Record<string, DocExample> = {
             sourceCode: sourceMap['input']['VariantDemp']
         }]
     },
+    statusAndHelp: {
+        title: '状态与帮助信息',
+        key: 'status-help',
+        description: '使用 status 表达校验状态，help 在输入框下方展示提示、说明或错误信息。',
+        demos: [{
+            component: StatusAndHelpDemo,
+            sourceCode: sourceMap['input']['StatusAndHelpDemo']
+        }]
+    },
+    embedded: {
+        title: '嵌入式变体',
+        key: 'embedded-variant',
+        description: 'variant="embedded" 适合卡片、列表和模态中的内联编辑场景，保留 focus ring 但不再形成独立外框。',
+        demos: [{
+            component: EmbeddedVariantDemo,
+            sourceCode: sourceMap['input']['EmbeddedVariantDemo']
+        }]
+    },
     noHoverFocusEffect: {
         title: '关闭悬浮效果',
         key: 'no-hover-focus-effect',
         description: '通过 enableHoverFocusEffect 属性关闭输入框与文本域在 hover/focus 时的悬浮视觉效果。',
         demos: [{
             component: NoHoverFocusEffectDemo,
-            sourceCode: 'NoHoverFocusEffectDemo'
+            sourceCode: sourceMap['input']['NoHoverFocusEffectDemo']
         }]
     },
     autoComplete: {
@@ -162,7 +181,7 @@ export const inputExamples: Record<string, DocExample> = {
         description: '用于输入和管理多个文本项的组件，支持增删、排序和拖拽等操作。',
         demos: [{
             component: BasicTextListInput,
-            sourceCode: 'BasicTextListInput'
+            sourceCode: sourceMap['input']['BasicTextListInput']
         }]
     },
     textListEvents: {
@@ -171,7 +190,7 @@ export const inputExamples: Record<string, DocExample> = {
         description: '文本列表输入框支持丰富的事件回调，可以监听项目的增加、删除、修改和拖拽排序。',
         demos: [{
             component: TextListWithEvents,
-            sourceCode: 'TextListWithEvents'
+            sourceCode: sourceMap['input']['TextListWithEvents']
         }]
     },
     textListLimits: {
@@ -180,7 +199,7 @@ export const inputExamples: Record<string, DocExample> = {
         description: '通过maxItems和minItems属性可以限制列表的最大和最小项目数量。',
         demos: [{
             component: TextListWithLimits,
-            sourceCode: 'TextListWithLimits'
+            sourceCode: sourceMap['input']['TextListWithLimits']
         }]
     },
     textListVariants: {
@@ -189,7 +208,7 @@ export const inputExamples: Record<string, DocExample> = {
         description: '支持禁用状态、禁用拖拽和允许空项等不同变体。',
         demos: [{
             component: TextListVariants,
-            sourceCode: 'TextListVariants'
+            sourceCode: sourceMap['input']['TextListVariants']
         }]
     },
     textListSizes: {
@@ -198,7 +217,7 @@ export const inputExamples: Record<string, DocExample> = {
         description: '支持不同尺寸的文本列表输入框。',
         demos: [{
             component: TextListSizes,
-            sourceCode: 'TextListSizes'
+            sourceCode: sourceMap['input']['TextListSizes']
         }]
     },
 };
@@ -248,6 +267,12 @@ export const inputAPI: DocAPI = {
             default: '-'
         },
         {
+            param: 'help',
+            desc: '显示在输入框下方的帮助信息、校验提示或错误文案',
+            type: 'React.ReactNode',
+            default: '-'
+        },
+        {
             param: 'prefix',
             desc: '前缀内容',
             type: 'React.ReactNode',
@@ -292,8 +317,14 @@ export const inputAPI: DocAPI = {
         {
             param: 'variant',
             desc: '输入框变体样式',
-            type: "'outlined' | 'borderless' | 'filled' | 'underlined'",
+            type: "'outlined' | 'borderless' | 'filled' | 'underlined' | 'embedded'",
             default: 'outlined'
+        },
+        {
+            param: 'status',
+            desc: '输入状态，用于表达默认、错误、警告和成功反馈',
+            type: "'default' | 'error' | 'warning' | 'success'",
+            default: 'default'
         },
         {
             param: 'bordered',
@@ -430,7 +461,7 @@ export const inputAPI: DocAPI = {
         {
             param: 'variant',
             desc: '输入框样式变体',
-            type: "'outlined' | 'borderless' | 'filled' | 'underlined'",
+            type: "'outlined' | 'borderless' | 'filled' | 'underlined' | 'embedded'",
             default: 'outlined'
         },
         {
@@ -572,6 +603,18 @@ export const inputAPI: DocAPI = {
             desc: '最小宽度',
             type: 'string | number',
             default: '-'
+        },
+        {
+            param: 'help',
+            desc: '显示在列表下方的帮助或错误信息',
+            type: 'React.ReactNode',
+            default: '-'
+        },
+        {
+            param: 'status',
+            desc: '列表整体的反馈状态，会同步作用到内部输入项',
+            type: "'default' | 'error' | 'warning' | 'success'",
+            default: 'default'
         }
     ]
 };
@@ -583,7 +626,8 @@ export const anchors = Object.values(inputExamples).map(example => ({
     { key: 'api', label: 'Input API' },
     { key: 'textarea-api', label: 'TextArea API' },
     { key: 'search-api', label: 'SearchInput API' },
-    { key: 'number-api', label: 'InputNumber API' }
+    { key: 'number-api', label: 'InputNumber API' },
+    { key: 'text-list-api', label: 'TextList API' }
 ]);
 
 const InputDoc: React.FC = () => {
@@ -608,6 +652,11 @@ const InputDoc: React.FC = () => {
                     title: 'InputNumber API',
                     data: inputAPI.inputNumber,
                     anchor: 'number-api'
+                },
+                {
+                    title: 'TextList API',
+                    data: inputAPI.textList,
+                    anchor: 'text-list-api'
                 }
             ]}
         />

@@ -127,6 +127,10 @@ export const menuConfig: AriMenuItemProps[] = [
                 label: 'Menu 菜单',
             },
             {
+                key: '/popover',
+                label: 'Popover 气泡层',
+            },
+            {
                 key: '/context-menu',
                 label: 'ContextMenu 右键菜单',
             },
@@ -331,6 +335,11 @@ export const routes = [
         path: '/menu',
         component: getDocComponent('menu'),
         anchors: getDocAnchors('menu')
+    },
+    {
+        path: '/popover',
+        component: getDocComponent('popover'),
+        anchors: getDocAnchors('popover')
     },
     {
         path: '/context-menu',

@@ -2760,6 +2760,29 @@ export const FormUsageColorPicker: React.FC = () => {
         基础容器
     </AriContainer>
 );`,
+    "PlainContainerDemo": `export const PlainContainerDemo: React.FC = () => (
+  <AriFlex vertical space={16}>
+        <AriContainer
+            variant='plain'
+            style={{
+                background: 'linear-gradient(135deg, rgba(33, 150, 243, 0.08), rgba(76, 175, 80, 0.08))',
+                padding: 16,
+            }}
+        >
+            <AriTypography variant='caption' value='plain 变体默认移除背景、圆角、边框、阴影和默认 padding，适合作为纯布局容器。' />
+        </AriContainer>
+
+        <AriContainer
+            variant='plain'
+            showBorder
+            showBorderRadius
+            bgVariant='solid'
+            padding={16}
+        >
+            plain 也可以通过显式传参重新打开边框、圆角与背景。
+        </AriContainer>
+    </AriFlex>
+);`,
     "PositionDemo": `export const PositionDemo: React.FC = () => {
   return (
         <AriFlex vertical space={16}>
@@ -6428,39 +6451,103 @@ export const UseHookDemo: React.FC = () => {
             <AriInput placeholder="通过 bordered 关闭边框" bordered={false} />
             <AriInput placeholder="填充背景" variant="filled" />
             <AriInput placeholder="下划线" variant="underlined" />
+            <AriInput placeholder="嵌入式输入框" variant="embedded" />
         </AriFlex>
     );
 }
 
-export const NoHoverFocusEffectDemo: React.FC = () => {
+export const StatusAndHelpDemo: React.FC = () => {
     return (
         <AriFlex vertical space={16} style={{ width: '100%' }}>
             <AriInput
-                placeholder="关闭 hover/focus 悬浮效果的输入框"
-                enableHoverFocusEffect={false}
+                label="项目名称"
+                placeholder="输入项目名称"
+                status="success"
+                help="名称可用，保存后会同步更新项目标题。"
+                defaultValue="aries-desktop"
+            />
+            <AriInput
+                label="访问令牌"
+                placeholder="请输入访问令牌"
+                status="error"
+                help="令牌不能为空，且长度至少为 16 位。"
             />
             <AriInput.TextArea
-                placeholder="关闭 hover/focus 悬浮效果的文本域"
-                rows={4}
-                enableHoverFocusEffect={false}
+                label="描述"
+                placeholder="请输入项目描述"
+                autoSize={{ minRows: 3, maxRows: 6 }}
+                status="warning"
+                help="描述过长时建议拆成两段，以免影响卡片列表展示。"
+            />
+            <AriInput.TextList
+                label="技能标签"
+                defaultValue={['React', 'Tauri']}
+                status="success"
+                help="拖拽可调整顺序，列表会同步展示在设置页概览卡片中。"
             />
         </AriFlex>
     );
-}
-
-export const AutoCompleteDemo: React.FC = () => {
-    return (
+};`,
+    "StatusAndHelpDemo": `export const StatusAndHelpDemo: React.FC = () => {
+  return (
         <AriFlex vertical space={16} style={{ width: '100%' }}>
-            <AriTypography variant='h4' value="常用自动完成属性示例" />
-            <AriInput type="text" placeholder="姓名" autoComplete="name" />
-            <AriInput type="email" placeholder="电子邮箱" autoComplete="email" />
-            <AriInput type="tel" placeholder="电话号码" autoComplete="tel" />
-            <AriInput type="text" placeholder="用户名" autoComplete="username" />
-            <AriInput type="password" placeholder="当前密码" autoComplete="current-password" />
-            <AriInput type="password" placeholder="新密码" autoComplete="new-password" />
-            <AriInput type="text" placeholder="地址" autoComplete="street-address" />
-            <AriInput type="text" placeholder="禁用自动完成" autoComplete="off" />
+            <AriInput
+                label="项目名称"
+                placeholder="输入项目名称"
+                status="success"
+                help="名称可用，保存后会同步更新项目标题。"
+                defaultValue="aries-desktop"
+            />
+            <AriInput
+                label="访问令牌"
+                placeholder="请输入访问令牌"
+                status="error"
+                help="令牌不能为空，且长度至少为 16 位。"
+            />
+            <AriInput.TextArea
+                label="描述"
+                placeholder="请输入项目描述"
+                autoSize={{ minRows: 3, maxRows: 6 }}
+                status="warning"
+                help="描述过长时建议拆成两段，以免影响卡片列表展示。"
+            />
+            <AriInput.TextList
+                label="技能标签"
+                defaultValue={['React', 'Tauri']}
+                status="success"
+                help="拖拽可调整顺序，列表会同步展示在设置页概览卡片中。"
+            />
         </AriFlex>
+    );
+};`,
+    "EmbeddedVariantDemo": `export const EmbeddedVariantDemo: React.FC = () => {
+  const [title, setTitle] = useState('本周版本回归整理');
+    const [summary, setSummary] = useState('用于验证 embedded 变体在列表、卡片和模态内联编辑时的表现。');
+
+    return (
+        <AriContainer
+            showBorder
+            bgVariant='solid'
+            padding={16}
+            style={{ width: '100%', maxWidth: 520 }}
+        >
+            <AriFlex vertical space={12}>
+                <AriTypography variant='caption' value='列表内联编辑' />
+                <AriInput
+                    variant='embedded'
+                    value={title}
+                    onChange={setTitle}
+                    prefix={<AriIcon name="edit" />}
+                />
+                <AriInput.TextArea
+                    variant='embedded'
+                    value={summary}
+                    onChange={setSummary}
+                    autoSize={{ minRows: 2, maxRows: 4 }}
+                    help="保留 focus ring，但不形成额外外框。"
+                />
+            </AriFlex>
+        </AriContainer>
     );
 };`,
     "NoHoverFocusEffectDemo": `export const NoHoverFocusEffectDemo: React.FC = () => {
@@ -6543,6 +6630,11 @@ export const AutoCompleteDemo: React.FC = () => {
             <AriInput.TextArea
                 placeholder="通过 variant 使用无边框"
                 variant="borderless"
+            />
+            <AriInput.TextArea
+                placeholder="嵌入式文本域"
+                variant="embedded"
+                help="适合卡片或模态里的内联编辑。"
             />
         </AriFlex>
     );
@@ -6715,6 +6807,15 @@ export const TextListVariants: React.FC = () => {
                 defaultValue={['有内容的项', '']}
                 itemPlaceholder="可以为空"
             />
+
+            <AriInput.TextList
+                label="嵌入式 + 错误状态"
+                variant="embedded"
+                status="error"
+                help="至少需要保留一条有效规则。"
+                defaultValue={['']}
+                allowEmpty
+            />
         </AriFlex>
     );
 };
@@ -6848,6 +6949,15 @@ export const TextListVariants: React.FC = () => {
                 defaultValue={['有内容的项', '']}
                 itemPlaceholder="可以为空"
             />
+
+            <AriInput.TextList
+                label="嵌入式 + 错误状态"
+                variant="embedded"
+                status="error"
+                help="至少需要保留一条有效规则。"
+                defaultValue={['']}
+                allowEmpty
+            />
         </AriFlex>
     );
 };
@@ -6948,6 +7058,15 @@ export const TextListVariants: React.FC = () => {
                 defaultValue={['有内容的项', '']}
                 itemPlaceholder="可以为空"
             />
+
+            <AriInput.TextList
+                label="嵌入式 + 错误状态"
+                variant="embedded"
+                status="error"
+                help="至少需要保留一条有效规则。"
+                defaultValue={['']}
+                allowEmpty
+            />
         </AriFlex>
     );
 };
@@ -7014,6 +7133,15 @@ export const TextListSizes: React.FC = () => {
                 allowEmpty
                 defaultValue={['有内容的项', '']}
                 itemPlaceholder="可以为空"
+            />
+
+            <AriInput.TextList
+                label="嵌入式 + 错误状态"
+                variant="embedded"
+                status="error"
+                help="至少需要保留一条有效规则。"
+                defaultValue={['']}
+                allowEmpty
             />
         </AriFlex>
     );
@@ -7855,6 +7983,82 @@ export const GroupDemo: React.FC = () => {
     );
 };
 
+export const ActionsVisibilityDemo: React.FC = () => {
+    const items = [
+        {
+            key: 'hover',
+            label: '仅悬停显示',
+            textPosition: 'left' as const,
+            meta: <AriTypography variant='caption'>hover</AriTypography>,
+            actions: <AriButton type='text' size='sm' icon='more_horiz' />,
+            actionsVisibility: 'hover' as const,
+        },
+        {
+            key: 'hover-or-focus',
+            label: '悬停或聚焦显示',
+            meta: <AriTypography variant='caption'>hover / focus</AriTypography>,
+            actions: (
+                <AriFlex align='center' space={4}>
+                    <AriButton type='text' size='sm' icon='edit' />
+                    <AriButton type='text' size='sm' icon='delete' />
+                </AriFlex>
+            ),
+            actionsVisibility: 'hover-or-focus' as const,
+        },
+        {
+            key: 'legacy-hover',
+            label: '兼容旧版 hover 开关',
+            meta: <AriTypography variant='caption'>showActionsOnHover</AriTypography>,
+            actions: <AriButton type='text' size='sm' icon='sync' />,
+            showActionsOnHover: true,
+        },
+    ];
+
+    return (
+        <AriContainer style={{ maxWidth: 360 }}>
+            <AriMenu items={items} />
+        </AriContainer>
+    );
+};
+
+export const DynamicItemsDemo: React.FC = () => {
+    const [showDrafts, setShowDrafts] = useState(true);
+    const [expandedKeys, setExpandedKeys] = useState<string[]>(['workspace']);
+
+    const items = [
+        {
+            key: 'workspace',
+            label: '项目空间',
+            icon: 'folder',
+            children: [
+                { key: 'overview', label: '概览', icon: 'dashboard' },
+                { key: 'sessions', label: '会话', icon: 'chat' },
+                ...(showDrafts ? [{ key: 'drafts', label: '草稿箱', icon: 'draft' }] : []),
+            ],
+        },
+    ];
+
+    return (
+        <AriFlex vertical space={12}>
+            <AriButton
+                size='sm'
+                type='text'
+                icon={showDrafts ? 'visibility_off' : 'visibility'}
+                onClick={() => setShowDrafts(prev => !prev)}
+            >
+                {showDrafts ? '移除草稿箱节点' : '恢复草稿箱节点'}
+            </AriButton>
+            <AriContainer style={{ maxWidth: 360 }}>
+                <AriMenu
+                    items={items}
+                    expandedKeys={expandedKeys}
+                    onExpand={setExpandedKeys}
+                />
+            </AriContainer>
+        </AriFlex>
+    );
+};
+
 export const SessionLikeMenu: React.FC = () => {
     const [selectedKey, setSelectedKey] = useState('s-1');
     const [pinnedKeys, setPinnedKeys] = useState<string[]>([]);
@@ -7953,7 +8157,7 @@ export const SessionLikeMenu: React.FC = () => {
                                 />
                             </AriFlex>
                         ),
-                        showActionsOnHover: true,
+                        actionsVisibility: 'hover' as const,
                         onContextMenu: (event) => {
                             event.preventDefault();
                             setContextMenu({ x: event.clientX, y: event.clientY, key: session.key });
@@ -8129,6 +8333,220 @@ export const SessionLikeMenu: React.FC = () => {
         <AriMenu items={items} defaultSelectedKey="dashboard" />
     );
 };`,
+    "ActionsVisibilityDemo": `export const ActionsVisibilityDemo: React.FC = () => {
+  const items = [
+        {
+            key: 'hover',
+            label: '仅悬停显示',
+            textPosition: 'left' as const,
+            meta: <AriTypography variant='caption'>hover</AriTypography>,
+            actions: <AriButton type='text' size='sm' icon='more_horiz' />,
+            actionsVisibility: 'hover' as const,
+        },
+        {
+            key: 'hover-or-focus',
+            label: '悬停或聚焦显示',
+            meta: <AriTypography variant='caption'>hover / focus</AriTypography>,
+            actions: (
+                <AriFlex align='center' space={4}>
+                    <AriButton type='text' size='sm' icon='edit' />
+                    <AriButton type='text' size='sm' icon='delete' />
+                </AriFlex>
+            ),
+            actionsVisibility: 'hover-or-focus' as const,
+        },
+        {
+            key: 'legacy-hover',
+            label: '兼容旧版 hover 开关',
+            meta: <AriTypography variant='caption'>showActionsOnHover</AriTypography>,
+            actions: <AriButton type='text' size='sm' icon='sync' />,
+            showActionsOnHover: true,
+        },
+    ];
+
+    return (
+        <AriContainer style={{ maxWidth: 360 }}>
+            <AriMenu items={items} />
+        </AriContainer>
+    );
+};`,
+    "DynamicItemsDemo": `export const DynamicItemsDemo: React.FC = () => {
+  const [showDrafts, setShowDrafts] = useState(true);
+    const [expandedKeys, setExpandedKeys] = useState<string[]>(['workspace']);
+
+    const items = [
+        {
+            key: 'workspace',
+            label: '项目空间',
+            icon: 'folder',
+            children: [
+                { key: 'overview', label: '概览', icon: 'dashboard' },
+                { key: 'sessions', label: '会话', icon: 'chat' },
+                ...(showDrafts ? [{ key: 'drafts', label: '草稿箱', icon: 'draft' }] : []),
+            ],
+        },
+    ];
+
+    return (
+        <AriFlex vertical space={12}>
+            <AriButton
+                size='sm'
+                type='text'
+                icon={showDrafts ? 'visibility_off' : 'visibility'}
+                onClick={() => setShowDrafts(prev => !prev)}
+            >
+                {showDrafts ? '移除草稿箱节点' : '恢复草稿箱节点'}
+            </AriButton>
+            <AriContainer style={{ maxWidth: 360 }}>
+                <AriMenu
+                    items={items}
+                    expandedKeys={expandedKeys}
+                    onExpand={setExpandedKeys}
+                />
+            </AriContainer>
+        </AriFlex>
+    );
+};
+
+export const SessionLikeMenu: React.FC = () => {
+    const [selectedKey, setSelectedKey] = useState('s-1');
+    const [pinnedKeys, setPinnedKeys] = useState<string[]>([]);
+    const [renamingKey, setRenamingKey] = useState<string>('');
+    const [renameValue, setRenameValue] = useState('');
+    const [contextMenu, setContextMenu] = useState<{ x: number; y: number; key: string } | null>(null);
+    const [titleMap, setTitleMap] = useState<Record<string, string>>({});
+
+    const sessions = [
+        { key: 's-1', title: '机械臂材质方案：PBR + 烘焙流程', time: '今天 10:12' },
+        { key: 's-2', title: '低模角色风格探索', time: '昨天 18:22' },
+        { key: 's-3', title: '工业控制台重建与导出', time: '02/08 09:18' },
+    ];
+
+    const sortedSessions = useMemo(() => {
+        return [...sessions].sort((a, b) => {
+            const aPinned = pinnedKeys.includes(a.key);
+            const bPinned = pinnedKeys.includes(b.key);
+            if (aPinned === bPinned) return 0;
+            return aPinned ? -1 : 1;
+        });
+    }, [pinnedKeys]);
+
+    const startRename = (key: string) => {
+        const target = sessions.find(item => item.key === key);
+        if (!target) return;
+        setRenamingKey(key);
+        setRenameValue(titleMap[key] || target.title);
+    };
+
+    const commitRename = () => {
+        if (!renamingKey) return;
+        const value = renameValue.trim();
+        if (value) {
+            setTitleMap(prev => ({ ...prev, [renamingKey]: value }));
+        }
+        setRenamingKey('');
+        setRenameValue('');
+    };
+
+    return (
+        <AriContainer style={{ position: 'relative', maxWidth: 360 }}>
+            <AriTypography variant='caption'>
+                标题左侧自适应省略，右侧时间固定；Hover 显示图钉/删除；右键菜单支持重命名。
+            </AriTypography>
+            <AriContainer style={{ height: 8 }} />
+            <AriMenu
+                selectedKey={selectedKey}
+                items={sortedSessions.map((session) => {
+                    const isPinned = pinnedKeys.includes(session.key);
+                    const isRenaming = renamingKey === session.key;
+                    const title = titleMap[session.key] || session.title;
+                    return {
+                        key: session.key,
+                        label: isRenaming ? (
+                            <AriInput
+                                value={renameValue}
+                                autoFocus
+                                onChange={setRenameValue}
+                                onBlur={commitRename}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter') {
+                                        event.preventDefault();
+                                        commitRename();
+                                    }
+                                    if (event.key === 'Escape') {
+                                        event.preventDefault();
+                                        setRenamingKey('');
+                                        setRenameValue('');
+                                    }
+                                }}
+                            />
+                        ) : (
+                            title
+                        ),
+                        meta: isRenaming ? null : <AriTypography variant='caption'>{session.time}</AriTypography>,
+                        actions: isRenaming ? null : (
+                            <AriFlex align='center' space={4}>
+                                <AriButton
+                                    type='text'
+                                    size='sm'
+                                    icon={isPinned ? 'push_pin_fill' : 'push_pin'}
+                                    onClick={() => {
+                                        setPinnedKeys(prev =>
+                                            prev.includes(session.key)
+                                                ? prev.filter(key => key !== session.key)
+                                                : [session.key, ...prev]
+                                        );
+                                    }}
+                                />
+                                <AriButton
+                                    type='text'
+                                    size='sm'
+                                    icon='delete'
+                                    onClick={() => console.log('delete:', session.key)}
+                                />
+                            </AriFlex>
+                        ),
+                        actionsVisibility: 'hover' as const,
+                        onContextMenu: (event) => {
+                            event.preventDefault();
+                            setContextMenu({ x: event.clientX, y: event.clientY, key: session.key });
+                        },
+                        onClick: () => setSelectedKey(session.key),
+                    };
+                })}
+                onSelect={(key) => setSelectedKey(key)}
+            />
+
+            {contextMenu ? (
+                <AriContainer
+                    style={{
+                        position: 'fixed',
+                        left: contextMenu.x,
+                        top: contextMenu.y,
+                        zIndex: 999,
+                        minWidth: 180,
+                    }}
+                    onClick={(event) => event.stopPropagation()}
+                >
+                    <AriMenu
+                        items={[
+                            {
+                                key: 'rename',
+                                icon: 'edit',
+                                label: '重新命名',
+                                onClick: () => {
+                                    startRename(contextMenu.key);
+                                    setContextMenu(null);
+                                },
+                            }
+                        ]}
+                    />
+                </AriContainer>
+            ) : null}
+        </AriContainer>
+    );
+};
+`,
     "SessionLikeMenu": `export const SessionLikeMenu: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState('s-1');
     const [pinnedKeys, setPinnedKeys] = useState<string[]>([]);
@@ -8227,7 +8645,7 @@ export const SessionLikeMenu: React.FC = () => {
                                 />
                             </AriFlex>
                         ),
-                        showActionsOnHover: true,
+                        actionsVisibility: 'hover' as const,
                         onContextMenu: (event) => {
                             event.preventDefault();
                             setContextMenu({ x: event.clientX, y: event.clientY, key: session.key });
@@ -9375,6 +9793,139 @@ export const CustomButtonPopconfirm: React.FC = () => (
         <AriButton>自定义按钮</AriButton>
     </AriPopconfirm>
 );`,
+  },
+  "popover": {
+    "BasicPopover": `export const BasicPopover: React.FC = () => {
+  return (
+        <>
+            <style>{\`
+                .preview-popover-panel {
+                    border: 1px solid var(--z-color-border);
+                    box-shadow: var(--z-shadow-md);
+                }
+            \`}</style>
+            <AriPopover
+                className='preview-popover-panel'
+            content={
+                <AriFlex vertical space={8}>
+                    <AriTypography variant='h4' value='快速操作' />
+                    <AriTypography variant='caption' value='在这里放置说明、按钮或轻量面板内容。' />
+                </AriFlex>
+            }
+                children={<AriButton>点击打开</AriButton>}
+            />
+        </>
+    );
+};`,
+    "PositionPopover": `export const PositionPopover: React.FC = () => {
+  const positions = ['top', 'right', 'bottom', 'left', 'topLeft', 'topRight', 'bottomLeft', 'bottomRight'] as const;
+
+    return (
+        <AriFlex wrap space={12}>
+            {positions.map((position) => (
+                <AriPopover
+                    key={position}
+                    position={position}
+                    content={<AriTypography variant='caption' value={\`当前位置：\${position}\`} />}
+                >
+                    <AriButton size='sm'>{position}</AriButton>
+                </AriPopover>
+            ))}
+        </AriFlex>
+    );
+};`,
+    "TriggerPopover": `export const TriggerPopover: React.FC = () => {
+  const [manualOpen, setManualOpen] = useState(false);
+
+    return (
+        <AriFlex wrap space={12} align='center'>
+            <AriPopover
+                trigger='hover'
+                content={<AriTypography variant='caption' value='hover 更适合承载带操作的轻量卡片。' />}
+            >
+                <AriButton>悬停触发</AriButton>
+            </AriPopover>
+
+            <AriPopover
+                trigger='click'
+                content={<AriTypography variant='caption' value='click 适合更多菜单和筛选面板。' />}
+            >
+                <AriButton>点击触发</AriButton>
+            </AriPopover>
+
+            <AriPopover
+                trigger='manual'
+                open={manualOpen}
+                onOpenChange={setManualOpen}
+                content={
+                    <AriFlex vertical space={8}>
+                        <AriTypography variant='caption' value='manual 模式完全由外部状态控制。' />
+                        <AriButton size='sm' onClick={() => setManualOpen(false)}>关闭</AriButton>
+                    </AriFlex>
+                }
+            >
+                <AriButton onClick={() => setManualOpen((prev) => !prev)}>
+                    {manualOpen ? '收起手动弹层' : '打开手动弹层'}
+                </AriButton>
+            </AriPopover>
+        </AriFlex>
+    );
+};`,
+    "ControlledPopover": `export const ControlledPopover: React.FC = () => {
+  const [open, setOpen] = useState(false);
+    const [name, setName] = useState('桌面端设置');
+
+    return (
+        <AriPopover
+            open={open}
+            onOpenChange={setOpen}
+            closeOnOutsideClick={false}
+            content={
+                <AriFlex vertical space={12} style={{ width: 280 }}>
+                    <AriTypography variant='h4' value='编辑名称' />
+                    <AriInput
+                        variant='embedded'
+                        value={name}
+                        onChange={setName}
+                        placeholder='请输入名称'
+                    />
+                    <AriFlex justify='end' space={8}>
+                        <AriButton type='text' size='sm' onClick={() => setOpen(false)}>取消</AriButton>
+                        <AriButton size='sm' onClick={() => setOpen(false)}>保存</AriButton>
+                    </AriFlex>
+                </AriFlex>
+            }
+        >
+            <AriButton onClick={() => setOpen(true)}>受控模式</AriButton>
+        </AriPopover>
+    );
+};`,
+    "WidthPopover": `export const WidthPopover: React.FC = () => {
+  return (
+        <AriFlex wrap space={16} align='start'>
+            <AriPopover
+                matchTriggerWidth
+                content={
+                    <AriTypography variant='caption' value='matchTriggerWidth 会让弹层宽度与触发元素保持一致，适合筛选器或下拉面板。' />
+                }
+            >
+                <AriButton style={{ width: 220 }}>匹配触发宽度</AriButton>
+            </AriPopover>
+
+            <AriPopover
+                minWidth={260}
+                defaultOpen
+                content={
+                    <AriContainer variant='plain' style={{ padding: 4 }}>
+                        <AriTypography variant='caption' value='minWidth 适合为多列操作菜单或说明卡片预留稳定宽度。' />
+                    </AriContainer>
+                }
+            >
+                <AriButton>最小宽度 260px</AriButton>
+            </AriPopover>
+        </AriFlex>
+    );
+};`,
   },
   "portal": {
     "BasicPortal": `export const BasicPortal: React.FC = () => {
@@ -23246,6 +23797,12 @@ export const TimePickerDisplayDemo: React.FC = () => {
                 onShow={() => console.log('tooltip shown')}
                 onHide={() => console.log('tooltip hidden')}
                 children={<AriButton>延迟提示</AriButton>}
+            />
+
+            <AriTooltip
+                content="会继承触发元素宽度，适合多行说明文案"
+                matchTriggerWidth
+                children={<AriButton style={{ width: 180 }}>匹配触发元素宽度</AriButton>}
             />
 
             <AriTooltip

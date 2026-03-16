@@ -8,6 +8,7 @@ import {
     BorderRadiusDemo,
     CustomBackgroundDemo,
     FillDemo,
+    PlainContainerDemo,
     PositionDemo,
     ShadowDemo,
     SizeAndMaterialDemo,
@@ -22,6 +23,15 @@ export const containerExamples: Record<string, DocExample> = {
         demos: [{
             component: BasicContainer,
             sourceCode: sourceMap['container']['BasicContainer']
+        }]
+    },
+    plain: {
+        title: '轻量容器',
+        key: 'plain',
+        description: '使用 variant="plain" 可获得透明、无默认 padding、无默认圆角/边框/阴影的轻量容器，适合作为纯布局表面。',
+        demos: [{
+            component: PlainContainerDemo,
+            sourceCode: sourceMap['container']['PlainContainerDemo']
         }]
     },
     position: {
@@ -101,6 +111,12 @@ export const containerExamples: Record<string, DocExample> = {
 export const containerAPI: DocAPI = {
     props: [
         {
+            param: 'variant',
+            desc: '容器视觉变体。plain 会移除默认背景、padding、圆角、边框和阴影，显式传入的样式配置仍可覆盖',
+            type: "'default' | 'plain'",
+            default: 'default'
+        },
+        {
             param: 'positionType',
             desc: '定位类型',
             type: "'relative' | 'absolute' | 'fixed' | 'sticky'",
@@ -134,7 +150,7 @@ export const containerAPI: DocAPI = {
             param: 'showBorderRadius',
             desc: '是否显示圆角',
             type: 'boolean',
-            default: 'true'
+            default: 'true（plain 变体下默认 false）'
         },
         {
             param: "borderStyle",

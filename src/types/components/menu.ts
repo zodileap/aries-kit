@@ -2,6 +2,8 @@ import { _Props } from "./base";
 import type { ReactNode } from "react";
 import type { IconAnimation, IconState } from "./icon";
 
+export type AriMenuActionsVisibility = 'always' | 'hover' | 'hover-or-focus';
+
 /**
  * 菜单项配置
  * 
@@ -35,7 +37,17 @@ export interface AriMenuItemProps extends Omit<_Props, 'onClick' | "children"> {
     meta?: ReactNode;
     /** 右侧操作区 */
     actions?: ReactNode;
-    /** 是否仅在 hover 时显示右侧操作区 */
+    /**
+     * 右侧操作区显示时机
+     *
+     * default: "always"
+     */
+    actionsVisibility?: AriMenuActionsVisibility;
+    /**
+     * 是否仅在 hover 时显示右侧操作区
+     *
+     * @deprecated 请改用 actionsVisibility="hover"
+     */
     showActionsOnHover?: boolean;
 }
 

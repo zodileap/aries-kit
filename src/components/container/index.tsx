@@ -11,6 +11,7 @@ import { useCss } from "@ari/utils";
 export const AriContainer: React.FC<AriContainerProps> = ({
     children,
     className,
+    variant = 'default',
     fill = false,
     maxWidth,
     minWidth,
@@ -23,7 +24,7 @@ export const AriContainer: React.FC<AriContainerProps> = ({
     positionType = 'static',
     style,
     ghost = false,
-    showBorderRadius = true,
+    showBorderRadius,
     padding,
     overflow,
     blur = false,
@@ -36,6 +37,7 @@ export const AriContainer: React.FC<AriContainerProps> = ({
     ...props
 }) => {
     const cs = useCss("container");
+    const effectiveShowBorderRadius = showBorderRadius ?? variant !== 'plain';
 
     // 处理样式
     const containerStyle: React.CSSProperties = {
@@ -81,12 +83,13 @@ export const AriContainer: React.FC<AriContainerProps> = ({
             cs.gen(
                 className,
                 cs.b(),
+                cs.m(variant),
                 alignment ? cs.m(alignment) : undefined, // 对齐方式修饰符
                 material ? cs.m(material) : undefined, // 材质修饰符
                 bgVariant ? cs.m(`bg-${bgVariant}`) : undefined, // 背景色变体修饰符
                 shadowMode ? cs.is(`shadow-${shadowMode}`) : undefined,
                 cs.is('hover-transform', hoverTransform),
-                cs.is('border-radius', showBorderRadius),
+                cs.is('border-radius', effectiveShowBorderRadius),
                 cs.is('fill', fill),
                 cs.is('ghost', ghost),
                 cs.is('border', showBorder),

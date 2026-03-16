@@ -56,6 +56,14 @@
     background-color: getVar(color, bg-glass);
   }
 
+  &--plain {
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
   // 材质变体
   &--solid {
     background-color: getVar(color, bg-solid);

@@ -191,6 +191,82 @@ export const GroupDemo: React.FC = () => {
     );
 };
 
+export const ActionsVisibilityDemo: React.FC = () => {
+    const items = [
+        {
+            key: 'hover',
+            label: '仅悬停显示',
+            textPosition: 'left' as const,
+            meta: <AriTypography variant='caption'>hover</AriTypography>,
+            actions: <AriButton type='text' size='sm' icon='more_horiz' />,
+            actionsVisibility: 'hover' as const,
+        },
+        {
+            key: 'hover-or-focus',
+            label: '悬停或聚焦显示',
+            meta: <AriTypography variant='caption'>hover / focus</AriTypography>,
+            actions: (
+                <AriFlex align='center' space={4}>
+                    <AriButton type='text' size='sm' icon='edit' />
+                    <AriButton type='text' size='sm' icon='delete' />
+                </AriFlex>
+            ),
+            actionsVisibility: 'hover-or-focus' as const,
+        },
+        {
+            key: 'legacy-hover',
+            label: '兼容旧版 hover 开关',
+            meta: <AriTypography variant='caption'>showActionsOnHover</AriTypography>,
+            actions: <AriButton type='text' size='sm' icon='sync' />,
+            showActionsOnHover: true,
+        },
+    ];
+
+    return (
+        <AriContainer style={{ maxWidth: 360 }}>
+            <AriMenu items={items} />
+        </AriContainer>
+    );
+};
+
+export const DynamicItemsDemo: React.FC = () => {
+    const [showDrafts, setShowDrafts] = useState(true);
+    const [expandedKeys, setExpandedKeys] = useState<string[]>(['workspace']);
+
+    const items = [
+        {
+            key: 'workspace',
+            label: '项目空间',
+            icon: 'folder',
+            children: [
+                { key: 'overview', label: '概览', icon: 'dashboard' },
+                { key: 'sessions', label: '会话', icon: 'chat' },
+                ...(showDrafts ? [{ key: 'drafts', label: '草稿箱', icon: 'draft' }] : []),
+            ],
+        },
+    ];
+
+    return (
+        <AriFlex vertical space={12}>
+            <AriButton
+                size='sm'
+                type='text'
+                icon={showDrafts ? 'visibility_off' : 'visibility'}
+                onClick={() => setShowDrafts(prev => !prev)}
+            >
+                {showDrafts ? '移除草稿箱节点' : '恢复草稿箱节点'}
+            </AriButton>
+            <AriContainer style={{ maxWidth: 360 }}>
+                <AriMenu
+                    items={items}
+                    expandedKeys={expandedKeys}
+                    onExpand={setExpandedKeys}
+                />
+            </AriContainer>
+        </AriFlex>
+    );
+};
+
 export const SessionLikeMenu: React.FC = () => {
     const [selectedKey, setSelectedKey] = useState('s-1');
     const [pinnedKeys, setPinnedKeys] = useState<string[]>([]);
@@ -289,7 +365,7 @@ export const SessionLikeMenu: React.FC = () => {
                                 />
                             </AriFlex>
                         ),
-                        showActionsOnHover: true,
+                        actionsVisibility: 'hover' as const,
                         onContextMenu: (event) => {
                             event.preventDefault();
                             setContextMenu({ x: event.clientX, y: event.clientY, key: session.key });

@@ -87,7 +87,7 @@ export const buttonAPI: DocAPI = {
         },
         {
             param: 'useColorText',
-            desc: '是否让彩色按钮文字跟随 color 使用同色系高对比方案；关闭后回退为中性色文字',
+            desc: '是否让彩色按钮文字跟随 color 使用同色系方案；关闭后回退为中性色文字',
             type: 'boolean',
             default: 'true'
         },

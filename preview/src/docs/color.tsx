@@ -7,6 +7,8 @@ interface ColorGridProps {
     description?: string;
 }
 
+const COLOR_CARD_WIDTH = 180;
+
 const ColorGrid: React.FC<ColorGridProps> = ({ colors, title, description }) => {
     const copyToClipboard = (variable: string) => {
         navigator.clipboard.writeText(variable).then(() => {
@@ -29,8 +31,9 @@ const ColorGrid: React.FC<ColorGridProps> = ({ colors, title, description }) => 
             )}
             <div style={{ 
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                gap: '16px'
+                gridTemplateColumns: `repeat(auto-fill, minmax(min(${COLOR_CARD_WIDTH}px, 100%), ${COLOR_CARD_WIDTH}px))`,
+                gap: '16px',
+                justifyContent: 'start'
             }}>
                 {Object.entries(colors).map(([name, value]) => (
                     <div

@@ -1,0 +1,23 @@
+@use "../global/index.scss" as *;
+
+.#{$namespace}-popover {
+  position: fixed;
+  z-index: getVar(z-index, popover);
+  box-sizing: border-box;
+  max-width: min(32rem, calc(100vw - 1rem));
+  overflow: hidden;
+  border-radius: getVar(border-radius, container);
+  border: 1px solid getVar(color, border);
+  background-color: getVar(color, bg);
+  box-shadow: getVar(color, box-shadow-popover);
+  color: getVar(color, text);
+
+  &__content {
+    padding: getVar(inset, xs);
+  }
+
+  &__trigger {
+    display: inline-flex;
+    min-width: 0;
+  }
+}

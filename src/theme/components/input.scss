@@ -124,6 +124,63 @@
         }
     }
 
+    &.#{$namespace}-is-embedded {
+        border-color: transparent;
+        background: transparent !important;
+        box-shadow: none;
+
+        &:hover {
+            background: getVar(color, bg-opacity-blur) !important;
+            border-color: getVar(color, border-glass);
+            box-shadow: none;
+        }
+
+        &:focus-within {
+            background: getVar(color, bg-opacity-blur) !important;
+            border-color: getVar(color, brand);
+            box-shadow: 0 0 0 3px rgba(getVar(color, brand), 0.12);
+        }
+    }
+
+    &.#{$namespace}-is-status-error {
+        border-color: getVar(color, border-danger);
+
+        &:hover,
+        &:focus-within {
+            border-color: getVar(color, danger);
+        }
+
+        &:focus-within {
+            box-shadow: 0 0 0 3px rgba(getVar(color, danger), 0.12);
+        }
+    }
+
+    &.#{$namespace}-is-status-warning {
+        border-color: getVar(color, border-warning);
+
+        &:hover,
+        &:focus-within {
+            border-color: getVar(color, warning);
+        }
+
+        &:focus-within {
+            box-shadow: 0 0 0 3px rgba(getVar(color, warning), 0.12);
+        }
+    }
+
+    &.#{$namespace}-is-status-success {
+        border-color: getVar(color, border-success);
+
+        &:hover,
+        &:focus-within {
+            border-color: getVar(color, success);
+        }
+
+        &:focus-within {
+            box-shadow: 0 0 0 3px rgba(getVar(color, success), 0.12);
+        }
+    }
+
     &.#{$namespace}-is-no-hover-focus-effect {
         &:not(.#{$namespace}-is-disabled) {
             &:hover,
@@ -155,6 +212,15 @@
                 border: none;
                 border-bottom: 1px solid getVar(color, border);
                 border-radius: 0;
+            }
+        }
+
+        &.#{$namespace}-is-embedded {
+            &:hover,
+            &:focus-within {
+                background: transparent !important;
+                border-color: transparent;
+                box-shadow: none;
             }
         }
     }
@@ -244,6 +310,25 @@
         color: getVar(color, text) !important;
         margin-bottom: getVar(inset, xxs) !important;
         font-weight: getVar(font-weight, medium) !important;
+    }
+
+    &__help {
+        margin-top: getVar(inset, xxs);
+        font-size: getVar(font-size, caption);
+        color: getVar(color, text-secondary);
+        line-height: 1.5;
+    }
+
+    &.#{$namespace}-is-status-error &__help {
+        color: getVar(color, text-danger);
+    }
+
+    &.#{$namespace}-is-status-warning &__help {
+        color: getVar(color, text-warning);
+    }
+
+    &.#{$namespace}-is-status-success &__help {
+        color: getVar(color, text-success);
     }
 }
 
@@ -446,6 +531,71 @@
         }
     }
 
+    &.#{$namespace}-is-embedded {
+        .#{$namespace}-text-area__textarea {
+            border-color: transparent;
+            background: transparent;
+            box-shadow: none;
+
+            &:hover {
+                background: getVar(color, bg-opacity-blur);
+                border-color: getVar(color, border-glass);
+                box-shadow: none;
+            }
+
+            &:focus {
+                background: getVar(color, bg-opacity-blur);
+                border-color: getVar(color, brand);
+                box-shadow: 0 0 0 3px rgba(getVar(color, brand), 0.12);
+            }
+        }
+    }
+
+    &.#{$namespace}-is-status-error {
+        .#{$namespace}-text-area__textarea {
+            border-color: getVar(color, border-danger);
+
+            &:hover,
+            &:focus {
+                border-color: getVar(color, danger);
+            }
+
+            &:focus {
+                box-shadow: 0 0 0 3px rgba(getVar(color, danger), 0.12);
+            }
+        }
+    }
+
+    &.#{$namespace}-is-status-warning {
+        .#{$namespace}-text-area__textarea {
+            border-color: getVar(color, border-warning);
+
+            &:hover,
+            &:focus {
+                border-color: getVar(color, warning);
+            }
+
+            &:focus {
+                box-shadow: 0 0 0 3px rgba(getVar(color, warning), 0.12);
+            }
+        }
+    }
+
+    &.#{$namespace}-is-status-success {
+        .#{$namespace}-text-area__textarea {
+            border-color: getVar(color, border-success);
+
+            &:hover,
+            &:focus {
+                border-color: getVar(color, success);
+            }
+
+            &:focus {
+                box-shadow: 0 0 0 3px rgba(getVar(color, success), 0.12);
+            }
+        }
+    }
+
     &.#{$namespace}-is-filled {
         .#{$namespace}-text-area__textarea {
             border: none;
@@ -511,6 +661,17 @@
                     border: none;
                     border-bottom: 1px solid getVar(color, border);
                     border-radius: 0;
+                }
+            }
+        }
+
+        &.#{$namespace}-is-embedded {
+            .#{$namespace}-text-area__textarea {
+                &:hover,
+                &:focus {
+                    background: transparent;
+                    border-color: transparent;
+                    box-shadow: none;
                 }
             }
         }
@@ -619,11 +780,49 @@
         font-weight: getVar(font-weight, medium) !important;
     }
 
+    &__help {
+        margin-top: getVar(inset, xxs);
+        font-size: getVar(font-size, caption);
+        color: getVar(color, text-secondary);
+        line-height: 1.5;
+    }
+
+    &.#{$namespace}-is-status-error &__help {
+        color: getVar(color, text-danger);
+    }
+
+    &.#{$namespace}-is-status-warning &__help {
+        color: getVar(color, text-warning);
+    }
+
+    &.#{$namespace}-is-status-success &__help {
+        color: getVar(color, text-success);
+    }
+
     &__count {
         margin-top: getVar(inset, xxs);
         font-size: getVar(font-size, caption);
         color: getVar(color, text-secondary);
         text-align: right;
+    }
+
+    &__help {
+        margin-top: getVar(inset, xxs);
+        font-size: getVar(font-size, caption);
+        color: getVar(color, text-secondary);
+        line-height: 1.5;
+    }
+
+    &.#{$namespace}-is-status-error &__help {
+        color: getVar(color, text-danger);
+    }
+
+    &.#{$namespace}-is-status-warning &__help {
+        color: getVar(color, text-warning);
+    }
+
+    &.#{$namespace}-is-status-success &__help {
+        color: getVar(color, text-success);
     }
 
     // 拖拽占位符样式

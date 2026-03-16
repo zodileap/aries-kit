@@ -70,7 +70,7 @@ export const tooltipExamples: Record<string, DocExample> = {
     behavior: {
         title: '延迟与禁用',
         key: 'behavior',
-        description: '展示显示/隐藏延迟、最小宽度、禁用状态和显隐回调。',
+        description: '展示显示/隐藏延迟、最小宽度、宽度匹配、禁用状态和显隐回调。',
         demos: [{
             component: TooltipBehaviorDemo,
             sourceCode: sourceMap['tooltip']['TooltipBehaviorDemo']
@@ -138,7 +138,13 @@ export const tooltipAPI: DocAPI = {
             param: 'minWidth',
             desc: '提示框最小宽度，支持 number（自动补全为px）或 CSS 宽度字符串',
             type: 'number | string',
-            default: '-'
+            default: '按内容自适应'
+        },
+        {
+            param: 'matchTriggerWidth',
+            desc: '是否让提示框宽度与触发元素保持一致',
+            type: 'boolean',
+            default: 'false'
         },
         {
             param: 'onShow',
@@ -168,7 +174,7 @@ const TooltipDoc: React.FC = () => {
     return (
         <Doc
             title="Tooltip 提示框"
-            description="文字提示组件，当用户鼠标悬停、聚焦或点击元素时，显示简短的提示信息。默认背景色使用 var(--z-color-bg)，箭头默认关闭。"
+            description="文字提示组件，当用户鼠标悬停、聚焦或点击元素时，显示简短的提示信息。默认按内容宽度收缩；如果需要承载菜单或操作面板，请优先使用 Popover。"
             examples={tooltipExamples}
             api={tooltipAPI}
         />

@@ -83,7 +83,7 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid color-mix(in srgb, getVar(color, $color-name) 45%, getVar(color, border) 55%);
-    @include button-content-color(getVar(color, $color-name));
+    @include button-content-color(getVar(color, text-#{$color-name}));
     box-shadow: none;
 
     &:hover {
