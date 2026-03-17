@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCss } from "@ari/utils";
-import {
-  AriButton,
-  AriFlex,
-  AriTag,
-  AriTooltip,
-  AriDivider,
-} from "@ari/components";
+import type * as Monaco from "monaco-editor";
+import { AriButton } from "@ari/components/button";
+import { AriDivider } from "@ari/components/divider";
+import { AriFlex } from "@ari/components/flex";
+import { AriTag } from "@ari/components/tag";
+import { AriTooltip } from "@ari/components/tooltip";
 import { useI18n } from "@ari/i18n";
-import * as monaco from "monaco-editor";
-import { AriCodeLineConfig, AriCodeProps } from "@ari/types/components";
+import type { AriCodeLineConfig, AriCodeProps } from "@ari/types/components";
+import { loadMonaco } from "./loader";
+import type { MonacoModule } from "./loader";
 import { getThemeManager } from "./themeManager";
 import { useCodeDecorations } from "./hooks";
 
@@ -44,39 +44,6 @@ const getNormalizedLineCount = (lines: AriCodeLineConfig[] = []): number => {
 
   return lineSet.size;
 };
-
-// 扩展Window类型以支持MonacoEnvironment
-declare global {
-  interface Window {
-    MonacoEnvironment?: monaco.Environment;
-  }
-}
-
-// 配置 Monaco Editor 的 Worker 环境
-if (typeof window !== 'undefined' && !window.MonacoEnvironment) {
-  window.MonacoEnvironment = {
-    getWorker: function (_workerId, label) {
-      // 使用动态导入来避免路径问题
-      const workerMap = {
-        json: () => import('monaco-editor/esm/vs/language/json/json.worker?worker'),
-        css: () => import('monaco-editor/esm/vs/language/css/css.worker?worker'),
-        scss: () => import('monaco-editor/esm/vs/language/css/css.worker?worker'),
-        less: () => import('monaco-editor/esm/vs/language/css/css.worker?worker'),
-        html: () => import('monaco-editor/esm/vs/language/html/html.worker?worker'),
-        handlebars: () => import('monaco-editor/esm/vs/language/html/html.worker?worker'),
-        razor: () => import('monaco-editor/esm/vs/language/html/html.worker?worker'),
-        typescript: () => import('monaco-editor/esm/vs/language/typescript/ts.worker?worker'),
-        javascript: () => import('monaco-editor/esm/vs/language/typescript/ts.worker?worker'),
-      };
-
-      // 获取对应的 Worker 模块或使用默认的 editor worker
-      const workerModule = workerMap[label as keyof typeof workerMap] || 
-        (() => import('monaco-editor/esm/vs/editor/editor.worker?worker'));
-
-      return workerModule().then((module) => new module.default());
-    },
-  };
-}
 
 /**
  * 代码组件，使用 Monaco Editor 支持浏览和编辑一体的功能
@@ -168,18 +135,18 @@ export const AriCode: React.FC<AriCodeProps> = ({
   const { t } = useI18n();
   const cs = useCss("code");
   const containerRef = useRef<HTMLDivElement>(null);
-  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+  const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
+  const monacoRef = useRef<MonacoModule | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [content, setContent] = useState(() => processEscapeSequences(value));
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
+  const [editorStatus, setEditorStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const editableRef = useRef(editable);
   const disabledRef = useRef(disabled);
+  const onChangeRef = useRef(onChange);
   const [isLanguageTagVisible, setIsLanguageTagVisible] = useState(showLanguageTag);
-
-  // 初始化主题管理器
-  const themeManager = useMemo(() => getThemeManager(), []);
   
   // 使用装饰器管理 hook
   const {
@@ -196,6 +163,10 @@ export const AriCode: React.FC<AriCodeProps> = ({
     editableRef.current = editable;
     disabledRef.current = disabled;
   }, [editable, disabled]);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   useEffect(() => {
     setIsLanguageTagVisible(showLanguageTag);
@@ -215,7 +186,7 @@ export const AriCode: React.FC<AriCodeProps> = ({
 
   const headerTitle = path || title;
 
-  const lineNumbersOption = useMemo<monaco.editor.LineNumbersType>(() => {
+  const lineNumbersOption = useMemo<Monaco.editor.LineNumbersType>(() => {
     if (!showLineNumbers) {
       return "off";
     }
@@ -323,56 +294,264 @@ export const AriCode: React.FC<AriCodeProps> = ({
   // 初始化 Monaco Editor
   useEffect(() => {
     if (!containerRef.current) return;
+    let isDisposed = false;
+    let newEditor: Monaco.editor.IStandaloneCodeEditor | null = null;
+    let unsubscribeTheme: () => void = () => undefined;
+    const disposables: Array<{ dispose: () => void }> = [];
+
+    const initializeEditor = async () => {
+      setEditorStatus("loading");
+
+      try {
+        const monaco = await loadMonaco();
+
+        if (isDisposed || !containerRef.current) {
+          return;
+        }
+
+        monacoRef.current = monaco;
+
+        const monacoLanguage = getMonacoLanguage(language);
+        const themeManager = getThemeManager(monaco);
+        const themeName = themeManager.getThemeName();
+        const processedValue = processEscapeSequences(value);
+
+        newEditor = monaco.editor.create(containerRef.current, {
+          value: processedValue,
+          language: monacoLanguage,
+          theme: themeName,
+          readOnly: !editable || disabled,
+          minimap: {
+            enabled: false,
+          },
+          fontSize: editorFontOptions.fontSize,
+          fontFamily:
+            "'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace",
+          lineNumbers: lineNumbersOption,
+          scrollBeyondLastLine: false,
+          wordWrap: "off",
+          automaticLayout: true,
+          tabSize: tabSize,
+          insertSpaces: true,
+          renderWhitespace: "none",
+          scrollbar: {
+            vertical: "auto",
+            horizontal: "auto",
+            useShadows: false,
+            verticalHasArrows: false,
+            horizontalHasArrows: false,
+            verticalScrollbarSize: 10,
+            horizontalScrollbarSize: 10,
+          },
+          selectionHighlight: true,
+          occurrencesHighlight: "multiFile",
+          renderLineHighlightOnlyWhenFocus: false,
+          overviewRulerLanes: 0,
+          hideCursorInOverviewRuler: true,
+          overviewRulerBorder: false,
+          folding: true,
+          renderLineHighlight: "none",
+          lineDecorationsWidth: 0,
+          lineNumbersMinChars: 4,
+          glyphMargin: false,
+          contextmenu: editable && !disabled,
+          quickSuggestions:
+            editable && !disabled
+              ? {
+                  other: true,
+                  comments: true,
+                  strings: true,
+                }
+              : false,
+          parameterHints: {
+            enabled: editable && !disabled,
+          },
+          suggestOnTriggerCharacters: editable && !disabled,
+          acceptSuggestionOnEnter: editable && !disabled ? "on" : "off",
+          snippetSuggestions: editable && !disabled ? "inline" : "none",
+          suggest: {
+            insertMode: "replace",
+          },
+          padding: {
+            top: 0,
+            bottom: 16,
+          },
+          lineHeight: editorFontOptions.lineHeight,
+          fixedOverflowWidgets: true,
+          cursorBlinking: "smooth",
+          cursorSmoothCaretAnimation: "on",
+          guides: {
+            indentation: false,
+          },
+        });
+
+        editorRef.current = newEditor;
+
+        applyHighlightDecorations(monaco, newEditor, highlightLines);
+        applyDiffDecorations(monaco, newEditor, diffLines);
+
+        const initialLineNumbers = getCurrentLineNumber(newEditor);
+        setSelectedLineNumbers(initialLineNumbers);
+
+        disposables.push(
+          newEditor.onDidChangeCursorPosition(() => {
+            setHasUserInteracted(true);
+            const lineNumbers = getCurrentLineNumber(newEditor!);
+            setSelectedLineNumbers(lineNumbers);
+            applyCurrentLinesDecoration(monaco, newEditor!, lineNumbers, true);
+          })
+        );
+
+        disposables.push(
+          newEditor.onDidChangeCursorSelection(() => {
+            setHasUserInteracted(true);
+            const lineNumbers = getCurrentLineNumber(newEditor!);
+            setSelectedLineNumbers(lineNumbers);
+            applyCurrentLinesDecoration(monaco, newEditor!, lineNumbers, true);
+          })
+        );
+
+        disposables.push(
+          newEditor.onMouseDown(() => {
+            setHasUserInteracted(true);
+          })
+        );
+
+        disposables.push(
+          newEditor.onDidChangeModelContent(() => {
+            const nextValue = newEditor!.getValue();
+            setContent(nextValue);
+            onChangeRef.current?.(nextValue);
+
+            try {
+              setCanUndo(true);
+              setCanRedo(false);
+            } catch {
+              setCanUndo(false);
+              setCanRedo(false);
+            }
+          })
+        );
+
+        disposables.push(
+          newEditor.onDidChangeCursorPosition(() => {
+            try {
+              setCanUndo(true);
+              setCanRedo(false);
+            } catch {
+              // 忽略错误
+            }
+          })
+        );
+
+        setCanUndo(false);
+        setCanRedo(false);
+
+        unsubscribeTheme = themeManager.addListener((newThemeName) => {
+          monaco.editor.setTheme(newThemeName);
+        });
+
+        disposables.push(
+          newEditor.onKeyDown((e) => {
+            if (disabledRef.current) {
+              e.preventDefault();
+              e.stopPropagation();
+              return;
+            }
+
+            const isCommand = e.metaKey || e.ctrlKey;
+            if (!isCommand) return;
+
+            if (e.keyCode === monaco.KeyCode.KeyC) {
+              const model = newEditor!.getModel();
+              const selection = newEditor!.getSelection();
+              const hasSelection = !!(model && selection && !selection.isEmpty());
+
+              if (hasSelection && model && selection) {
+                e.preventDefault();
+                e.stopPropagation();
+                void copyTextToClipboard(model.getValueInRange(selection));
+                return;
+              }
+
+              if (!editableRef.current) {
+                e.preventDefault();
+                e.stopPropagation();
+                void copyTextToClipboard(newEditor!.getValue());
+              }
+              return;
+            }
+
+            if (!editableRef.current && e.keyCode === monaco.KeyCode.KeyA) {
+              e.preventDefault();
+              e.stopPropagation();
+              newEditor!.trigger("keyboard", "editor.action.selectAll", null);
+              return;
+            }
+
+            if (e.keyCode === monaco.KeyCode.KeyF) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (editableRef.current && e.shiftKey) {
+                newEditor!.trigger("keyboard", "editor.action.formatDocument", null);
+              } else {
+                newEditor!.trigger("keyboard", "actions.find", null);
+              }
+              return;
+            }
+
+            if (editableRef.current && e.keyCode === monaco.KeyCode.KeyZ) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (e.shiftKey) {
+                newEditor!.trigger("keyboard", "redo", null);
+              } else {
+                newEditor!.trigger("keyboard", "undo", null);
+              }
+              return;
+            }
+
+            if (editableRef.current && e.keyCode === monaco.KeyCode.KeyY) {
+              e.preventDefault();
+              e.stopPropagation();
+              newEditor!.trigger("keyboard", "redo", null);
+            }
+          })
+        );
+
+        setEditorStatus("ready");
+      } catch (error) {
+        if (!isDisposed) {
+          console.error("Monaco Editor 加载失败:", error);
+          setEditorStatus("error");
+        }
+      }
+    };
+
+    void initializeEditor();
+
+    return () => {
+      isDisposed = true;
+      unsubscribeTheme();
+      disposables.forEach((disposable) => disposable.dispose());
+      newEditor?.dispose();
+      editorRef.current = null;
+      monacoRef.current = null;
+    };
+  }, []); // 只在组件挂载时创建一次
+
+  // 更新编辑器属性
+  useEffect(() => {
+    const editor = editorRef.current;
+    const monaco = monacoRef.current;
+
+    if (!editor || !monaco) return;
 
     const monacoLanguage = getMonacoLanguage(language);
 
-    // 获取当前主题名称
-    const themeName = themeManager.getThemeName();
-
-    // 处理初始值，转换转义字符
-    const processedValue = processEscapeSequences(value);
-
-    // 创建编辑器
-    const newEditor = monaco.editor.create(containerRef.current, {
-      value: processedValue,
-      language: monacoLanguage,
-      theme: themeName,
+    // 更新只读状态
+    editor.updateOptions({
       readOnly: !editable || disabled,
-      minimap: {
-        enabled: false,
-      },
-      fontSize: editorFontOptions.fontSize,
-      fontFamily:
-        "'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace",
-      lineNumbers: lineNumbersOption,
-      scrollBeyondLastLine: false,
-      wordWrap: "off",
-      automaticLayout: true,
-      tabSize: tabSize,
-      insertSpaces: true,
-      renderWhitespace: "none",
-      scrollbar: {
-        vertical: "auto",
-        horizontal: "auto",
-        useShadows: false,
-        verticalHasArrows: false,
-        horizontalHasArrows: false,
-        verticalScrollbarSize: 10,
-        horizontalScrollbarSize: 10,
-      },
-      // 确保选中高亮正常工作
-      selectionHighlight: true,
-      occurrencesHighlight: "multiFile",
-      renderLineHighlightOnlyWhenFocus: false,
-      overviewRulerLanes: 0,
-      hideCursorInOverviewRuler: true,
-      overviewRulerBorder: false,
-      folding: true,
-      // 行高亮设置 - 禁用默认行高亮，使用装饰器替代
-      renderLineHighlight: "none",
-      lineDecorationsWidth: 0,
-      lineNumbersMinChars: 4,
-      glyphMargin: false,
       contextmenu: editable && !disabled,
       quickSuggestions:
         editable && !disabled
@@ -388,217 +567,30 @@ export const AriCode: React.FC<AriCodeProps> = ({
       suggestOnTriggerCharacters: editable && !disabled,
       acceptSuggestionOnEnter: editable && !disabled ? "on" : "off",
       snippetSuggestions: editable && !disabled ? "inline" : "none",
-      suggest: {
-        insertMode: "replace",
-      },
-      padding: {
-        top: 0,
-        bottom: 16,
-      },
-      lineHeight: editorFontOptions.lineHeight,
-      fixedOverflowWidgets: true,
-      // 启用光标闪烁
-      cursorBlinking: "smooth",
-      cursorSmoothCaretAnimation: "on",
-      // 禁用缩进参考线
-      guides: {
-        indentation: false,
-      },
-    });
-
-    editorRef.current = newEditor;
-
-    // 应用行高亮装饰器
-    applyHighlightDecorations(newEditor, highlightLines);
-    applyDiffDecorations(newEditor, diffLines);
-
-    // 初始化时不显示当前行高亮
-    const initialLineNumbers = getCurrentLineNumber(newEditor);
-    setSelectedLineNumbers(initialLineNumbers);
-    
-    // 监听光标位置和选择变化
-    const cursorPositionDisposable = newEditor.onDidChangeCursorPosition(() => {
-      setHasUserInteracted(true);
-      const lineNumbers = getCurrentLineNumber(newEditor);
-      setSelectedLineNumbers(lineNumbers);
-      applyCurrentLinesDecoration(newEditor, lineNumbers, true);
-    });
-
-    // 监听选择变化
-    const selectionDisposable = newEditor.onDidChangeCursorSelection(() => {
-      setHasUserInteracted(true);
-      const lineNumbers = getCurrentLineNumber(newEditor);
-      setSelectedLineNumbers(lineNumbers);
-      applyCurrentLinesDecoration(newEditor, lineNumbers, true);
-    });
-
-    // 监听点击事件
-    const clickDisposable = newEditor.onMouseDown(() => {
-      setHasUserInteracted(true);
-    });
-
-    // 监听内容变化
-    const disposable = newEditor.onDidChangeModelContent(() => {
-      const value = newEditor.getValue();
-      setContent(value);
-      onChange?.(value);
-
-      // 更新撤销/重做状态 - 使用编辑器的方法而不是模型的方法
-      try {
-        // Monaco Editor 的 undo/redo 状态需要通过编辑器触发操作来检查
-        setCanUndo(true); // 默认可撤销
-        setCanRedo(false); // 默认不可重做
-      } catch (e) {
-        // 忽略错误，使用默认状态
-        setCanUndo(false);
-        setCanRedo(false);
-      }
-    });
-
-    // 监听光标变化以更新撤销/重做状态
-    const cursorDisposable = newEditor.onDidChangeCursorPosition(() => {
-      try {
-        // Monaco Editor 的 undo/redo 状态检查
-        setCanUndo(true); // 简化处理
-        setCanRedo(false);
-      } catch (e) {
-        // 忽略错误
-      }
-    });
-
-    // 初始化撤销/重做状态
-    try {
-      // 简化状态初始化
-      setCanUndo(false);
-      setCanRedo(false);
-    } catch (e) {
-      // 忽略错误
-    }
-
-    // 监听主题变化
-    const unsubscribeTheme = themeManager.addListener((newThemeName) => {
-      newEditor.updateOptions({
-        theme: newThemeName,
-      });
-    });
-
-    // 默认快捷键支持
-    const keydownDisposable = newEditor.onKeyDown((e) => {
-      if (disabledRef.current) {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-
-      const isCommand = e.metaKey || e.ctrlKey;
-      if (!isCommand) return;
-
-      // Copy: 有选区复制选区；只读模式无选区时复制全文
-      if (e.keyCode === monaco.KeyCode.KeyC) {
-        const model = newEditor.getModel();
-        const selection = newEditor.getSelection();
-        const hasSelection = !!(model && selection && !selection.isEmpty());
-
-        if (hasSelection && model && selection) {
-          e.preventDefault();
-          e.stopPropagation();
-          void copyTextToClipboard(model.getValueInRange(selection));
-          return;
-        }
-
-        if (!editableRef.current) {
-          e.preventDefault();
-          e.stopPropagation();
-          void copyTextToClipboard(newEditor.getValue());
-        }
-        return;
-      }
-
-      // 只读模式也支持全选与查找
-      if (!editableRef.current && e.keyCode === monaco.KeyCode.KeyA) {
-        e.preventDefault();
-        e.stopPropagation();
-        newEditor.trigger("keyboard", "editor.action.selectAll", null);
-        return;
-      }
-
-      // 查找 / 格式化
-      if (e.keyCode === monaco.KeyCode.KeyF) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (editableRef.current && e.shiftKey) {
-          newEditor.trigger("keyboard", "editor.action.formatDocument", null);
-        } else {
-          newEditor.trigger("keyboard", "actions.find", null);
-        }
-        return;
-      }
-
-      // 编辑模式支持撤销/重做
-      if (editableRef.current && e.keyCode === monaco.KeyCode.KeyZ) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.shiftKey) {
-          newEditor.trigger("keyboard", "redo", null);
-        } else {
-          newEditor.trigger("keyboard", "undo", null);
-        }
-        return;
-      }
-
-      if (editableRef.current && e.keyCode === monaco.KeyCode.KeyY) {
-        e.preventDefault();
-        e.stopPropagation();
-        newEditor.trigger("keyboard", "redo", null);
-      }
-    });
-
-
-    return () => {
-      disposable.dispose();
-      cursorDisposable.dispose();
-      cursorPositionDisposable.dispose();
-      selectionDisposable.dispose();
-      clickDisposable.dispose();
-      unsubscribeTheme();
-      keydownDisposable.dispose();
-      newEditor.dispose();
-    };
-  }, []); // 只在组件挂载时创建一次
-
-  // 更新编辑器属性
-  useEffect(() => {
-    if (!editorRef.current) return;
-
-    const monacoLanguage = getMonacoLanguage(language);
-
-    // 更新只读状态
-    editorRef.current.updateOptions({
-      readOnly: !editable || disabled,
     });
 
     // 更新语言
-    const model = editorRef.current.getModel();
+    const model = editor.getModel();
     if (model) {
       monaco.editor.setModelLanguage(model, monacoLanguage);
     }
 
     // 更新行号显示
-    editorRef.current.updateOptions({
+    editor.updateOptions({
       lineNumbers: lineNumbersOption,
     });
 
     // 更新Tab大小
-    editorRef.current.updateOptions({
+    editor.updateOptions({
       tabSize: tabSize,
     });
 
     // 更新字体大小
-    editorRef.current.updateOptions({
+    editor.updateOptions({
       fontSize: editorFontOptions.fontSize,
       lineHeight: editorFontOptions.lineHeight,
     });
-  }, [editable, disabled, language, lineNumbersOption, tabSize, editorFontOptions]);
+  }, [editable, disabled, language, lineNumbersOption, tabSize, editorFontOptions, editorStatus]);
 
   // 更新内容
   useEffect(() => {
@@ -608,25 +600,37 @@ export const AriCode: React.FC<AriCodeProps> = ({
     if (processedValue !== currentValue) {
       editorRef.current.setValue(processedValue);
     }
-  }, [value]);
+  }, [value, editorStatus]);
 
   // 更新行高亮
   useEffect(() => {
-    if (!editorRef.current) return;
-    applyHighlightDecorations(editorRef.current, highlightLines);
-  }, [highlightLines, applyHighlightDecorations]);
+    const editor = editorRef.current;
+    const monaco = monacoRef.current;
+
+    if (!editor || !monaco) return;
+
+    applyHighlightDecorations(monaco, editor, highlightLines);
+  }, [highlightLines, applyHighlightDecorations, editorStatus]);
 
   // 更新 Diff 行高亮
   useEffect(() => {
-    if (!editorRef.current) return;
-    applyDiffDecorations(editorRef.current, diffLines);
-  }, [diffLines, applyDiffDecorations]);
+    const editor = editorRef.current;
+    const monaco = monacoRef.current;
+
+    if (!editor || !monaco) return;
+
+    applyDiffDecorations(monaco, editor, diffLines);
+  }, [diffLines, applyDiffDecorations, editorStatus]);
 
   // 更新当前选中行高亮（当选中行号改变时重新应用）
   useEffect(() => {
-    if (!editorRef.current) return;
-    applyCurrentLinesDecoration(editorRef.current, selectedLineNumbers, hasUserInteracted);
-  }, [selectedLineNumbers, hasUserInteracted, applyCurrentLinesDecoration]);
+    const editor = editorRef.current;
+    const monaco = monacoRef.current;
+
+    if (!editor || !monaco) return;
+
+    applyCurrentLinesDecoration(monaco, editor, selectedLineNumbers, hasUserInteracted);
+  }, [selectedLineNumbers, hasUserInteracted, applyCurrentLinesDecoration, editorStatus]);
 
 
   // 复制代码
@@ -688,6 +692,8 @@ export const AriCode: React.FC<AriCodeProps> = ({
     onLanguageTagClose?.(e);
   }, [onLanguageTagClose]);
 
+  const isEditorReady = editorStatus === "ready";
+
   // 生成组件的class
   const codeClasses = useMemo(() => {
     const classes = [cs.b()];
@@ -695,9 +701,10 @@ export const AriCode: React.FC<AriCodeProps> = ({
     if (showLineNumbers) classes.push(cs.m("with-line-numbers"));
     if (editable) classes.push(cs.m("editable"));
     if (disabled) classes.push(cs.m("disabled"));
+    if (!isEditorReady) classes.push(cs.is("loading"));
     classes.push(cs.m(`font-${fontSize}`));
     return cs.gen(...classes);
-  }, [cs, className, showLineNumbers, editable, disabled, fontSize]);
+  }, [cs, className, showLineNumbers, editable, disabled, fontSize, isEditorReady]);
 
   return (
     <div className={codeClasses}>
@@ -761,14 +768,14 @@ export const AriCode: React.FC<AriCodeProps> = ({
         >
           <AriButton
             onClick={handleUndo}
-            disabled={disabled || !canUndo}
+            disabled={disabled || !isEditorReady || !canUndo}
             type="text"
             icon="undo"
             label={t.common.undo}
           />
           <AriButton
             onClick={handleRedo}
-            disabled={disabled || !canRedo}
+            disabled={disabled || !isEditorReady || !canRedo}
             type="text"
             icon="redo"
             label={t.common.redo}
@@ -776,14 +783,14 @@ export const AriCode: React.FC<AriCodeProps> = ({
           <AriDivider type="vertical" />
           <AriButton
             onClick={handleFormat}
-            disabled={disabled}
+            disabled={disabled || !isEditorReady}
             type="text"
             icon="format_align_justify"
             label={t.common.format}
           />
           <AriButton
             onClick={handleFind}
-            disabled={disabled}
+            disabled={disabled || !isEditorReady}
             type="text"
             icon="search"
             label={t.common.find}
@@ -792,10 +799,23 @@ export const AriCode: React.FC<AriCodeProps> = ({
       )}
 
       <div className={cs.e("content")}>
+        {!isEditorReady && (
+          <div
+            className={cs.e("loading")}
+            style={{ height: height || "300px" }}
+          >
+            <pre className={cs.e("loading-text")}>
+              {content || _placeholder || t.common.loading}
+            </pre>
+          </div>
+        )}
         <div
           ref={containerRef}
           className={cs.e("monaco-container")}
-          style={{ height: height || "300px" }}
+          style={{
+            height: height || "300px",
+            display: isEditorReady ? "block" : "none",
+          }}
         />
       </div>
     </div>

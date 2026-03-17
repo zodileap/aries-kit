@@ -40,6 +40,20 @@ function App() {
 ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 ```
 
+## Large Components
+
+Heavy components should prefer dedicated subpath exports to avoid inflating the main entry bundle.
+
+For `Code`, use:
+
+```tsx
+import { AriCode } from '@aries-kit/react/code';
+import '@aries-kit/react/style.css';
+import '@aries-kit/react/code/style.css';
+```
+
+If the page does not use `AriCode`, do not import `@aries-kit/react/code` or `@aries-kit/react/code/style.css`. This keeps the initial JavaScript and Monaco editor styles out of the main path.
+
 ## Hooks
 
 Hooks are currently exported from the main package:

@@ -1,5 +1,5 @@
-import * as monaco from 'monaco-editor';
 import { getTheme, getColorTheme, onThemeChange, onColorThemeChange } from '@ari/init';
+import type { MonacoModule } from './loader';
 import { getMonacoTheme } from './themes';
 
 /**
@@ -8,13 +8,15 @@ import { getMonacoTheme } from './themes';
  */
 export class MonacoThemeManager {
   private static instance: MonacoThemeManager;
+  private monaco: MonacoModule;
   private currentTheme: string = 'brand';
   private currentColorTheme: 'light' | 'dark' = 'light';
   private listeners: Array<(themeName: string) => void> = [];
   private unsubscribeTheme?: () => void;
   private unsubscribeColorTheme?: () => void;
 
-  private constructor() {
+  private constructor(monaco: MonacoModule) {
+    this.monaco = monaco;
     this.currentTheme = getTheme();
     this.currentColorTheme = getColorTheme();
     this.setupListeners();
@@ -24,9 +26,9 @@ export class MonacoThemeManager {
   /**
    * 获取主题管理器单例
    */
-  public static getInstance(): MonacoThemeManager {
+  public static getInstance(monaco: MonacoModule): MonacoThemeManager {
     if (!MonacoThemeManager.instance) {
-      MonacoThemeManager.instance = new MonacoThemeManager();
+      MonacoThemeManager.instance = new MonacoThemeManager(monaco);
     }
     return MonacoThemeManager.instance;
   }
@@ -63,10 +65,10 @@ export class MonacoThemeManager {
     const darkTheme = getMonacoTheme(this.currentTheme, 'dark');
 
     // 定义亮色主题
-    monaco.editor.defineTheme('ari-light', lightTheme);
+    this.monaco.editor.defineTheme('ari-light', lightTheme);
     
     // 定义暗色主题
-    monaco.editor.defineTheme('ari-dark', darkTheme);
+    this.monaco.editor.defineTheme('ari-dark', darkTheme);
   }
 
   /**
@@ -77,9 +79,9 @@ export class MonacoThemeManager {
     this.defineCurrentTheme();
     const themeName = this.getThemeName();
     // 强制刷新主题
-    monaco.editor.setTheme('vs'); // 先切换到默认主题
+    this.monaco.editor.setTheme('vs'); // 先切换到默认主题
     setTimeout(() => {
-      monaco.editor.setTheme(themeName); // 再切换回我们的主题
+      this.monaco.editor.setTheme(themeName); // 再切换回我们的主题
     }, 10);
     this.notifyListeners(themeName);
   }
@@ -135,4 +137,5 @@ export class MonacoThemeManager {
 /**
  * 获取主题管理器实例
  */
-export const getThemeManager = () => MonacoThemeManager.getInstance();
+export const getThemeManager = (monaco: MonacoModule) =>
+  MonacoThemeManager.getInstance(monaco);

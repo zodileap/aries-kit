@@ -76,10 +76,9 @@
     }
 
     &__content {
-        // 当使用Monaco Editor时，不设置padding，让Monaco自己控制
-        // padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
         margin: 0;
         overflow-x: auto;
+        position: relative;
         transition: all getVar(duration, element-interaction);
 
         // 只有非Monaco模式才设置padding
@@ -173,7 +172,6 @@
         width: 100%;
         height: 100%;
         min-height: 100px;
-        // transition: all getVar(duration, element-interaction);
 
         .#{$namespace}-code--disabled & {
             .monaco-editor {
@@ -189,6 +187,23 @@
         .view-lines {
             padding-left: 5px;
         }
+    }
+
+    &__loading {
+        padding: getVar(inset, container-vertical) getVar(inset, container-horizontal);
+        background-color: getVar(color, bg);
+        box-sizing: border-box;
+        overflow: auto;
+    }
+
+    &__loading-text {
+        margin: 0;
+        color: getVar(color, text-secondary);
+        font-family: getVar(font-family, mono);
+        font-size: getVar(font-size, body);
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-word;
     }
 
     &--font-sm {

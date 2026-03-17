@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react';
-import * as monaco from "monaco-editor";
-import { AriCodeDiffLines, AriCodeLineConfig } from "@ari/types/components";
+import type * as Monaco from "monaco-editor";
+import type { AriCodeDiffLines, AriCodeLineConfig } from "@ari/types/components";
+import type { MonacoModule } from "../loader";
 
 /**
  * 代码装饰器管理 Hook
@@ -71,7 +72,7 @@ export const useCodeDecorations = () => {
   }, []);
 
   // 应用行高亮装饰器
-  const applyHighlightDecorations = useCallback((editor: monaco.editor.IStandaloneCodeEditor, highlightLines: AriCodeLineConfig[]) => {
+  const applyHighlightDecorations = useCallback((monaco: MonacoModule, editor: Monaco.editor.IStandaloneCodeEditor, highlightLines: AriCodeLineConfig[]) => {
     if (!highlightLines || highlightLines.length === 0) {
       // 如果没有高亮行，清除所有装饰器
       highlightDecorationsRef.current = editor.deltaDecorations(highlightDecorationsRef.current, []);
@@ -82,7 +83,7 @@ export const useCodeDecorations = () => {
     const linesToHighlight = processHighlightLines(highlightLines, lineCount);
     
     // 创建装饰器配置
-    const decorations: monaco.editor.IModelDeltaDecoration[] = linesToHighlight.map(lineNumber => ({
+    const decorations: Monaco.editor.IModelDeltaDecoration[] = linesToHighlight.map(lineNumber => ({
       range: new monaco.Range(lineNumber, 1, lineNumber, 1),
       options: {
         isWholeLine: true,
@@ -95,7 +96,7 @@ export const useCodeDecorations = () => {
   }, [processHighlightLines]);
 
   // 应用 Diff 装饰器
-  const applyDiffDecorations = useCallback((editor: monaco.editor.IStandaloneCodeEditor, diffLines?: AriCodeDiffLines) => {
+  const applyDiffDecorations = useCallback((monaco: MonacoModule, editor: Monaco.editor.IStandaloneCodeEditor, diffLines?: AriCodeDiffLines) => {
     if (!diffLines) {
       diffAddedDecorationsRef.current = editor.deltaDecorations(diffAddedDecorationsRef.current, []);
       diffRemovedDecorationsRef.current = editor.deltaDecorations(diffRemovedDecorationsRef.current, []);
@@ -106,7 +107,7 @@ export const useCodeDecorations = () => {
     const addedLines = processHighlightLines(diffLines.added ?? [], lineCount);
     const removedLines = processHighlightLines(diffLines.removed ?? [], lineCount);
 
-    const addedDecorations: monaco.editor.IModelDeltaDecoration[] = addedLines.map((lineNumber) => ({
+    const addedDecorations: Monaco.editor.IModelDeltaDecoration[] = addedLines.map((lineNumber) => ({
       range: new monaco.Range(lineNumber, 1, lineNumber, 1),
       options: {
         isWholeLine: true,
@@ -116,7 +117,7 @@ export const useCodeDecorations = () => {
       }
     }));
 
-    const removedDecorations: monaco.editor.IModelDeltaDecoration[] = removedLines.map((lineNumber) => ({
+    const removedDecorations: Monaco.editor.IModelDeltaDecoration[] = removedLines.map((lineNumber) => ({
       range: new monaco.Range(lineNumber, 1, lineNumber, 1),
       options: {
         isWholeLine: true,
@@ -131,7 +132,7 @@ export const useCodeDecorations = () => {
   }, [processHighlightLines]);
 
   // 应用当前选中行装饰器
-  const applyCurrentLinesDecoration = useCallback((editor: monaco.editor.IStandaloneCodeEditor, lineNumbers: number[], shouldShow: boolean) => {
+  const applyCurrentLinesDecoration = useCallback((monaco: MonacoModule, editor: Monaco.editor.IStandaloneCodeEditor, lineNumbers: number[], shouldShow: boolean) => {
     // 只有在应该显示时才显示当前行高亮
     if (!shouldShow) {
       currentLinesDecorationRef.current = editor.deltaDecorations(currentLinesDecorationRef.current, []);
@@ -144,7 +145,7 @@ export const useCodeDecorations = () => {
       return;
     }
 
-    const decorations: monaco.editor.IModelDeltaDecoration[] = lineNumbers.map(lineNumber => ({
+    const decorations: Monaco.editor.IModelDeltaDecoration[] = lineNumbers.map(lineNumber => ({
       range: new monaco.Range(lineNumber, 1, lineNumber, 1),
       options: {
         isWholeLine: true,
@@ -157,13 +158,13 @@ export const useCodeDecorations = () => {
   }, []);
 
   // 检查是否有文本被选中（不只是光标定位）
-  const hasTextSelection = useCallback((editor: monaco.editor.IStandaloneCodeEditor): boolean => {
+  const hasTextSelection = useCallback((editor: Monaco.editor.IStandaloneCodeEditor): boolean => {
     const selections = editor.getSelections();
     if (!selections || selections.length === 0) {
       return false;
     }
 
-    return selections.some(selection => {
+    return selections.some((selection) => {
       // 如果选择的开始和结束位置不同，说明有文本被选中
       return !(
         selection.startLineNumber === selection.endLineNumber &&
@@ -173,7 +174,7 @@ export const useCodeDecorations = () => {
   }, []);
 
   // 获取当前光标所在的行号（仅在没有文本选择时使用）
-  const getCurrentLineNumber = useCallback((editor: monaco.editor.IStandaloneCodeEditor): number[] => {
+  const getCurrentLineNumber = useCallback((editor: Monaco.editor.IStandaloneCodeEditor): number[] => {
     // 如果有文本选择，不显示当前行高亮
     if (hasTextSelection(editor)) {
       return [];
@@ -185,7 +186,7 @@ export const useCodeDecorations = () => {
   }, [hasTextSelection]);
 
   // 清理所有装饰器
-  const clearAllDecorations = useCallback((editor: monaco.editor.IStandaloneCodeEditor) => {
+  const clearAllDecorations = useCallback((editor: Monaco.editor.IStandaloneCodeEditor) => {
     highlightDecorationsRef.current = editor.deltaDecorations(highlightDecorationsRef.current, []);
     currentLinesDecorationRef.current = editor.deltaDecorations(currentLinesDecorationRef.current, []);
     diffAddedDecorationsRef.current = editor.deltaDecorations(diffAddedDecorationsRef.current, []);

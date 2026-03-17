@@ -213,6 +213,8 @@ Extends {@link AriContainer}
 10. 如果组件存在子组件或额外 API（例如 `TreeView`、`TreeNode`），对应的 Preview 也必须分别为它们的公开 props 提供示例，不允许只写 API 表不写 demo。
 11. 新增组件、修改组件 props、调整默认值、删除 props 后，必须重新执行 Preview props 覆盖检查；未通过检查前，不允许认为文档已完成。
 12. Preview 文档中的示例优先展示单个 prop 的独立效果；当多个 prop 组合展示时，仍需确保每个 prop 至少有一个示例可以清楚判断其作用。
+13. 对于包含大型运行时、编辑器、图表引擎、可视化渲染器、worker 或大体积样式资源的组件，必须提供独立子入口，格式为 `@aries-kit/react/{componentName}`，必要时同时提供 `@aries-kit/react/{componentName}/style.css`。
+14. 大组件不得只依赖根入口导出；实现时必须确保业务未引入该子入口时，不会在初次加载路径中承载该组件的主运行时、worker 和专属样式资源。`Code` 组件以 `@aries-kit/react/code` 为基准示例。
 
 ```tsx
 /**

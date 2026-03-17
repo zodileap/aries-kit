@@ -20,7 +20,7 @@ export const codeExamples: Record<string, DocExample> = {
     basic: {
         title: '基础用法',
         key: 'basic-usage',
-        description: '基础的代码展示组件，支持语法高亮与默认快捷键（如 Cmd/Ctrl + C 复制、Cmd/Ctrl + F 查找）。',
+        description: '基础的代码展示组件，支持语法高亮与默认快捷键（如 Cmd/Ctrl + C 复制、Cmd/Ctrl + F 查找），Monaco 编辑器会在组件渲染时按需加载。业务侧推荐通过 @aries-kit/react/code 单独引入。',
         demos: [{
             component: BasicCodeDemo,
             sourceCode: sourceMap['code']['BasicCodeDemo']

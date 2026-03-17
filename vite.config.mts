@@ -64,6 +64,11 @@ export default defineConfig({
 
         await fs.copy(path.resolve(__dirname, 'README.md'), path.resolve(__dirname, 'dist/README.md'))
         await fs.copy(path.resolve(__dirname, 'LICENSE'), path.resolve(__dirname, 'dist/LICENSE'))
+        const mainCssPath = path.resolve(__dirname, 'dist/assets/index.css')
+        const publicCssPath = path.resolve(__dirname, 'dist/assets/style.css')
+        if (await fs.pathExists(mainCssPath)) {
+          await fs.copy(mainCssPath, publicCssPath)
+        }
         await patchMonacoDynamicImports()
 
         // await fs.copy(path.resolve(__dirname, 'src/core'), path.resolve(__dirname, 'dist/core'))
@@ -108,6 +113,7 @@ export default defineConfig({
     },
   },
   build: {
+    cssCodeSplit: true,
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'AriesKit',

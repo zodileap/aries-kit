@@ -1,6 +1,6 @@
 {
   "name": "@aries-kit/react",
-  "version": "0.2.10",
+  "version": "0.3.0",
   "private": true,
   "description": "Aries Kit React component and hooks library.",
   "license": "MIT",
@@ -38,6 +38,12 @@
       "import": "./index.es.js",
       "require": "./index.umd.js"
     },
+    "./code": {
+      "types": "./types/code.d.ts",
+      "import": "./code/index.js",
+      "require": "./index.umd.js"
+    },
+    "./code/style.css": "./code/style.css",
     "./style.css": "./assets/style.css",
     "./theme/index.scss": "./theme/index.scss",
     "./theme/style.scss": "./theme/style.scss",
@@ -55,7 +61,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json && vite build",
-    "postbuild": "node -r esbuild-register scripts/resolveCatalogDeps.ts",
+    "postbuild": "node scripts/buildSubpathEntries.mjs && node -r esbuild-register scripts/resolveCatalogDeps.ts",
     "build:ts": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "release:npm": "pnpm build && npm publish ./dist --access public --cache ./.npm-cache",
     "release:npm:dry-run": "pnpm build && npm publish ./dist --dry-run --access public --cache ./.npm-cache",
