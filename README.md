@@ -113,6 +113,8 @@ The publishable package is generated in `dist/`.
 
 Do not publish from the repository root. The root package is marked as private to prevent accidental empty-package releases.
 
+When bumping the package version, create the matching annotated Git tag `<version>` at the same time. The tag message must use the corresponding section content from `CHANGELOG.md`, rather than a one-line summary.
+
 ```bash
 pnpm release:npm:dry-run
 pnpm release:npm
