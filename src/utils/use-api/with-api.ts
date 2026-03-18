@@ -1,5 +1,5 @@
 import { AriMessage } from "@ari/components/message";
-import { WasmApiResponse } from "@ari/types/wasm/leo_api/v1";
+import { WasmApiResponse } from "@ari/types/wasm";
 
 export enum ErrorLevel {
   NONE = 0,

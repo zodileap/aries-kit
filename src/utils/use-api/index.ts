@@ -1,7 +1,7 @@
 import { useCallback, useRef } from "react";
 import { AriMessage } from "@ari/components/message";
 import { I18nTranslates } from "@ari/types";
-import { WasmApiResponse } from "@ari/types/wasm/leo_api/v1";
+import { WasmApiResponse } from "@ari/types/wasm";
 import { withApi } from "./with-api";
 import {
   UseApiReturn,
