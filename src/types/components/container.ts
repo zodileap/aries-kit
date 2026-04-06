@@ -1,5 +1,4 @@
-import { ReactNode, RefObject } from "react";
-import { Position, ShadowMode } from "../widget";
+import { ShadowMode } from "../widget";
 import { _Props } from "./base";
 
 /**

@@ -1,8 +1,9 @@
 import { AriAppLayout, AriAppLayoutProvider } from "@ari/repository";
 import { useInitialization, setTheme } from ".";
-import Lottie from 'lottie-react';
 import { AppProps } from "@ari/types";
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
+
+const LazyLottie = lazy(() => import("lottie-react"));
 
 
 export const AriApp: React.FC<AppProps> = ({
@@ -62,12 +63,16 @@ export const AriApp: React.FC<AppProps> = ({
             backgroundColor: '#f0f0f0', // 根据需要调整背景色
         }}>
             
-            {animationData != undefined && <Lottie
-                animationData={animationData}
-                loop={true}
-                autoplay={true}
-                style={{ width: 200, height: 200 }} // 根据需要调整大小
-            />}
+            {animationData != undefined && (
+                <Suspense fallback={null}>
+                    <LazyLottie
+                        animationData={animationData}
+                        loop={true}
+                        autoplay={true}
+                        style={{ width: 200, height: 200 }} // 根据需要调整大小
+                    />
+                </Suspense>
+            )}
 
         </div>
     }

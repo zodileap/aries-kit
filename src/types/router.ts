@@ -1,4 +1,4 @@
-import { Route, RouteObject } from 'react-router-dom';
+import { RouteObject } from 'react-router-dom';
 import { I18nTranslates } from './i18n';
 
 /**

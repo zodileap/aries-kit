@@ -1,5 +1,3 @@
-import { RefObject } from "react";
-
 /**
  * CSS类名配置接口
  */
